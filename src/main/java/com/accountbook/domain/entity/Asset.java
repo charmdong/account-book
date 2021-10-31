@@ -1,5 +1,6 @@
 package com.accountbook.domain.entity;
 
+import com.accountbook.domain.dto.CreateAssetRequest;
 import com.accountbook.domain.enums.AssetType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,19 +18,19 @@ public class Asset {
     @Id
     @GeneratedValue
     @Column(name = "ASSET_SEQ")
-    private Long seq;
+    protected Long seq;
 
-    private String name;
-    private String memo;
-    private Long balance;
+    protected String name;
+    protected String memo;
+    protected Long balance;
 
     @Enumerated(EnumType.STRING)
-    private AssetType assetType;
+    protected AssetType assetType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
-    private User user;
+    protected User user;
 
-    private Boolean initYn;
-    private LocalDateTime initDate;
+    protected Boolean initYn;
+    protected LocalDateTime initDate;
 }

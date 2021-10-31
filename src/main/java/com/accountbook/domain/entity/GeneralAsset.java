@@ -10,6 +10,6 @@ import javax.persistence.Entity;
 @Getter
 @NoArgsConstructor
 @DiscriminatorValue("NON_CREDIT")
-public class NonCredit extends Asset {
+public class GeneralAsset extends Asset {
 
 }

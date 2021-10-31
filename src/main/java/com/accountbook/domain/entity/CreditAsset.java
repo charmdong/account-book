@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @DiscriminatorValue("CREDIT")
-public class Credit extends Asset {
+public class CreditAsset extends Asset {
 
     private LocalDateTime settlementDate;
     private LocalDateTime paymentDate;
@@ -21,5 +21,5 @@ public class Credit extends Asset {
 
     @OneToOne
     @JoinColumn(name = "PAY_ASSET_TYPE")
-    private NonCredit paymentType;
+    private GeneralAsset paymentType;
 }
