@@ -1,17 +1,20 @@
-package com.accountbook.domain.dto;
+package com.accountbook.dto;
 
 import com.accountbook.domain.entity.GeneralAsset;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-public class CreateAssetRequest {
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+public class AssetRequest {
 
-    private Long seq;
     private String name;
     private String memo;
     private Long balance;
