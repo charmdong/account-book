@@ -19,6 +19,7 @@ public class User {
 
     private String password;
     private String name;
+    private String email;
     private LocalDateTime birthDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
