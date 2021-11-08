@@ -14,35 +14,38 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("")
-    public void join(@RequestBody UserRequest userRequest) {
+    public void addUser(@RequestBody UserRequest request) {
 
+        userService.addUser(request);
     }
 
     @GetMapping("/{userId}")
     public UserDto getUser(@PathVariable("userId") String userId) {
 
-        return new UserDto();
+        return userService.getUser(userId);
     }
 
     @PutMapping("/{userId}")
-    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest userRequest) {
+    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest request) {
 
+        userService.updateUser(userId, request);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable("userId") String userId) {
 
+        userService.deleteUser(userId);
     }
 
     @PostMapping("/id")
     public String findUserId(@RequestBody UserRequest request) {
 
-        return "";
+        return userService.findUserId(request);
     }
 
     @PostMapping("/password")
     public String findUserPassword(@RequestBody UserRequest request) {
 
-        return "";
+        return userService.findPassword(request);
     }
 }

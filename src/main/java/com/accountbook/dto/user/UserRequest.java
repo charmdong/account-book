@@ -21,6 +21,7 @@ public class UserRequest {
     @NotEmpty
     private String name;
 
+    @NotEmpty
     private String email;
     private LocalDateTime birthDate;
 }
