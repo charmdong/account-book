@@ -1,6 +1,7 @@
 package com.accountbook.domain.entity;
 
 import com.accountbook.domain.enums.EventType;
+import com.accountbook.dto.user.CategoryRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,20 @@ public class UserCategory {
     @OneToOne
     @JoinColumn(name = "CATEGORY_CODE")
     private Category category;
+
+    // 생성자 메서드
+    public static UserCategory createUserCategory (CategoryRequest request) {
+        UserCategory userCategory = new UserCategory();
+
+        userCategory.changeUser(request.getUser());
+        userCategory.category = request.getCategory();
+
+        return userCategory;
+    }
+
+    // 연관 관계 메서드
+    private void changeUser(User user) {
+        this.user = user;
+        user.getUserCategoryList().add(this);
+    }
 }
