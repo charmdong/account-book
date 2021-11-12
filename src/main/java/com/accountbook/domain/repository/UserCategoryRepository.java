@@ -19,4 +19,16 @@ public class UserCategoryRepository {
                 .setParameter("userId", userId)
                 .getResultList();
     }
+
+    public UserCategory getCategory(Long seq) {
+        return em.find(UserCategory.class, seq);
+    }
+
+    public void addUserCategory(UserCategory userCategory) {
+        em.persist(userCategory);
+    }
+
+    public void deleteUserCategory(UserCategory userCategory) {
+        em.remove(userCategory);
+    }
 }

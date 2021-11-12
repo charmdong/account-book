@@ -1,7 +1,6 @@
 package com.accountbook.dto.user;
 
-import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.entity.User;
+import com.accountbook.domain.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryRequest {
 
-    private User user;
-    private Category category;
-
+    private String userId;
+    private String name;
+    private EventType eventType;
+    private Boolean useYn;
 
 }

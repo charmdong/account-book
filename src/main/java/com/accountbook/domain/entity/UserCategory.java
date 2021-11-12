@@ -26,18 +26,27 @@ public class UserCategory {
     private Category category;
 
     // 생성자 메서드
-    public static UserCategory createUserCategory (CategoryRequest request) {
+    public static UserCategory createUserCategory (User user, Category category) {
         UserCategory userCategory = new UserCategory();
 
-        userCategory.changeUser(request.getUser());
-        userCategory.category = request.getCategory();
+        userCategory.changeUser(user);
+        userCategory.category = category;
 
         return userCategory;
     }
 
     // 연관 관계 메서드
+    public void changeUserCategory(User user, Category category) {
+        changeUser(user);
+        changeCategory(category);
+    }
+
     private void changeUser(User user) {
         this.user = user;
         user.getUserCategoryList().add(this);
+    }
+
+    public void changeCategory(Category category) {
+        this.category = category;
     }
 }
