@@ -29,32 +29,32 @@ public class AssetApiController {
     private final HttpSession session;
 
     // 자산 전체 조회
-    @GetMapping(value = "")
+    @GetMapping("")
     public List<AssetDto> getAssetList(@RequestParam String param) {
         String userId = session.getAttribute("userId").toString();
         return assetService.getAssetList(userId);
     }
 
     // 자산 상세 조회
-    @GetMapping
+    @GetMapping("{assetSeq}")
     public AssetDto getAssetDetail(@PathVariable("assetSeq") long assetSeq) {
         return assetService.getAsset(assetSeq);
     }
 
     // 자산 등록
-    @PostMapping(value = "path")
+    @PostMapping("")
     public void postMethodName(@RequestBody @Valid AssetRequest assetRequest) {
         assetService.registAsset(assetRequest);
     }
 
     // 자산 수정
-    @PutMapping
+    @PutMapping("{assetSeq}")
     public void updateAsset(@PathVariable("assetSeq") long assetSeq, @RequestBody @Valid AssetRequest assetRequest) {
         assetService.updateAseet(assetSeq, assetRequest);
     }
 
     // 자산 삭제
-    @DeleteMapping
+    @DeleteMapping("{assetSeq}")
     public void removeAsset(@PathVariable("assetSeq") long assetSeq) {
         assetService.removeAsset(assetSeq);
     }
