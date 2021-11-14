@@ -1,8 +1,8 @@
 package com.accountbook.api;
 
 import com.accountbook.dto.user.CategoryRequest;
-import com.accountbook.dto.user.UserCategoryDto;
-import com.accountbook.service.UserCategoryService;
+import com.accountbook.dto.user.CategoryDto;
+import com.accountbook.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,15 +13,15 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class UserCategoryApiController {
 
-    private final UserCategoryService categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping
-    public List<UserCategoryDto> getUserCategoryList() {
+    public List<CategoryDto> getUserCategoryList() {
         return null;
     }
 
     @GetMapping("/{userCategorySeq}")
-    public UserCategoryDto getUserCategory(@PathVariable("userCategorySeq") Long seq) {
+    public CategoryDto getUserCategory(@PathVariable("userCategorySeq") Long seq) {
         return null;
     }
 

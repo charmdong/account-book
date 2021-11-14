@@ -28,5 +28,5 @@ public class EcoEvent {
     private AssetType assetType;
 
     @OneToOne
-    private UserCategory category;
+    private Category category;
 }

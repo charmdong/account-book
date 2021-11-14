@@ -1,7 +1,5 @@
 package com.accountbook.domain.entity;
 
-import com.accountbook.domain.enums.EventType;
-import com.accountbook.dto.user.CategoryRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,26 +12,39 @@ public class Category {
 
     @Id
     @GeneratedValue
-    @Column(name = "CATEGORY_CODE")
-    private Long code;
+    @Column(name = "USER_CATEGORY_SEQ")
+    private Long seq;
 
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
-    @Enumerated(EnumType.STRING)
-    private EventType eventType;
-
-    private Boolean useYn;
-    private Boolean defaultYn;
+    @OneToOne
+    @JoinColumn(name = "CATEGORY_CODE")
+    private ComCategory comCategory;
 
     // 생성자 메서드
-    public static Category createCategory(CategoryRequest request) {
+    public static Category createUserCategory (User user, ComCategory comCategory) {
         Category category = new Category();
 
-        category.name = request.getName();
-        category.eventType = request.getEventType();
-        category.useYn = request.getUseYn();
-        category.defaultYn = false;
+        category.changeUser(user);
+        category.comCategory = comCategory;
 
         return category;
+    }
+
+    // 연관 관계 메서드
+    public void changeUserCategory(User user, ComCategory comCategory) {
+        changeUser(user);
+        changeCategory(comCategory);
+    }
+
+    private void changeUser(User user) {
+        this.user = user;
+        user.getCategoryList().add(this);
+    }
+
+    public void changeCategory(ComCategory comCategory) {
+        this.comCategory = comCategory;
     }
 }

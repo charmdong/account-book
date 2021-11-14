@@ -3,13 +3,10 @@ package com.accountbook.domain.entity;
 import com.accountbook.domain.enums.PeriodType;
 import com.accountbook.dto.Budget.BudgetRequest;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,7 +21,7 @@ public class Budget {
 
     @OneToOne
     @JoinColumn(name = "USER_CATEGORY_SEQ")
-    private UserCategory category;
+    private Category category;
 
     @Enumerated(EnumType.STRING)
     private PeriodType periodType;

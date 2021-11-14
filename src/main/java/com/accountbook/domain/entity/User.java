@@ -30,7 +30,7 @@ public class User {
     private final List<Asset> assetList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private final List<UserCategory> userCategoryList = new ArrayList<>();
+    private final List<Category> categoryList = new ArrayList<>();
 
     // 생성자 메서드
     public static User createUser(UserRequest request) {
