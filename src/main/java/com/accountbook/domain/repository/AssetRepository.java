@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.accountbook.domain.entity.Asset;
-import com.accountbook.domain.entity.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AssetRepository extends JpaRepository<User, Long> {
+public interface AssetRepository extends JpaRepository<Asset, Long> {
     
     // 자산 전체 조회
     List<Asset> findByUserId(String userId);
