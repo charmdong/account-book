@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/asset/")
+@RequestMapping("/api/asset")
 public class AssetApiController {
     private final AssetService assetService;
     private final HttpSession session;
@@ -36,7 +36,7 @@ public class AssetApiController {
     }
 
     // 자산 상세 조회
-    @GetMapping("{assetSeq}")
+    @GetMapping("/{assetSeq}")
     public AssetDto getAssetDetail(@PathVariable("assetSeq") long assetSeq) {
         return assetService.getAsset(assetSeq);
     }
@@ -48,13 +48,13 @@ public class AssetApiController {
     }
 
     // 자산 수정
-    @PutMapping("{assetSeq}")
+    @PutMapping("/{assetSeq}")
     public void updateAsset(@PathVariable("assetSeq") long assetSeq, @RequestBody @Valid AssetRequest assetRequest) {
         assetService.updateAseet(assetSeq, assetRequest);
     }
 
     // 자산 삭제
-    @DeleteMapping("{assetSeq}")
+    @DeleteMapping("/{assetSeq}")
     public void removeAsset(@PathVariable("assetSeq") long assetSeq) {
         assetService.removeAsset(assetSeq);
     }
