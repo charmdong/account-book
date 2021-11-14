@@ -13,16 +13,12 @@ import javax.validation.constraints.NotEmpty;
 public class BudgetDto {
     private Long seq;
 
-    @NotEmpty
     private UserCategory category;
 
-    @NotEmpty
     private PeriodType periodType;
 
-    @NotEmpty
     private Long amount;
 
-    @NotEmpty
     private User user;
 
     public BudgetDto(Long seq, UserCategory category, PeriodType periodType, Long amount, User user) {
