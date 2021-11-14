@@ -38,20 +38,23 @@ public class UserCategoryService {
     }
 
     public void addUserCategory(CategoryRequest request) {
-        Category findCategory = getCategory(request);
+        // 1. category 공통 코드
+        Category category = getCategory(request);
 
-        // 3. UserCategory 등록
+        // 2. UserCategory 등록
         User user = userRepository.findById(request.getUserId()).get();
-        UserCategory userCategory = UserCategory.createUserCategory(user, findCategory);
+        UserCategory userCategory = UserCategory.createUserCategory(user, category);
         userCategoryRepository.addUserCategory(userCategory);
     }
 
     public void updateUserCategory(Long seq, CategoryRequest request) {
         UserCategory userCategory = userCategoryRepository.getCategory(seq);
-        Category findCategory = getCategory(request);
 
-        // 3. Dirty Checking
-        userCategory.changeCategory(findCategory);
+        // 1. category 공통 코드
+        Category category = getCategory(request);
+
+        // 2. Dirty Checking
+        userCategory.changeCategory(category);
     }
 
     public void deleteUserCategory(Long seq) {
@@ -59,16 +62,23 @@ public class UserCategoryService {
         userCategoryRepository.deleteUserCategory(userCategory);
     }
 
+    /**
+     * Category 공통 코드 엔티티 조회 및 반환
+     * 존재하지 않는 경우, 새로 등록 후 반환
+     * 존재하는 경우, 조회 후 반환
+     * @param request
+     * @return
+     */
     private Category getCategory(CategoryRequest request) {
         // 1. Category entity 존재하는 지 확인
-        Category findCategory = categoryRepository.findByNameAndEventType(request.getName(), request.getEventType());
+        Category category = categoryRepository.findByNameAndEventType(request.getName(), request.getEventType());
 
         // 2. Category entity 존재하지 않는 경우, Category 생성 후 UserCategory 등록
-        if (findCategory == null) {
-            findCategory = Category.createCategory(request);
-            categoryRepository.save(findCategory);
+        if (category == null) {
+            category = Category.createCategory(request);
+            categoryRepository.save(category);
         }
 
-        return findCategory;
+        return category;
     }
 }
