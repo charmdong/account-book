@@ -9,10 +9,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 사용자 엔티티
+ */
 @Entity
 @Getter
 @NoArgsConstructor
-public class User {
+public class User extends BaseTimeInfo {
 
     @Id
     @Column(name = "USER_ID")
@@ -55,5 +58,9 @@ public class User {
         this.password = password;
     }
 
-    // 연관 관계 메서드 -> budget, asset, userCategory 쪽에서 구현하는 게 맞을 거 같다.
+    // 연관 관계 메서드
+    public void deleteCategory(Category category) {
+        // TODO 테스트 해봐야 함. 사용자 카테고리 삭제 user의 카테고리 리스트 출력
+        categoryList.remove(category);
+    }
 }

@@ -1,4 +1,4 @@
-package com.accountbook.domain.repository;
+package com.accountbook.domain.repository.category;
 
 import com.accountbook.domain.entity.ComCategory;
 import com.accountbook.domain.enums.EventType;

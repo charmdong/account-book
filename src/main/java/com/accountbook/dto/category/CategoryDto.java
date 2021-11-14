@@ -1,4 +1,4 @@
-package com.accountbook.dto.user;
+package com.accountbook.dto.category;
 
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.enums.EventType;
