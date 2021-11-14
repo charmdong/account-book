@@ -20,26 +20,25 @@ public class Asset {
     @Id
     @GeneratedValue
     @Column(name = "ASSET_SEQ")
-    protected Long seq;
+    private Long seq;
 
-    protected String name;
-    protected String memo;
-    protected Long balance;
+    private String name;
+    private String memo;
+    private Long balance;
 
     @Enumerated(EnumType.STRING)
-    protected AssetType assetType;
+    private AssetType assetType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
-    protected User user;
+    private User user;
 
-    protected Boolean initYn;
-    protected LocalDateTime initDate;
+    private Boolean initYn;
+    private LocalDateTime initDate;
 
     private LocalDateTime settlementDate;
     private LocalDateTime paymentDate;
     private Boolean autoYn;
-    private GeneralAsset paymentType;
 
     public void changeAsset(AssetRequest request) {
         this.name = request.getName();
@@ -51,7 +50,6 @@ public class Asset {
         this.settlementDate = request.getSettlementDate();
         this.paymentDate = request.getPaymentDate();
         this.autoYn = request.getAutoYn();
-        this.paymentType = request.getPaymentType();
     }
 
     public static Asset createAsset(AssetRequest assetRequest) {
@@ -67,7 +65,6 @@ public class Asset {
         asset.settlementDate = assetRequest.getSettlementDate();
         asset.paymentDate = assetRequest.getPaymentDate();
         asset.autoYn = assetRequest.getAutoYn();
-        asset.paymentType = assetRequest.getPaymentType();
 
         return asset;
     }

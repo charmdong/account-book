@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AssetService {
-    AssetRepository assetRepository;
+    private final AssetRepository assetRepository;
 
     // 자산 전체 조회
     public List<AssetDto> getAssetList(String userId) {

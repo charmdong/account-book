@@ -1,6 +1,5 @@
 package com.accountbook.dto;
 
-import com.accountbook.domain.entity.GeneralAsset;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
 import lombok.AccessLevel;
@@ -25,5 +24,4 @@ public class AssetRequest {
     private LocalDateTime settlementDate;
     private LocalDateTime paymentDate;
     private Boolean autoYn;
-    private GeneralAsset paymentType;
 }

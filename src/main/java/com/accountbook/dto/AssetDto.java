@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.accountbook.domain.entity.Asset;
-import com.accountbook.domain.entity.GeneralAsset;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
 
@@ -26,7 +25,6 @@ public class AssetDto {
     private LocalDateTime settlementDate;
     private LocalDateTime paymentDate;
     private Boolean autoYn;
-    private GeneralAsset paymentType;
 
     public AssetDto(Asset asset) {
         this.seq = asset.getSeq();
@@ -40,7 +38,6 @@ public class AssetDto {
         this.settlementDate = asset.getSettlementDate();
         this.paymentDate = asset.getPaymentDate();
         this.autoYn = asset.getAutoYn();
-        this.paymentType = asset.getPaymentType();
     }
 
     public static List<AssetDto> convertAssetList(List<Asset> asset) {
