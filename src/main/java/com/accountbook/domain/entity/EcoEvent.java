@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class EconomyEvent {
+public class EcoEvent {
 
     @Id
     @GeneratedValue
