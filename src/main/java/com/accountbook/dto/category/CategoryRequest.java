@@ -21,13 +21,13 @@ public class CategoryRequest {
     @NotEmpty
     private String userId;
 
-    @NotEmpty
+    @NotEmpty(message = "카테고리명 누락")
     private String name;
 
-    @NotEmpty
+    @NotEmpty(message = "자산타입 누락")
     private EventType eventType;
 
-    @NotEmpty
+    @NotEmpty(message = "사용여부 누락")
     private Boolean useYn;
 
 }

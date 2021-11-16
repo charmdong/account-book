@@ -4,11 +4,17 @@ import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.dto.category.CategoryDto;
 import com.accountbook.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CategoryApiController
@@ -81,5 +87,19 @@ public class CategoryApiController {
     public void deleteUserCategory(@PathVariable("userCategory") Long seq) {
 
         categoryService.deleteUserCategory(seq);
+    }
+
+    /**
+     * @Valid Exception Handler
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler
+    public ResponseEntity validExceptionHandler(MethodArgumentNotValidException e) {
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("message", e.getBindingResult().getFieldError().getDefaultMessage());
+
+        return new ResponseEntity(resultMap, HttpStatus.BAD_REQUEST);
     }
 }
