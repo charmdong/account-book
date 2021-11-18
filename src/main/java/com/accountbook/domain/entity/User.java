@@ -3,6 +3,9 @@ package com.accountbook.domain.entity;
 import com.accountbook.dto.user.UserRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,7 +17,9 @@ import java.util.List;
  */
 @Entity
 @Getter
+@ToString(of = {"id", "password", "name", "email", "birthDate"})
 @NoArgsConstructor
+@DynamicUpdate
 public class User extends BaseTimeInfo {
 
     @Id
@@ -50,8 +55,14 @@ public class User extends BaseTimeInfo {
 
     // 비즈니스 로직 메서드
     public void changeUser(UserRequest request) {
-        this.name = request.getName();
-        this.email = request.getEmail();
+
+        if(StringUtils.hasText(request.getName())) {
+            this.name = request.getName();
+        }
+
+        if(StringUtils.hasText(request.getEmail())) {
+            this.email = request.getEmail();
+        }
     }
 
     public void changePassword(String password) {

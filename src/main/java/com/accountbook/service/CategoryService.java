@@ -39,7 +39,9 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryDto> getUserCategoryList(String userId) {
 
-        List<Category> categoryList = categoryRepository.getUserCategoryList(userId);
+        User user = userRepository.findById(userId).get();
+
+        List<Category> categoryList = categoryRepository.getUserCategoryList(user);
         List<CategoryDto> result = new ArrayList<>();
 
         for (Category category: categoryList) {

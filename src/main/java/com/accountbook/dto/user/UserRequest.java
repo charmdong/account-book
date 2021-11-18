@@ -25,8 +25,7 @@ public class UserRequest {
     @NotEmpty(message = "이름 누락")
     private String name;
 
-    @NotEmpty
-    @Email(message = "이메일 누락")
+    @NotEmpty(message = "이메일 누락")
     private String email;
     private LocalDateTime birthDate;
 }

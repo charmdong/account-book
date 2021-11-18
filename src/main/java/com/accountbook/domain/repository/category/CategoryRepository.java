@@ -1,6 +1,7 @@
 package com.accountbook.domain.repository.category;
 
 import com.accountbook.domain.entity.Category;
+import com.accountbook.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,13 +23,13 @@ public class CategoryRepository {
     /**
      * 사용자 카테고리 목록 조회
      *
-     * @param userId
+     * @param user
      * @return 사용자 카테고리 목록
      */
-    public List<Category> getUserCategoryList (String userId) {
+    public List<Category> getUserCategoryList (User user) {
         return em.createQuery(
-                "select c from Category c where c.user =: userId", Category.class)
-                .setParameter("userId", userId)
+                "select c from Category c where c.user =: user", Category.class)
+                .setParameter("user", user)
                 .getResultList();
     }
 
