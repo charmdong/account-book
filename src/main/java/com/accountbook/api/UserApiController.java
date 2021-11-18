@@ -4,9 +4,14 @@ import com.accountbook.dto.user.UserRequest;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 사용자 API Controller
@@ -80,5 +85,19 @@ public class UserApiController {
     public String findUserPassword(@RequestBody UserRequest request) {
         // TODO 사용자 패스워드를 반환하면 안됨. 이메일로 쏘든지 해야함.
         return userService.findPassword(request);
+    }
+
+    /**
+     * @Valid Exception Handler
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler
+    public ResponseEntity validExceptionHandler(MethodArgumentNotValidException e) {
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("message", e.getBindingResult().getFieldError().getDefaultMessage());
+
+        return new ResponseEntity(resultMap, HttpStatus.BAD_REQUEST);
     }
 }
