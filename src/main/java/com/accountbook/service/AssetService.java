@@ -19,12 +19,11 @@ public class AssetService {
     private final AssetRepository assetRepository;
 
     // 자산 전체 조회
-    // public List<AssetDto> getAssetList(String userId) {
-    //     List<AssetDto> ret = AssetDto.convertAssetList(assetRepository.findByUserId(userId));
+    public List<AssetDto> getAssetList(String userId) {
+        List<AssetDto> ret = AssetDto.convertAssetList(assetRepository.findByUserId(userId));
 
-    //     return ret;
-    // }
-
+        return ret;
+    }
     // 자산 상세 조회
     public AssetDto getAsset(long assetSeq) {
         AssetDto ret = new AssetDto(assetRepository.findById(assetSeq).orElseThrow());

@@ -1,6 +1,7 @@
 package com.accountbook.domain.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,9 +20,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootTest
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
+@Slf4j
 public class AssetRepositoryTest {
 
     @Autowired
@@ -30,9 +34,7 @@ public class AssetRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    @PersistenceContext
-    EntityManager em;
-
+    // asset 등록
     @Test
     @Rollback(value = false)
     public void registAsset() {
@@ -41,10 +43,40 @@ public class AssetRepositoryTest {
         User user = User.createUser(userRequest);
         // userRepository.save(user);
 
-        AssetRequest assetRequest = new AssetRequest("월급", "test", 20000L, AssetType.BANK, user, true, localDateTime, localDateTime, localDateTime, true);
+        AssetRequest assetRequest = new AssetRequest("월급", "test", 20000L, AssetType.BANK, user, true, localDateTime,
+                localDateTime, localDateTime, true);
         Asset asset = Asset.createAsset(assetRequest);
 
         assetRepository.save(asset);
-        System.out.println("@@@@@@@@@@@@@ : " + asset.toString());
+        log.info("Add asset : " + asset.toString());
+    }
+
+    // assetlist 조회
+    @Test
+    public void getAssetList() {
+        String userId = "test";
+        List<Asset> assetList = assetRepository.findByUserId(userId);
+
+        for (Asset asset : assetList) {
+            log.info("Get asset list : " + asset.toString());
+        }
+    }
+
+    // asset 상세 조회
+    @Test
+    public void getDetailAsset() {
+        long assetSeq = 13;
+        Asset asset = assetRepository.findById(assetSeq).orElseThrow();
+
+        log.info("Get detail asset : " + asset.toString());
+    }
+
+    // asset 삭제
+    @Test
+    public void deleteAsset(){
+        long assetSeq = 13;
+        assetRepository.deleteById(assetSeq);
+
+        log.info("seq : {} asset have been deleted.",assetSeq);
     }
 }
