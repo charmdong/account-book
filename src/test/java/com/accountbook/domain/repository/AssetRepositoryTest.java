@@ -43,8 +43,7 @@ public class AssetRepositoryTest {
         User user = User.createUser(userRequest);
         // userRepository.save(user);
 
-        AssetRequest assetRequest = new AssetRequest("월급", "test", 20000L, AssetType.BANK, user, true, localDateTime,
-                localDateTime, localDateTime, true);
+        AssetRequest assetRequest = new AssetRequest("월급", "test", 20000L, AssetType.BANK, user, true, localDateTime, localDateTime, localDateTime, true);
         Asset asset = Asset.createAsset(assetRequest);
 
         assetRepository.save(asset);
