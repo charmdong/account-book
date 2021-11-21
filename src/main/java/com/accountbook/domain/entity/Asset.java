@@ -1,17 +1,29 @@
 package com.accountbook.domain.entity;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import com.accountbook.domain.enums.AssetType;
 import com.accountbook.dto.AssetRequest;
-import com.nimbusds.oauth2.sdk.Request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import lombok.ToString;
 
 @Entity
 @Getter
+@ToString
 @Inheritance
 @DiscriminatorColumn
 @NoArgsConstructor
