@@ -1,4 +1,4 @@
-package com.accountbook.domain.repository;
+package com.accountbook.domain.repository.user;
 
 import com.accountbook.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * 사용자 Repo
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 

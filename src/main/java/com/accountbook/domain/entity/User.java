@@ -3,16 +3,24 @@ package com.accountbook.domain.entity;
 import com.accountbook.dto.user.UserRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 사용자 엔티티
+ */
 @Entity
 @Getter
+@ToString(of = {"id", "password", "name", "email", "birthDate"})
 @NoArgsConstructor
-public class User {
+@DynamicUpdate
+public class User extends BaseTimeInfo {
 
     @Id
     @Column(name = "USER_ID")
@@ -47,13 +55,23 @@ public class User {
 
     // 비즈니스 로직 메서드
     public void changeUser(UserRequest request) {
-        this.name = request.getName();
-        this.email = request.getEmail();
+
+        if(StringUtils.hasText(request.getName())) {
+            this.name = request.getName();
+        }
+
+        if(StringUtils.hasText(request.getEmail())) {
+            this.email = request.getEmail();
+        }
     }
 
     public void changePassword(String password) {
         this.password = password;
     }
 
-    // 연관 관계 메서드 -> budget, asset, userCategory 쪽에서 구현하는 게 맞을 거 같다.
+    // 연관 관계 메서드
+    public void deleteCategory(Category category) {
+        // TODO 테스트 해봐야 함. 사용자 카테고리 삭제 user의 카테고리 리스트 출력
+        categoryList.remove(category);
+    }
 }

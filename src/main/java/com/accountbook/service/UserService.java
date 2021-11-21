@@ -1,7 +1,7 @@
 package com.accountbook.service;
 
 import com.accountbook.domain.entity.User;
-import com.accountbook.domain.repository.UserRepository;
+import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * 사용자 Service
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,6 +35,7 @@ public class UserService {
      * @param userId
      * @return
      */
+    @Transactional(readOnly = true)
     public UserDto getUser(String userId) {
 
         Optional<User> user = userRepository.findById(userId);
@@ -49,7 +53,7 @@ public class UserService {
     }
 
     /**
-     * 사용자 정보 삭제
+     * 사용자 탈퇴
      * @param userId
      */
     public void deleteUser(String userId) {
@@ -62,6 +66,7 @@ public class UserService {
      * @param request
      * @return
      */
+    @Transactional(readOnly = true)
     public String findUserId(UserRequest request) {
 
         User user = userRepository.findById(request.getId()).get();
@@ -73,6 +78,7 @@ public class UserService {
      * @param request
      * @return
      */
+    @Transactional(readOnly = true)
     public String findPassword(UserRequest request) {
 
         User user = userRepository.findById(request.getId()).get();

@@ -1,14 +1,21 @@
 package com.accountbook.domain.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * Category
+ *
+ * @author donggun
+ * @since 2021/11/15
+ */
 @Entity
 @Getter
-@NoArgsConstructor
-public class Category {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Category extends BaseTimeInfo {
 
     @Id
     @GeneratedValue
@@ -24,27 +31,17 @@ public class Category {
     private ComCategory comCategory;
 
     // 생성자 메서드
-    public static Category createUserCategory (User user, ComCategory comCategory) {
+    public static Category createCategory (User user, ComCategory comCategory) {
         Category category = new Category();
 
-        category.changeUser(user);
+        category.user = user;
         category.comCategory = comCategory;
 
         return category;
     }
 
     // 연관 관계 메서드
-    public void changeUserCategory(User user, ComCategory comCategory) {
-        changeUser(user);
-        changeCategory(comCategory);
-    }
-
-    private void changeUser(User user) {
-        this.user = user;
-        user.getCategoryList().add(this);
-    }
-
-    public void changeCategory(ComCategory comCategory) {
+    public void changeComCategory(ComCategory comCategory) {
         this.comCategory = comCategory;
     }
 }
