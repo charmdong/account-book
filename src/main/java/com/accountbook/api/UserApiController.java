@@ -50,7 +50,7 @@ public class UserApiController {
      * @param request
      */
     @PutMapping("/{userId}")
-    public void updateUser(@PathVariable("userId") String userId, @RequestBody @Valid UserRequest request) {
+    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest request) {
 
         userService.updateUser(userId, request);
     }
