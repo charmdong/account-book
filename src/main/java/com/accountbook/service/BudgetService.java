@@ -26,8 +26,14 @@ public class BudgetService {
 
     //예산 상세 조회
     @Transactional(readOnly = true)
-    public BudgetDto getOneBudget(Long budgetId){
-        return new BudgetDto(budgetRepository.findById(budgetId));
+    public BudgetDto getOneBudget(Long budgetSeq){
+        return new BudgetDto(budgetRepository.findBySeq(budgetSeq));
+    }
+
+    //예산 조회 by User
+    @Transactional(readOnly = true)
+    public List<BudgetDto> getBudgetByUser(String userId){
+        return budgetRepository.findByUser(userId).stream().map(BudgetDto::new).collect(Collectors.toList());
     }
 
     //예산 등록
@@ -38,7 +44,7 @@ public class BudgetService {
 
     //예산 수정
     public void updateBudget(BudgetRequest budgetRequest, Long budgetSeq){
-        Budget budget = budgetRepository.findById(budgetSeq);
+        Budget budget = budgetRepository.findBySeq(budgetSeq);
         if(budget == null){
             throw new IllegalStateException();
         }
@@ -47,8 +53,8 @@ public class BudgetService {
     }
 
     //예산 삭제
-    public void deleteBudget(Long budgetId){
-        Budget budget = budgetRepository.findById(budgetId);
+    public void deleteBudget(Long budgetSeq){
+        Budget budget = budgetRepository.findBySeq(budgetSeq);
         if(budget == null){
             throw new IllegalStateException();
         }

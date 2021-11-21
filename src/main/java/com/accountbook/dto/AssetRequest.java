@@ -1,17 +1,17 @@
 package com.accountbook.dto;
 
+import java.time.LocalDateTime;
+
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
-import lombok.AccessLevel;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class AssetRequest {
 
     private String name;
