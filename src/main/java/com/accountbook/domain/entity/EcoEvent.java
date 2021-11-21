@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class EcoEvent {
+public class EcoEvent extends BaseInfo{
 
     @Id
     @GeneratedValue
-    @Column(name = "EVENT_SEQ")
+    @Column(name = "ECO_EVENT_SEQ")
     private Long seq;
 
     @Enumerated(EnumType.STRING)
@@ -29,7 +29,7 @@ public class EcoEvent {
     private AssetType assetType;
 
     @OneToOne
-    @Column(name = "CATEGORY_SEQ")
+    @JoinColumn(name = "CATEGORY_SEQ")
     private Category category;
 
     //생성 메소드
