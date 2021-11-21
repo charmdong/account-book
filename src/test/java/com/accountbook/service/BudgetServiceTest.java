@@ -91,13 +91,15 @@ class BudgetServiceTest {
     }
 
     private Category getCategory() {
-        Category categoryRequest = new Category();
 
-        categoryRequest.setUserId("rlfehd1");
-        categoryRequest.setName("chicken");
-        categoryRequest.setEventType(EventType.EXPENDITURE);
-        categoryRequest.setUseYn(true);
-
-        return Category.createCategory(categoryRequest);
+//        Category categoryRequest = Category.createCategory();
+//
+//        categoryRequest.setUserId("rlfehd1");
+//        categoryRequest.setName("chicken");
+//        categoryRequest.setEventType(EventType.EXPENDITURE);
+//        categoryRequest.setUseYn(true);
+//
+//        return Category.createCategory(categoryRequest);
+        return null;
     }
 }

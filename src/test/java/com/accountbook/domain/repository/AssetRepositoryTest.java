@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import com.accountbook.domain.entity.Asset;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
+import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.AssetRequest;
 import com.accountbook.dto.user.UserRequest;
 
