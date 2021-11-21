@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 public class BudgetRequest {
 
     @NotEmpty
-    private Category category;
+    private Long categorySeq;
 
     @NotEmpty
     private PeriodType periodType;
@@ -19,13 +19,13 @@ public class BudgetRequest {
     private Long amount;
 
     @NotEmpty
-    private User user;
+    private String userId;
 
 
-    public BudgetRequest(Category category, PeriodType periodType, Long amount, User user) {
-        this.category = category;
+    public BudgetRequest(Long categorySeq, PeriodType periodType, Long amount, String userId) {
+        this.categorySeq = categorySeq;
         this.periodType = periodType;
         this.amount = amount;
-        this.user = user;
+        this.userId = userId;
     }
 }
