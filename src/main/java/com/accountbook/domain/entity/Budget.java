@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "budget")
-public class Budget {
+public class Budget extends BaseInfo{
 
     @Id
     @GeneratedValue
