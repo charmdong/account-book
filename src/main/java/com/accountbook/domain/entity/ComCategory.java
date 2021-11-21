@@ -1,7 +1,7 @@
 package com.accountbook.domain.entity;
 
 import com.accountbook.domain.enums.EventType;
-import com.accountbook.dto.user.CategoryRequest;
+import com.accountbook.dto.category.CategoryRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class ComCategory {
+public class ComCategory extends BaseInfo {
 
     @Id
     @GeneratedValue
