@@ -29,11 +29,11 @@ public class AssetApiController {
     private final HttpSession session;
 
     // 자산 전체 조회
-    // @GetMapping("")
-    // public List<AssetDto> getAssetList(@RequestParam String param) {
-    //     String userId = session.getAttribute("userId").toString();
-    //     return assetService.getAssetList(userId);
-    // }
+    @GetMapping("")
+    public List<AssetDto> getAssetList(@RequestParam String param) {
+        String userId = session.getAttribute("userId").toString();
+        return assetService.getAssetList(userId);
+    }
 
     // 자산 상세 조회
     @GetMapping("/{assetSeq}")
