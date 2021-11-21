@@ -128,10 +128,8 @@ class AccountBookApplicationTests {
 		request.setEmail("chungdk1993@naver.com");
 		request.setBirthDate(Year.of(1993).atMonth(11).atDay(17).atTime(14,59));
 
-		// when
 		userService.addUser(request);
 
-	    // given
 	    CategoryRequest categoryRequest = new CategoryRequest();
 
 		categoryRequest.setUserId("test1");
@@ -141,7 +139,11 @@ class AccountBookApplicationTests {
 
 	    // when
 		categoryService.addUserCategory(categoryRequest);
+		List<CategoryDto> result = categoryService.getUserCategoryList("test1");
+		CategoryDto categoryDto = result.get(0);
 
+		categoryRequest.setName("pizza");
+		categoryService.updateUserCategory(categoryDto.getSeq(), categoryRequest);
 		// then
 	}
 
