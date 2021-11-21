@@ -29,14 +29,14 @@ public class EcoEvent {
     private AssetType assetType;
 
     @OneToOne
-    //@Column(name = "CATEGORY_SEQ")
+    @Column(name = "CATEGORY_SEQ")
     private Category category;
 
     //생성 메소드
     public static EcoEvent createEcoEvent(EcoEventRequest ecoEventRequest){
         EcoEvent ecoEvent = new EcoEvent();
         ecoEvent.eventType = ecoEventRequest.getEventType();
-        ecoEvent.useDate = LocalDateTime.now();
+        ecoEvent.useDate = ecoEventRequest.getUseDate();
         ecoEvent.amount = ecoEventRequest.getAmount();
         ecoEvent.assetType = ecoEventRequest.getAssetType();
         ecoEvent.category = ecoEventRequest.getCategory();

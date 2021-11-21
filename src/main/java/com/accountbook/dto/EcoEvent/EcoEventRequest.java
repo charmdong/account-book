@@ -25,8 +25,9 @@ public class EcoEventRequest {
     @NotEmpty
     private Category category;
 
-    public EcoEventRequest(EventType eventType, Long amount, AssetType assetType, Category category) {
+    public EcoEventRequest(EventType eventType, LocalDateTime useDate,Long amount, AssetType assetType, Category category) {
         this.eventType = eventType;
+        this.useDate = useDate;
         this.amount = amount;
         this.assetType = assetType;
         this.category = category;

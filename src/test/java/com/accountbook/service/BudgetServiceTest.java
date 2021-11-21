@@ -98,7 +98,6 @@ class BudgetServiceTest {
         categoryRequest.setEventType(EventType.EXPENDITURE);
         categoryRequest.setUseYn(true);
 
-        //categoryService.addUserCategory(categoryRequest);
-        return Category.createUserCategory(categoryRequest);
+        return Category.createCategory(categoryRequest);
     }
 }
