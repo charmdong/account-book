@@ -112,14 +112,11 @@ public class CategoryService {
      */
     public Long deleteCategory(Long seq) {
 
-        // 1. 사용자 category 조회
-        Category category = categoryRepository.getCategory(seq);
+        // 1. 사용자 category 제거
+        categoryRepository.deleteCategory(seq);
 
-        // 2. 사용자 category 제거
-        categoryRepository.deleteCategory(category);
-
-        // 3. 제거된 카테고리 seq 반환
-        return category.getSeq();
+        // 2. 제거된 카테고리 seq 반환 TODO 제거됐는 지 어떻게 아는데?
+        return seq;
     }
 
     /**

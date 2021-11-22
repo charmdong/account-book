@@ -58,10 +58,10 @@ public class CategoryRepository {
     /**
      * 사용자 카테고리 삭제
      *
-     * @param category
+     * @param seq
      */
-    public void deleteCategory (Category category) {
+    public void deleteCategory (Long seq) {
 
-        em.remove(category);
+        em.remove(getCategory(seq));
     }
 }
