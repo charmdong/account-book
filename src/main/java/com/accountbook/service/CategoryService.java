@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * CategoryService
@@ -41,12 +43,12 @@ public class CategoryService {
 
         User user = userRepository.findById(userId).get();
 
-        List<Category> categoryList = categoryRepository.getUserCategoryList(user);
-        List<CategoryDto> result = new ArrayList<>();
-
-        for (Category category: categoryList) {
-            result.add(new CategoryDto(category));
-        }
+        List<CategoryDto> result = categoryRepository
+                .getCategoryListByUser(user)
+                .orElseGet(ArrayList::new)
+                .stream()
+                .map(CategoryDto::new)
+                .collect(Collectors.toList());
 
         return result;
     }
@@ -114,14 +116,11 @@ public class CategoryService {
      */
     @Transactional(readOnly = true)
     private ComCategory getComCategory(CategoryRequest request) {
-        // 1. Category entity 존재하는 지 확인
-        ComCategory comCategory = comCategoryRepository.findByNameAndEventType(request.getName(), request.getEventType());
 
-        // 2. Category entity 존재하지 않는 경우, Category 생성 후 UserCategory 등록
-        if (comCategory == null) {
-            comCategory = ComCategory.createCategory(request);
-            comCategoryRepository.save(comCategory);
-        }
+        ComCategory comCategory = comCategoryRepository
+                                    .findByNameAndEventType(request.getName(), request.getEventType())
+                                    .orElseGet(() -> ComCategory.createCategory(request));
+        comCategoryRepository.save(comCategory);
 
         return comCategory;
     }

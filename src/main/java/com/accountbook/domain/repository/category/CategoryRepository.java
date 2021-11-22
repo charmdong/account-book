@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * CategoryRepository
@@ -26,11 +27,11 @@ public class CategoryRepository {
      * @param user
      * @return 사용자 카테고리 목록
      */
-    public List<Category> getUserCategoryList (User user) {
-        return em.createQuery(
+    public Optional<List<Category>> getCategoryListByUser (User user) {
+        return Optional.ofNullable(em.createQuery(
                 "select c from Category c where c.user =: user", Category.class)
                 .setParameter("user", user)
-                .getResultList();
+                .getResultList());
     }
 
     /**
