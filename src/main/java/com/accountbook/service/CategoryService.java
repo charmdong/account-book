@@ -39,7 +39,7 @@ public class CategoryService {
      * @return 사용자 카테고리 목록
      */
     @Transactional(readOnly = true)
-    public List<CategoryDto> getUserCategoryList(String userId) {
+    public List<CategoryDto> getCategoryListByUser(String userId) {
 
         User user = userRepository.findById(userId).get();
 
@@ -60,7 +60,7 @@ public class CategoryService {
      * @return 사용자 카테고리 상세 정보
      */
     @Transactional(readOnly = true)
-    public CategoryDto getUserCategory(Long seq) {
+    public CategoryDto getCategory(Long seq) {
 
         return new CategoryDto(categoryRepository.getCategory(seq));
     }
@@ -70,14 +70,18 @@ public class CategoryService {
      *
      * @param request
      */
-    public void addUserCategory(CategoryRequest request) {
-        // 1. category 공통 코드
+    public Long addCategory(CategoryRequest request) {
+
+        // 1. category 공통 코드 조회
         ComCategory comCategory = getComCategory(request);
 
         // 2. UserCategory 등록
         User user = userRepository.findById(request.getUserId()).get();
         Category category = Category.createCategory(user, comCategory);
         categoryRepository.addCategory(category);
+
+        // 3. category seq 반환
+        return category.getSeq();
     }
 
     /**
@@ -86,14 +90,19 @@ public class CategoryService {
      * @param seq
      * @param request
      */
-    public void updateUserCategory(Long seq, CategoryRequest request) {
+    public Long updateCategory(Long seq, CategoryRequest request) {
+
+        // 1. 사용자 category 조회
         Category category = categoryRepository.getCategory(seq);
 
-        // 1. category 공통 코드
+        // 2. category 공통 코드 조회
         ComCategory comCategory = getComCategory(request);
 
-        // 2. Dirty Checking
+        // 3. Dirty Checking TODO 에러 여부를 어떻게 알 수 있는가?
         category.changeComCategory(comCategory);
+
+        // 4. category seq 반환
+        return category.getSeq();
     }
 
     /**
@@ -101,9 +110,16 @@ public class CategoryService {
      *
      * @param seq
      */
-    public void deleteUserCategory(Long seq) {
+    public Long deleteCategory(Long seq) {
+
+        // 1. 사용자 category 조회
         Category category = categoryRepository.getCategory(seq);
+
+        // 2. 사용자 category 제거
         categoryRepository.deleteCategory(category);
+
+        // 3. 제거된 카테고리 seq 반환
+        return category.getSeq();
     }
 
     /**
