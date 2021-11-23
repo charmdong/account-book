@@ -1,5 +1,6 @@
 package com.accountbook.api;
 
+import com.accountbook.dto.ApiResponse;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.service.UserService;
@@ -26,11 +27,15 @@ public class UserApiController {
     /**
      * 사용자 등록
      * @param request
+     * @return 추가된 사용자 정보
      */
     @PostMapping
-    public void addUser(@RequestBody @Valid UserRequest request) {
+    public ApiResponse addUser(@RequestBody @Valid UserRequest request) {
 
         userService.addUser(request);
+        UserDto createdUser = userService.getUser(request.getId());
+
+        return new ApiResponse(createdUser, HttpStatus.OK, "SUCCESS");
     }
 
     /**
@@ -39,30 +44,51 @@ public class UserApiController {
      * @return 사용자 정보
      */
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable("userId") String userId) {
+    public ApiResponse getUser(@PathVariable("userId") String userId) {
 
-        return userService.getUser(userId);
+        return new ApiResponse(userService.getUser(userId), HttpStatus.OK, "SUCCESS");
     }
 
     /**
      * 사용자 정보 수정
      * @param userId
      * @param request
+     * @return 수정된 사용자 정보
      */
     @PutMapping("/{userId}")
-    public void updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest request) {
+    public ApiResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest request) {
 
         userService.updateUser(userId, request);
+        UserDto updatedUser = userService.getUser(userId);
+
+        return new ApiResponse(updatedUser, HttpStatus.OK, "SUCCESS");
+    }
+
+    /**
+     * 사용자 패스워드 변경
+     * @param userId
+     * @param request
+     * @return
+     */
+    @PutMapping("/password/{userId}")
+    public ApiResponse changePassword(@PathVariable("userId") String userId, @RequestBody UserRequest request) {
+
+        userService.changePassword(userId, request.getPassword());
+        return new ApiResponse(true, HttpStatus.OK, "SUCCESS");
     }
 
     /**
      * 사용자 탈퇴
      * @param userId
+     * @return 삭제 여부
      */
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable("userId") String userId) {
+    public ApiResponse deleteUser(@PathVariable("userId") String userId) {
 
         userService.deleteUser(userId);
+
+        // TODO 삭제 여부 어떻게 확인? Service 단에서 삭제 됐는 지 확인 후 예외 던지기?
+        return new ApiResponse("", HttpStatus.OK, "SUCCESS");
     }
 
     /**
@@ -71,9 +97,9 @@ public class UserApiController {
      * @return 사용자 아이디
      */
     @PostMapping("/id")
-    public String findUserId(@RequestBody UserRequest request) {
+    public ApiResponse findUserId(@RequestBody UserRequest request) {
 
-        return userService.findUserId(request);
+        return new ApiResponse(userService.findUserId(request), HttpStatus.OK, "SUCCESS");
     }
 
     /**
@@ -82,22 +108,20 @@ public class UserApiController {
      * @return 사용자 패스워드
      */
     @PostMapping("/password")
-    public String findUserPassword(@RequestBody UserRequest request) {
+    public ApiResponse findUserPassword(@RequestBody UserRequest request) {
         // TODO 사용자 패스워드를 반환하면 안됨. 이메일로 쏘든지 해야함.
-        return userService.findPassword(request);
+        return new ApiResponse(userService.findPassword(request), HttpStatus.OK, "SUCCESS");
     }
 
     /**
      * @Valid Exception Handler
      *
      * @param e
-     * @return
+     * @return 예외 정보
      */
     @ExceptionHandler
-    public ResponseEntity validExceptionHandler(MethodArgumentNotValidException e) {
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("message", e.getBindingResult().getFieldError().getDefaultMessage());
+    public ApiResponse validExceptionHandler(MethodArgumentNotValidException e) {
 
-        return new ResponseEntity(resultMap, HttpStatus.BAD_REQUEST);
+        return new ApiResponse(e, HttpStatus.BAD_REQUEST, e.getBindingResult().getFieldError().getDefaultMessage());
     }
 }

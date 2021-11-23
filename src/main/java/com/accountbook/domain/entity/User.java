@@ -42,6 +42,7 @@ public class User extends BaseTimeInfo {
 
     // 생성자 메서드
     public static User createUser(UserRequest request) {
+
         User user = new User();
 
         user.id = request.getId();
@@ -66,6 +67,7 @@ public class User extends BaseTimeInfo {
     }
 
     public void changePassword(String password) {
+
         this.password = password;
     }
 

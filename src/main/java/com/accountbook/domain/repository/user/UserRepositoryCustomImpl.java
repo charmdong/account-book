@@ -12,6 +12,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @Override
     public void addUser(User user) {
+
         em.persist(user);
     }
 }
