@@ -43,8 +43,8 @@ public class CategoryApiController {
      * @param seq
      * @return 사용자 카테고리 상세 정보
      */
-    @GetMapping("/{userCategorySeq}")
-    public ApiResponse getCategory(@PathVariable("userCategorySeq") Long seq) {
+    @GetMapping("/{categorySeq}")
+    public ApiResponse getCategory(@PathVariable("categorySeq") Long seq) {
 
         return new ApiResponse(categoryService.getCategory(seq), HttpStatus.OK, "SUCCESS");
     }
@@ -66,8 +66,8 @@ public class CategoryApiController {
      * @param seq
      * @param request
      */
-    @PatchMapping("/{userCategorySeq}")
-    public ApiResponse updateCategory(@PathVariable("userCategorySeq") Long seq,
+    @PatchMapping("/{categorySeq}")
+    public ApiResponse updateCategory(@PathVariable("categorySeq") Long seq,
                                    @RequestBody @Valid CategoryRequest request) {
 
         return new ApiResponse(categoryService.updateCategory(seq, request), HttpStatus.OK, "SUCCESS");
@@ -78,8 +78,8 @@ public class CategoryApiController {
      *
      * @param seq
      */
-    @DeleteMapping("/{userCategorySeq}")
-    public ApiResponse deleteCategory(@PathVariable("userCategory") Long seq) {
+    @DeleteMapping("/{categorySeq}")
+    public ApiResponse deleteCategory(@PathVariable("categorySeq") Long seq) {
 
         return new ApiResponse(categoryService.deleteCategory(seq), HttpStatus.OK, "SUCCESS");
     }
