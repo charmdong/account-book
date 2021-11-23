@@ -113,15 +113,4 @@ public class UserApiController {
         return new ApiResponse(userService.findPassword(request), HttpStatus.OK, "SUCCESS");
     }
 
-    /**
-     * @Valid Exception Handler
-     *
-     * @param e
-     * @return 예외 정보
-     */
-    @ExceptionHandler
-    public ApiResponse validExceptionHandler(MethodArgumentNotValidException e) {
-
-        return new ApiResponse(e, HttpStatus.BAD_REQUEST, e.getBindingResult().getFieldError().getDefaultMessage());
-    }
 }

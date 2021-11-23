@@ -84,15 +84,4 @@ public class CategoryApiController {
         return new ApiResponse(categoryService.deleteCategory(seq), HttpStatus.OK, "SUCCESS");
     }
 
-    /**
-     * @Valid Exception Handler
-     *
-     * @param e
-     * @return
-     */
-    @ExceptionHandler
-    public ApiResponse validExceptionHandler(MethodArgumentNotValidException e) {
-
-        return new ApiResponse(e, HttpStatus.BAD_REQUEST, e.getBindingResult().getFieldError().getDefaultMessage());
-    }
 }
