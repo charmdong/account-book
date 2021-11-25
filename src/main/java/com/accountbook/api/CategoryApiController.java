@@ -79,9 +79,10 @@ public class CategoryApiController {
      * @param seq
      */
     @DeleteMapping("/{categorySeq}")
-    public ApiResponse deleteCategory(@PathVariable("categorySeq") Long seq) {
+    public ApiResponse deleteCategory(@PathVariable("categorySeq") Long seq, HttpSession session) {
 
-        return new ApiResponse(categoryService.deleteCategory(seq), HttpStatus.OK, "SUCCESS");
+        String userId = String.valueOf(session.getAttribute("userId"));
+        return new ApiResponse(categoryService.deleteCategory(seq, userId), HttpStatus.OK, "SUCCESS");
     }
 
 }

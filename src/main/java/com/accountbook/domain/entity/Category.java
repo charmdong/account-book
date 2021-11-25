@@ -3,6 +3,7 @@ package com.accountbook.domain.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
  */
 @Entity
 @Getter
+@ToString(of = {"seq", "comCategory"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category extends BaseTimeInfo {
 
@@ -34,14 +36,26 @@ public class Category extends BaseTimeInfo {
     public static Category createCategory (User user, ComCategory comCategory) {
         Category category = new Category();
 
-        category.user = user;
-        category.comCategory = comCategory;
+        category.changeUser(user);
+        category.changeComCategory(comCategory);
 
         return category;
     }
 
     // 연관 관계 메서드
     public void changeComCategory(ComCategory comCategory) {
+
         this.comCategory = comCategory;
+    }
+
+    public void changeUser(User user) {
+
+        this.user = user;
+        user.getCategoryList().add(this);
+    }
+
+    public void updateUserCategoryList(User user) {
+
+        user.getCategoryList().remove(this);
     }
 }

@@ -110,13 +110,16 @@ public class CategoryService {
      *
      * @param seq
      */
-    public Long deleteCategory(Long seq) {
+    public Boolean deleteCategory(Long seq, String userId) {
 
-        // 1. 사용자 category 제거
+        User user = userRepository.findById(userId).get();
+
+        Category category = categoryRepository.getCategory(seq);
+        category.updateUserCategoryList(user);
+
         categoryRepository.deleteCategory(seq);
 
-        // 2. 제거된 카테고리 seq 반환 TODO 제거됐는 지 어떻게 아는데?
-        return seq;
+        return category.getSeq() == null;
     }
 
     /**

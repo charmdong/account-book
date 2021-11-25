@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Getter
-@ToString(of = {"id", "password", "name", "email", "birthDate"})
+@ToString(of = {"id", "password", "name", "email", "birthDate", "categoryList"})
 @NoArgsConstructor
 @DynamicUpdate
 public class User extends BaseTimeInfo {
@@ -71,9 +71,4 @@ public class User extends BaseTimeInfo {
         this.password = password;
     }
 
-    // 연관 관계 메서드
-    public void deleteCategory(Category category) {
-        // TODO 테스트 해봐야 함. 사용자 카테고리 삭제 user의 카테고리 리스트 출력
-        categoryList.remove(category);
-    }
 }

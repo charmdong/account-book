@@ -86,11 +86,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public String findUserId(UserRequest request) {
 
-        User findUser = userRepository
-                .findById(request.getId())
-                .orElseGet(() -> User.createUser(new UserRequest()));
-
-        return findUser.getId();
+        return userRepository.findByNameAndEmail(request.getName(), request.getEmail()).get().getId();
     }
 
     /**
@@ -101,10 +97,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public String findPassword(UserRequest request) {
 
-        User findUser = userRepository
-                .findById(request.getId())
-                .orElseGet(() -> User.createUser(new UserRequest()));
-
-        return findUser.getPassword();
+        return userRepository.findByIdAndEmail(request.getId(), request.getEmail()).get().getPassword();
     }
 }

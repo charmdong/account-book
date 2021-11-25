@@ -1,9 +1,15 @@
 package com.accountbook.service;
 
+import com.accountbook.domain.entity.Category;
+import com.accountbook.domain.entity.ComCategory;
+import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.repository.category.CategoryRepository;
+import com.accountbook.domain.repository.category.ComCategoryRepository;
+import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.category.CategoryDto;
 import com.accountbook.dto.category.CategoryRequest;
+import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,10 +34,16 @@ public class CategoryServiceTest {
     UserService userService;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     CategoryService categoryService;
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    ComCategoryRepository comCategoryRepository;
 
     @Test
     @Rollback(value = false)
@@ -55,14 +67,30 @@ public class CategoryServiceTest {
         categoryRequest.setUseYn(true);
 
         // when
-        Long result = categoryService.addCategory(categoryRequest);
-        System.out.println("result = " + result);
+        // 1. category 공통 코드 조회
+        ComCategory comCategory = getComCategory(categoryRequest);
 
-        // then
-        List<CategoryDto> categoryList = categoryService.getCategoryListByUser("test1");
-        for (CategoryDto categoryDto : categoryList) {
-            System.out.println("categoryDto = " + categoryDto);
-        }
+        // 2. UserCategory 등록
+        User user = userRepository.findById(categoryRequest.getUserId()).get();
+
+        Category category = Category.createCategory(user, comCategory);
+        categoryRepository.addCategory(category);
+
+        categoryService.deleteCategory(2L, user.getId());
+        System.out.println("user = " + user);
+
+        user = userRepository.findById("test1").get();
+        System.out.println("after = " + user);
+    }
+
+    private ComCategory getComCategory(CategoryRequest request) {
+
+        ComCategory comCategory = comCategoryRepository
+                .findByNameAndEventType(request.getName(), request.getEventType())
+                .orElseGet(() -> ComCategory.createCategory(request));
+        comCategoryRepository.save(comCategory);
+
+        return comCategory;
     }
 
     @Test
@@ -89,9 +117,23 @@ public class CategoryServiceTest {
     public void deleteCategoryTest () throws Exception {
         // given
         List<CategoryDto> categoryList = categoryService.getCategoryListByUser("test1");
-        categoryService.deleteCategory(categoryList.get(0).getSeq());
+        // categoryService.deleteCategory(categoryList.get(0).getSeq());
         // when
 
         // then
+    }
+
+    /**
+     * PK가 어느 타이밍에 생기는 지 궁금해서 해봄
+     * @throws Exception
+     */
+    @Test
+    public void pkTest () throws Exception {
+
+        Category category = Category.createCategory(new User(), new ComCategory());
+        System.out.println("BEFORE = " + category);
+
+        categoryRepository.addCategory(category);
+        System.out.println("AFTER = " + category);
     }
 }
