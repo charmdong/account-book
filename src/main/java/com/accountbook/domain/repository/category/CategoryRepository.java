@@ -1,7 +1,6 @@
 package com.accountbook.domain.repository.category;
 
 import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.entity.QCategory;
 import com.accountbook.domain.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+
+import static com.accountbook.domain.entity.QCategory.category;
 
 /**
  * CategoryRepository
@@ -31,8 +32,6 @@ public class CategoryRepository {
      * @return 사용자 카테고리 목록
      */
     public Optional<List<Category>> getCategoryListByUser (User user) {
-
-        QCategory category = QCategory.category;
 
         List<Category> categoryList = jpaQueryFactory
                 .selectFrom(category)
