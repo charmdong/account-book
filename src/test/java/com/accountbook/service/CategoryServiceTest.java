@@ -13,6 +13,7 @@ import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,20 +68,13 @@ public class CategoryServiceTest {
         categoryRequest.setUseYn(true);
 
         // when
-        // 1. category 공통 코드 조회
-        ComCategory comCategory = getComCategory(categoryRequest);
+        categoryService.addCategory(categoryRequest);
 
-        // 2. UserCategory 등록
-        User user = userRepository.findById(categoryRequest.getUserId()).get();
-
-        Category category = Category.createCategory(user, comCategory);
-        categoryRepository.addCategory(category);
-
-        categoryService.deleteCategory(2L, user.getId());
-        System.out.println("user = " + user);
-
-        user = userRepository.findById("test1").get();
-        System.out.println("after = " + user);
+        // then
+        List<CategoryDto> categoryList = categoryService.getCategoryListByUser("test1");
+        for (CategoryDto categoryDto : categoryList) {
+            System.out.println("categoryDto = " + categoryDto);
+        }
     }
 
     private ComCategory getComCategory(CategoryRequest request) {
