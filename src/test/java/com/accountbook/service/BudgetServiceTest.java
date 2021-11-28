@@ -125,8 +125,8 @@ class BudgetServiceTest {
         categoryRequest.setEventType(EventType.EXPENDITURE);
         categoryRequest.setUseYn(true);
 
-        categoryService.addUserCategory(categoryRequest);
-        List<CategoryDto> categoryDtoList = categoryService.getUserCategoryList(userId);
+        categoryService.addCategory(categoryRequest);
+        List<CategoryDto> categoryDtoList = categoryService.getCategoryListByUser(userId);
 
         return categoryDtoList.get(categoryDtoList.size()-1).getSeq();
     }

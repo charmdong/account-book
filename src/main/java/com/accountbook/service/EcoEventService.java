@@ -51,7 +51,6 @@ public class EcoEventService {
         Category category = categoryRepository.getCategory(ecoEventRequest.getCategorySeq());
         EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new NoSuchElementException("해당 금융 이벤트가 존재하지 않습니다."));
         ecoEvent.changeEcoEvent(ecoEventRequest,category);
-        ecoEventRepository.save(ecoEvent);
     }
 
     //이벤트 삭제
