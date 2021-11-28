@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Getter
-@ToString(of = {"id", "password", "name", "email", "birthDate"})
+@ToString(of = {"id", "password", "name", "email", "birthDate", "categoryList"})
 @NoArgsConstructor
 @DynamicUpdate
 public class User extends BaseTimeInfo {
@@ -42,6 +42,7 @@ public class User extends BaseTimeInfo {
 
     // 생성자 메서드
     public static User createUser(UserRequest request) {
+
         User user = new User();
 
         user.id = request.getId();
@@ -66,12 +67,8 @@ public class User extends BaseTimeInfo {
     }
 
     public void changePassword(String password) {
+
         this.password = password;
     }
 
-    // 연관 관계 메서드
-    public void deleteCategory(Category category) {
-        // TODO 테스트 해봐야 함. 사용자 카테고리 삭제 user의 카테고리 리스트 출력
-        categoryList.remove(category);
-    }
 }

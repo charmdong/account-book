@@ -1,4 +1,4 @@
-package com.accountbook.dto;
+package com.accountbook.dto.asset;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

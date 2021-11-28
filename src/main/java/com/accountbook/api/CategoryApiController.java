@@ -1,20 +1,15 @@
 package com.accountbook.api;
 
+import com.accountbook.dto.ApiResponse;
 import com.accountbook.dto.category.CategoryRequest;
-import com.accountbook.dto.category.CategoryDto;
 import com.accountbook.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * CategoryApiController
@@ -36,10 +31,10 @@ public class CategoryApiController {
      * @return 사용자 카테고리 목록
      */
     @GetMapping
-    public List<CategoryDto> getUserCategoryList(HttpSession session) {
-        // TODO SessionAttribute 사용방법 알아보기
+    public ApiResponse getCategoryListByUser(HttpSession session) {
+
         String userId = (String) session.getAttribute("userId");
-        return categoryService.getUserCategoryList(userId);
+        return new ApiResponse(categoryService.getCategoryListByUser(userId), HttpStatus.OK, "SUCCESS");
     }
 
     /**
@@ -48,10 +43,10 @@ public class CategoryApiController {
      * @param seq
      * @return 사용자 카테고리 상세 정보
      */
-    @GetMapping("/{userCategorySeq}")
-    public CategoryDto getUserCategory(@PathVariable("userCategorySeq") Long seq) {
+    @GetMapping("/{categorySeq}")
+    public ApiResponse getCategory(@PathVariable("categorySeq") Long seq) {
 
-        return categoryService.getUserCategory(seq);
+        return new ApiResponse(categoryService.getCategory(seq), HttpStatus.OK, "SUCCESS");
     }
 
     /**
@@ -60,9 +55,9 @@ public class CategoryApiController {
      * @param request
      */
     @PostMapping
-    public void addUserCategory(@RequestBody @Valid CategoryRequest request) {
+    public ApiResponse addCategory(@RequestBody @Valid CategoryRequest request) {
 
-        categoryService.addUserCategory(request);
+        return new ApiResponse(categoryService.addCategory(request), HttpStatus.OK, "SUCCESS");
     }
 
     /**
@@ -71,11 +66,11 @@ public class CategoryApiController {
      * @param seq
      * @param request
      */
-    @PatchMapping("/{userCategorySeq}")
-    public void updateUserCategory(@PathVariable("userCategorySeq") Long seq,
+    @PatchMapping("/{categorySeq}")
+    public ApiResponse updateCategory(@PathVariable("categorySeq") Long seq,
                                    @RequestBody @Valid CategoryRequest request) {
 
-        categoryService.updateUserCategory(seq, request);
+        return new ApiResponse(categoryService.updateCategory(seq, request), HttpStatus.OK, "SUCCESS");
     }
 
     /**
@@ -83,23 +78,11 @@ public class CategoryApiController {
      *
      * @param seq
      */
-    @DeleteMapping("/{userCategorySeq}")
-    public void deleteUserCategory(@PathVariable("userCategory") Long seq) {
+    @DeleteMapping("/{categorySeq}")
+    public ApiResponse deleteCategory(@PathVariable("categorySeq") Long seq, HttpSession session) {
 
-        categoryService.deleteUserCategory(seq);
+        String userId = String.valueOf(session.getAttribute("userId"));
+        return new ApiResponse(categoryService.deleteCategory(seq, userId), HttpStatus.OK, "SUCCESS");
     }
 
-    /**
-     * @Valid Exception Handler
-     *
-     * @param e
-     * @return
-     */
-    @ExceptionHandler
-    public ResponseEntity validExceptionHandler(MethodArgumentNotValidException e) {
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("message", e.getBindingResult().getFieldError().getDefaultMessage());
-
-        return new ResponseEntity(resultMap, HttpStatus.BAD_REQUEST);
-    }
 }

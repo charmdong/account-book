@@ -1,6 +1,7 @@
 package com.accountbook.domain.repository.user;
 
 import com.accountbook.domain.entity.User;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @Override
     public void addUser(User user) {
+
         em.persist(user);
     }
 }

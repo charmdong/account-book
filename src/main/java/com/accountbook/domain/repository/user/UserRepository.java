@@ -7,7 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * 사용자 Repo
+ * UserRepository
+ *
+ * @author donggun
+ * @since 2021/11/23
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
@@ -22,5 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     Optional<User> findByIdAndEmail(String userId, String email);
 
     // 사용자 정보 삭제
-    int deleteById(String userId);
+    void deleteById(String userId);
 }
