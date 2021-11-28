@@ -58,9 +58,7 @@ public class BudgetService {
     public void updateBudget(BudgetRequest budgetRequest, Long budgetSeq){
         Budget budget = budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new NoSuchElementException());
         Category category = categoryRepository.getCategory(budgetRequest.getCategorySeq());
-
         budget.changeBudget(budgetRequest, category);
-        budgetRepository.saveBudget(budget);
     }
 
     //예산 삭제
