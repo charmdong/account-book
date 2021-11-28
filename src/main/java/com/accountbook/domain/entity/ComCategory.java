@@ -4,11 +4,13 @@ import com.accountbook.domain.enums.EventType;
 import com.accountbook.dto.category.CategoryRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor
 public class ComCategory extends BaseInfo {
 

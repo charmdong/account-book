@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 /**
- * 사용자 Service
+ * UserService
+ *
+ * @author donggun
+ * @since 2021/11/23
  */
 @Service
 @RequiredArgsConstructor
@@ -38,8 +41,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getUser(String userId) {
 
-        Optional<User> user = userRepository.findById(userId);
-        return new UserDto(user.get());
+        User findUser = userRepository
+                            .findById(userId)
+                            .orElseGet(() -> User.createUser(new UserRequest()));
+
+        return new UserDto(findUser);
     }
 
     /**
@@ -50,6 +56,17 @@ public class UserService {
 
         User user = userRepository.findById(userId).get();
         user.changeUser(request);
+    }
+
+    /**
+     * 사용자 비밀번호 변경
+     * @param userId
+     * @param password
+     */
+    public void changePassword(String userId, String password) {
+
+        User user = userRepository.findById(userId).get();
+        user.changePassword(password);
     }
 
     /**
@@ -69,8 +86,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public String findUserId(UserRequest request) {
 
-        User user = userRepository.findById(request.getId()).get();
-        return user.getId();
+        return userRepository.findByNameAndEmail(request.getName(), request.getEmail()).get().getId();
     }
 
     /**
@@ -81,7 +97,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public String findPassword(UserRequest request) {
 
-        User user = userRepository.findById(request.getId()).get();
-        return user.getPassword();
+        return userRepository.findByIdAndEmail(request.getId(), request.getEmail()).get().getPassword();
     }
 }

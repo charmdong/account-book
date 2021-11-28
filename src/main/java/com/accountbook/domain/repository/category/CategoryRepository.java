@@ -2,11 +2,15 @@ package com.accountbook.domain.repository.category;
 
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.entity.User;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
+
+import static com.accountbook.domain.entity.QCategory.category;
 
 /**
  * CategoryRepository
@@ -19,6 +23,7 @@ import java.util.List;
 public class CategoryRepository {
 
     private final EntityManager em;
+    private final JPAQueryFactory jpaQueryFactory;
 
     /**
      * 사용자 카테고리 목록 조회
@@ -26,11 +31,14 @@ public class CategoryRepository {
      * @param user
      * @return 사용자 카테고리 목록
      */
-    public List<Category> getUserCategoryList (User user) {
-        return em.createQuery(
-                "select c from Category c where c.user =: user", Category.class)
-                .setParameter("user", user)
-                .getResultList();
+    public Optional<List<Category>> getCategoryListByUser (User user) {
+
+        List<Category> categoryList = jpaQueryFactory
+                .selectFrom(category)
+                .where(category.user.eq(user))
+                .fetch();
+
+        return Optional.ofNullable(categoryList);
     }
 
     /**
@@ -57,10 +65,10 @@ public class CategoryRepository {
     /**
      * 사용자 카테고리 삭제
      *
-     * @param category
+     * @param seq
      */
-    public void deleteCategory (Category category) {
+    public void deleteCategory (Long seq) {
 
-        em.remove(category);
+        em.remove(getCategory(seq));
     }
 }

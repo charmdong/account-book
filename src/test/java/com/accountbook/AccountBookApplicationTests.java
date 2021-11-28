@@ -138,19 +138,19 @@ class AccountBookApplicationTests {
 		categoryRequest.setUseYn(true);
 
 	    // when
-		categoryService.addUserCategory(categoryRequest);
-		List<CategoryDto> result = categoryService.getUserCategoryList("test1");
+		categoryService.addCategory(categoryRequest);
+		List<CategoryDto> result = categoryService.getCategoryListByUser("test1");
 		CategoryDto categoryDto = result.get(0);
 
 		categoryRequest.setName("pizza");
-		categoryService.updateUserCategory(categoryDto.getSeq(), categoryRequest);
+		categoryService.updateCategory(categoryDto.getSeq(), categoryRequest);
 		// then
 	}
 
 	@Test
 	public void findUserCategoryTest () throws Exception {
 	    // given
-		List<CategoryDto> result = categoryService.getUserCategoryList("test1");
+		List<CategoryDto> result = categoryService.getCategoryListByUser("test1");
 		for (CategoryDto categoryDto : result) {
 			System.out.println("categoryDto = " + categoryDto);
 		}

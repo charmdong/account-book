@@ -4,6 +4,8 @@ import com.accountbook.domain.entity.ComCategory;
 import com.accountbook.domain.enums.EventType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface ComCategoryRepository extends JpaRepository<ComCategory, Long> {
 
     /**
@@ -13,5 +15,5 @@ public interface ComCategoryRepository extends JpaRepository<ComCategory, Long> 
      * @param eventType
      * @return
      */
-    ComCategory findByNameAndEventType(String name, EventType eventType);
+    Optional<ComCategory> findByNameAndEventType(String name, EventType eventType);
 }
