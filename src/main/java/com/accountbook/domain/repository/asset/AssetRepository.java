@@ -1,4 +1,4 @@
-package com.accountbook.domain.repository;
+package com.accountbook.domain.repository.asset;
 
 import java.util.Optional;
 

@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.accountbook.domain.enums.AssetType;
-import com.accountbook.dto.AssetRequest;
+import com.accountbook.dto.asset.AssetRequest;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

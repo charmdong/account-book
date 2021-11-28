@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
-import com.accountbook.dto.AssetDto;
-import com.accountbook.dto.AssetRequest;
+import com.accountbook.dto.asset.AssetDto;
+import com.accountbook.dto.asset.AssetRequest;
 import com.accountbook.dto.user.UserRequest;
 
 import org.junit.Test;

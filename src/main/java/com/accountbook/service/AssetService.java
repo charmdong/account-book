@@ -3,7 +3,7 @@ package com.accountbook.service;
 import java.util.List;
 
 import com.accountbook.domain.entity.Asset;
-import com.accountbook.domain.repository.AssetRepository;
+import com.accountbook.domain.repository.asset.AssetRepository;
 import com.accountbook.dto.asset.AssetDto;
 import com.accountbook.dto.asset.AssetRequest;
 
