@@ -5,7 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import com.accountbook.dto.ApiResponse;
+import com.accountbook.dto.asset.ApiResponse;
 import com.accountbook.dto.asset.AssetDto;
 import com.accountbook.dto.asset.AssetRequest;
 import com.accountbook.service.AssetService;

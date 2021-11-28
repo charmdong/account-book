@@ -1,7 +1,7 @@
 package com.accountbook.api;
 
-import com.accountbook.dto.ApiResponse;
 import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.asset.ApiResponse;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;

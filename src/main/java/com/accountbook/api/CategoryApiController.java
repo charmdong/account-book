@@ -1,6 +1,6 @@
 package com.accountbook.api;
 
-import com.accountbook.dto.ApiResponse;
+import com.accountbook.dto.asset.ApiResponse;
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.service.CategoryService;
 import lombok.RequiredArgsConstructor;
