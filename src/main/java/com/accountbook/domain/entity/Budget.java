@@ -33,12 +33,12 @@ public class Budget extends BaseInfo{
     private User user;
 
     //생성 메소드
-    public static Budget createBudget(BudgetRequest budgetRequest) {
+    public static Budget createBudget(BudgetRequest budgetRequest, Category category, User user) {
         Budget budget = new Budget();
-        budget.category = budgetRequest.getCategory();
+        budget.category = category;
         budget.periodType = budgetRequest.getPeriodType();
         budget.amount =  budgetRequest.getAmount();
-        budget.setUser(budgetRequest.getUser());
+        budget.setUser(user);
         return budget;
     }
 
@@ -49,8 +49,8 @@ public class Budget extends BaseInfo{
     }
 
     //비즈니스 로직
-    public void changeBudget(BudgetRequest budgetRequest){
-        this.category = budgetRequest.getCategory();
+    public void changeBudget(BudgetRequest budgetRequest, Category category){
+        this.category = category;
         this.periodType = budgetRequest.getPeriodType();
         this.amount =  budgetRequest.getAmount();
     }

@@ -6,6 +6,7 @@ import com.accountbook.service.EcoEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -20,19 +21,22 @@ public class EcoEventApiController {
     public List<EcoEventDto> getAllBudget(){
         return ecoEventService.getAllEcoEvent();
     }
+
     //금융 이벤트 조회
     @GetMapping("/{eventSeq}")
     public EcoEventDto getOneBudget(@PathVariable long ecoEventSeq){
         return ecoEventService.getOneEcoEvent(ecoEventSeq);
     }
+
     //금융 이벤트 등록
     @PostMapping("/")
-    public void create(@RequestBody EcoEventRequest ecoEventRequest){
+    public void create(@RequestBody @Valid EcoEventRequest ecoEventRequest){
         ecoEventService.enrollEcoEvents(ecoEventRequest);
     }
+
     //금융 이벤트 수정
     @PatchMapping("/{eventSeq}")
-    public void update(@RequestBody EcoEventRequest ecoEventRequest, @PathVariable long ecoEventSeq){
+    public void update(@RequestBody @Valid EcoEventRequest ecoEventRequest, @PathVariable long ecoEventSeq){
         ecoEventService.updateEcoEvents(ecoEventRequest, ecoEventSeq);
     }
 

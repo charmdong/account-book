@@ -1,12 +1,13 @@
 package com.accountbook.service;
 
-import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.enums.PeriodType;
 import com.accountbook.dto.Budget.BudgetDto;
 import com.accountbook.dto.Budget.BudgetRequest;
+import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.dto.user.UserRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 class BudgetServiceTest {
@@ -28,78 +30,105 @@ class BudgetServiceTest {
     @Autowired
     private BudgetService budgetService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    //예산 등록
     @Test
     void enroll_Budget() {
         //given
-        User testUser = getUser();
-        Category testCategory = getCategory();
-        BudgetRequest budgetRequest = new BudgetRequest(testCategory,PeriodType.MONTHLY,100000L,testUser);
+        BudgetRequest budgetRequest = createBudgetRequest();
 
         //when
         budgetService.enrollBudget(budgetRequest);
 
         //then
-        List<BudgetDto> budgetDtoList = budgetService.getBudgetByUser(testUser.getId());
-        assertEquals(100000L,budgetDtoList.get(budgetDtoList.size()-1).getAmount());
+        List<BudgetDto> budgetDtoList = budgetService.getBudgetByUser(budgetRequest.getUserId());
+        assertEquals(budgetRequest.getAmount(),budgetDtoList.get(budgetDtoList.size()-1).getAmount());
     }
 
 
+    //예산 수정
     @Test
     public void update_Budget() {
         //given
-        List<BudgetDto> budgetDtoList = budgetService.getAllBudget();
-        if(budgetDtoList.size() == 0)  return;
-        BudgetDto budgetDto = budgetDtoList.get(budgetDtoList.size()-1);
+        //1. 예산 등록
+        BudgetRequest budgetRequest = createBudgetRequest();
+        budgetService.enrollBudget(budgetRequest);
+        Long budgetSeq = budgetService.getBudgetByUser(budgetRequest.getUserId()).get(0).getSeq();
 
-        User testUser = getUser();
-        Category testCategory = getCategory();
-        BudgetRequest budgetRequest = new BudgetRequest(testCategory,PeriodType.ANNUAL,300000L,testUser);
+        //2. 수정 Dto 생성
+        BudgetRequest updateBudgetRequest = new BudgetRequest(budgetRequest.getCategorySeq(),PeriodType.ANNUAL,300000L,budgetRequest.getUserId());
 
         //when
-        budgetService.updateBudget(budgetRequest,budgetDto.getSeq());
+        budgetService.updateBudget(updateBudgetRequest,budgetSeq);
 
         //then
-        assertEquals(300000L,budgetService.getOneBudget(budgetDto.getSeq()).getAmount());
-        assertEquals(PeriodType.ANNUAL,budgetService.getOneBudget(budgetDto.getSeq()).getPeriodType());
+        assertFalse(budgetRequest.getAmount() == budgetService.getOneBudget(budgetSeq).getAmount());
+        assertTrue(updateBudgetRequest.getAmount() == budgetService.getOneBudget(budgetSeq).getAmount());
+        assertEquals(updateBudgetRequest.getPeriodType(),budgetService.getOneBudget(budgetSeq).getPeriodType());
     }
 
+    //예산 삭제
+    //@org.junit.Test(expected = NoSuchElementException.class)
     @Test
+    //@Rollback(value = false)
     public void delete_Budget() {
         //given
-        List<BudgetDto> budgetDtoList = budgetService.getAllBudget();
-        if(budgetDtoList.size() == 0)  return;
-        BudgetDto budgetDtoDeleteBefore = budgetDtoList.get(budgetDtoList.size()-1);
+        BudgetRequest budgetRequest = createBudgetRequest();
+        budgetService.enrollBudget(budgetRequest);
+        List<BudgetDto> budgetDtoList = budgetService.getBudgetByUser(budgetRequest.getUserId());
 
         //when
-        budgetService.deleteBudget(budgetDtoDeleteBefore.getSeq());
+        budgetService.deleteBudget(budgetDtoList.get(budgetDtoList.size()-1).getSeq());
 
         //then
-        BudgetDto budgetdtoDeleteAfter = budgetService.getOneBudget(budgetDtoDeleteBefore.getSeq());
-        assertTrue(budgetdtoDeleteAfter == null);
+        log.info(">>> Fail ");
+        //fail("예외발생");
     }
 
-    public User getUser(){
-        UserRequest request = new UserRequest();
+    //테스트용 budgetRequest 생성
+    private BudgetRequest createBudgetRequest() {
+        String testUserId = getUser();
+        Long testCategorySeq = getCategory(testUserId);
+        BudgetRequest budgetRequest = new BudgetRequest(testCategorySeq, PeriodType.MONTHLY, 100000L, testUserId);
 
-        request.setId("rlfehd1");
+        return budgetRequest;
+    }
+
+    //테스트용 User 생성
+    public String getUser(){
+        UserRequest request = new UserRequest();
+        String userId = "rlfehd1";
+
+        request.setId(userId);
         request.setPassword("ghdrlfehed123!");
         request.setName("홍길동");
         request.setEmail("ghdrlfehd@gmail.com");
         request.setBirthDate(Year.of(2000).atMonth(12).atDay(31).atTime(14,03));
 
-        return User.createUser(request);
+        userService.addUser(request);
+
+        return userId;
     }
 
-    private Category getCategory() {
+    //테스트용 Category 생성
+    private Long getCategory(String userId) {
 
-//        Category categoryRequest = Category.createCategory();
-//
-//        categoryRequest.setUserId("rlfehd1");
-//        categoryRequest.setName("chicken");
-//        categoryRequest.setEventType(EventType.EXPENDITURE);
-//        categoryRequest.setUseYn(true);
-//
-//        return Category.createCategory(categoryRequest);
-        return null;
+        CategoryRequest categoryRequest = new CategoryRequest();
+
+        categoryRequest.setUserId("rlfehd1");
+        categoryRequest.setName("chicken");
+        categoryRequest.setEventType(EventType.EXPENDITURE);
+        categoryRequest.setUseYn(true);
+
+        categoryService.addUserCategory(categoryRequest);
+        List<CategoryDto> categoryDtoList = categoryService.getUserCategoryList(userId);
+
+        return categoryDtoList.get(categoryDtoList.size()-1).getSeq();
     }
+
 }
