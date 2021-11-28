@@ -1,5 +1,5 @@
 package com.accountbook.domain.repository.ecoEvent;
-;
+
 import com.accountbook.domain.entity.EcoEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
