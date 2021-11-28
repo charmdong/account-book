@@ -73,18 +73,21 @@ class BudgetServiceTest {
     }
 
     //예산 삭제
+    //@org.junit.Test(expected = NoSuchElementException.class)
     @Test
+    //@Rollback(value = false)
     public void delete_Budget() {
         //given
         BudgetRequest budgetRequest = createBudgetRequest();
         budgetService.enrollBudget(budgetRequest);
-        Long budgetSeq = budgetService.getBudgetByUser(budgetRequest.getUserId()).get(0).getSeq();
+        List<BudgetDto> budgetDtoList = budgetService.getBudgetByUser(budgetRequest.getUserId());
 
         //when
-        budgetService.deleteBudget(budgetSeq);
+        budgetService.deleteBudget(budgetDtoList.get(budgetDtoList.size()-1).getSeq());
 
         //then
-        assertTrue(budgetService.getOneBudget(budgetSeq) == null);
+        log.info(">>> Fail ");
+        //fail("예외발생");
     }
 
     //테스트용 budgetRequest 생성

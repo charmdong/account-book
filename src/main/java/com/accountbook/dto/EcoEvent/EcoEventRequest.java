@@ -23,13 +23,13 @@ public class EcoEventRequest {
     private AssetType assetType;
 
     @NotEmpty
-    private Category category;
+    private Long categorySeq;
 
-    public EcoEventRequest(EventType eventType, LocalDateTime useDate,Long amount, AssetType assetType, Category category) {
+    public EcoEventRequest(EventType eventType, LocalDateTime useDate,Long amount, AssetType assetType, Long categorySeq) {
         this.eventType = eventType;
         this.useDate = useDate;
         this.amount = amount;
         this.assetType = assetType;
-        this.category = category;
+        this.categorySeq = categorySeq;
     }
 }
