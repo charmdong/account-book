@@ -5,10 +5,12 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import com.accountbook.dto.AssetDto;
-import com.accountbook.dto.AssetRequest;
+import com.accountbook.dto.ApiResponse;
+import com.accountbook.dto.asset.AssetDto;
+import com.accountbook.dto.asset.AssetRequest;
 import com.accountbook.service.AssetService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,33 +32,44 @@ public class AssetApiController {
 
     // 자산 전체 조회
     @GetMapping("")
-    public List<AssetDto> getAssetList(@RequestParam String param) {
+    public ApiResponse getAssetList(@RequestParam String param) {
         String userId = session.getAttribute("userId").toString();
-        return assetService.getAssetList(userId);
+        List<AssetDto> data = assetService.getAssetList(userId);
+
+        ApiResponse response = new ApiResponse(data, HttpStatus.OK, "SUCCES");
+        return response;
     }
 
     // 자산 상세 조회
     @GetMapping("/{assetSeq}")
-    public AssetDto getAssetDetail(@PathVariable("assetSeq") long assetSeq) {
-        return assetService.getAsset(assetSeq);
+    public ApiResponse getAssetDetail(@PathVariable("assetSeq") long assetSeq) {
+        AssetDto data =  assetService.getAsset(assetSeq);
+        ApiResponse response = new ApiResponse(data, HttpStatus.OK, "SUCCES");
+        return response;
     }
 
     // 자산 등록
     @PostMapping("")
-    public void postMethodName(@RequestBody @Valid AssetRequest assetRequest) {
+    public ApiResponse postMethodName(@RequestBody @Valid AssetRequest assetRequest) {
         assetService.registAsset(assetRequest);
+        ApiResponse response = new ApiResponse(null, HttpStatus.OK, "SUCCES");
+        return response;
     }
 
     // 자산 수정
     @PutMapping("/{assetSeq}")
-    public void updateAsset(@PathVariable("assetSeq") long assetSeq, @RequestBody @Valid AssetRequest assetRequest) {
+    public ApiResponse updateAsset(@PathVariable("assetSeq") long assetSeq, @RequestBody @Valid AssetRequest assetRequest) {
         assetService.updateAseet(assetSeq, assetRequest);
+        ApiResponse response = new ApiResponse(null, HttpStatus.OK, "SUCCES");
+        return response;
     }
 
     // 자산 삭제
     @DeleteMapping("/{assetSeq}")
-    public void removeAsset(@PathVariable("assetSeq") long assetSeq) {
+    public ApiResponse removeAsset(@PathVariable("assetSeq") long assetSeq) {
         assetService.removeAsset(assetSeq);
+        ApiResponse response = new ApiResponse(null, HttpStatus.OK, "SUCCES");
+        return response;
     }
 
 }
