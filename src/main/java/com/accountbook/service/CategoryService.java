@@ -8,6 +8,7 @@ import com.accountbook.domain.repository.category.ComCategoryRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.exception.category.CategoryNotDeletedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,7 +128,11 @@ public class CategoryService {
         // 사용자 카테고리 삭제
         categoryRepository.deleteBySeq(seq);
 
-        return categoryRepository.findBySeq(seq) == null;
+        if(categoryRepository.findBySeq(seq) == null) {
+            throw new CategoryNotDeletedException("사용자 카테고리 삭제 오류");
+        }
+
+        return true;
     }
 
     /**
