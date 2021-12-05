@@ -37,7 +37,7 @@ public class BudgetService {
     //예산 상세 조회
     @Transactional(readOnly = true)
     public BudgetDto getOneBudget(Long budgetSeq){
-        return new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new NoSuchElementException()));
+        return new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(()-> new NoSuchElementException()));
     }
 
     //예산 조회 by User
@@ -79,7 +79,7 @@ public class BudgetService {
         }catch (EmptyResultDataAccessException e) {
             return false;
         }catch (NoSuchElementException e){
-            return false;
+            return true;
         }
         return true;
     }

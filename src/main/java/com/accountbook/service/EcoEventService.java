@@ -68,7 +68,7 @@ public class EcoEventService {
         }catch (EmptyResultDataAccessException e) {
             return false;
         }catch (NoSuchElementException e){
-            return false;
+            return true;
         }
         return true;
     }
