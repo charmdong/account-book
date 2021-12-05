@@ -52,7 +52,7 @@ public class AssetApiController {
     @PostMapping("")
     public ApiResponse postMethodName(@RequestBody @Valid AssetRequest assetRequest) {
         Boolean result = assetService.registAsset(assetRequest);
-        ApiResponse response = new ApiResponse(null, HttpStatus.OK, "SUCCES");
+        ApiResponse response = new ApiResponse(result, HttpStatus.OK, "SUCCES");
         return response;
     }
 
