@@ -1,7 +1,5 @@
 package com.accountbook.dto.Budget;
 
-import com.accountbook.domain.entity.User;
-import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.enums.PeriodType;
 import lombok.Data;
 
