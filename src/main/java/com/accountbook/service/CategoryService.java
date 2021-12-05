@@ -3,18 +3,18 @@ package com.accountbook.service;
 import com.accountbook.domain.entity.ComCategory;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.repository.category.ComCategoryRepository;
 import com.accountbook.domain.repository.category.CategoryRepository;
+import com.accountbook.domain.repository.category.ComCategoryRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.exception.category.CategoryNotDeletedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +62,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDto getCategory(Long seq) {
 
-        return new CategoryDto(categoryRepository.getCategory(seq));
+        return new CategoryDto(categoryRepository.findBySeq(seq));
     }
 
     /**
@@ -90,19 +90,23 @@ public class CategoryService {
      * @param seq
      * @param request
      */
-    public Long updateCategory(Long seq, CategoryRequest request) {
+    public CategoryDto updateCategory(Long seq, CategoryRequest request) {
 
         // 1. 사용자 category 조회
-        Category category = categoryRepository.getCategory(seq);
+        Category category = categoryRepository.findBySeq(seq);
 
         // 2. category 공통 코드 조회
         ComCategory comCategory = getComCategory(request);
 
-        // 3. Dirty Checking TODO 에러 여부를 어떻게 알 수 있는가?
+        // 3. Dirty Checking
         category.changeComCategory(comCategory);
 
-        // 4. category seq 반환
-        return category.getSeq();
+        // 4. flush & find
+        categoryRepository.flush();
+        Category updatedCategory = categoryRepository.findBySeq(category.getSeq());
+
+        // 5. category seq 반환
+        return new CategoryDto(updatedCategory);
     }
 
     /**
@@ -112,14 +116,23 @@ public class CategoryService {
      */
     public Boolean deleteCategory(Long seq, String userId) {
 
+        // 사용자 조회
         User user = userRepository.findById(userId).get();
 
-        Category category = categoryRepository.getCategory(seq);
+        // 사용자 카테고리 조회
+        Category category = categoryRepository.findBySeq(seq);
+
+        // 사용자 카테고리 목록 수정
         category.updateUserCategoryList(user);
 
-        categoryRepository.deleteCategory(seq);
+        // 사용자 카테고리 삭제
+        categoryRepository.deleteBySeq(seq);
 
-        return category.getSeq() == null;
+        if(categoryRepository.findBySeq(seq) == null) {
+            throw new CategoryNotDeletedException("사용자 카테고리 삭제 오류");
+        }
+
+        return true;
     }
 
     /**

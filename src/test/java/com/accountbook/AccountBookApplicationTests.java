@@ -1,6 +1,5 @@
 package com.accountbook;
 
-import com.accountbook.domain.entity.ComCategory;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.repository.category.CategoryRepository;
@@ -12,15 +11,12 @@ import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.service.CategoryService;
 import com.accountbook.service.UserService;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 

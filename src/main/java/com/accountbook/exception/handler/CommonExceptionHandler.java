@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackages = {"com.accountbook.api"})
-public class ControllerExceptionHandler {
+public class CommonExceptionHandler {
 
     /**
      * @Valid Exception Handler

@@ -27,10 +27,12 @@ public class UserService {
      * 회원가입
      * @param request
      */
-    public void addUser(UserRequest request) {
+    public UserDto addUser(UserRequest request) {
 
         User user = User.createUser(request);
         userRepository.addUser(user);
+
+        return getUser(user.getId());
     }
 
     /**
@@ -52,10 +54,14 @@ public class UserService {
      * 사용자 정보 수정
      * @param request
      */
-    public void updateUser(String userId, UserRequest request) {
+    public UserDto updateUser(String userId, UserRequest request) {
 
         User user = userRepository.findById(userId).get();
         user.changeUser(request);
+
+        userRepository.flush();
+
+        return getUser(userId);
     }
 
     /**
@@ -72,10 +78,13 @@ public class UserService {
     /**
      * 사용자 탈퇴
      * @param userId
+     * @return 삭제 여부
      */
-    public void deleteUser(String userId) {
+    public Boolean deleteUser(String userId) {
 
         userRepository.deleteById(userId);
+
+        return userRepository.findById(userId).isEmpty();
     }
 
     /**
