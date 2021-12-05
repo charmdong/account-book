@@ -1,5 +1,7 @@
 package com.accountbook.service;
 
+import com.accountbook.domain.entity.User;
+import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import org.junit.Test;
@@ -21,9 +23,17 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Test
     public void addUserTest () throws Exception {
         // given
+        UserRequest request = addUserSample();
+
+    }
+
+    private UserRequest addUserSample () {
         UserRequest request = new UserRequest();
 
         request.setId("test1");
@@ -32,12 +42,21 @@ public class UserServiceTest {
         request.setEmail("chungdk1993@naver.com");
         request.setBirthDate(Year.of(1993).atMonth(11).atDay(17).atTime(14,59));
 
-        userService.addUser(request);
+        UserDto userDto = userService.addUser(request);
+        System.out.println("userDto = " + userDto);
 
-        // when
-        UserDto user = userService.getUser(request.getId());
-        System.out.println("user = " + user);
+        return request;
+    }
 
-        // then
+    @Test
+    public void deleteUserTest () throws Exception {
+
+        UserRequest request = addUserSample();
+
+        User findUser = userRepository.findById(request.getId()).get();
+
+        userRepository.deleteById(request.getId());
+
+        System.out.println(userRepository.findById(findUser.getId()).isEmpty());
     }
 }

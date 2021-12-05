@@ -8,6 +8,9 @@ import com.accountbook.domain.entity.Asset;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
 
+import lombok.ToString;
+
+@ToString
 public class AssetDto {
     protected Long seq;
 
