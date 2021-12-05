@@ -42,7 +42,7 @@ public class EcoEventService {
 
     //이벤트 등록
     public Long enrollEcoEvents(EcoEventRequest ecoEventRequest){
-        Category category = categoryRepository.getCategory(ecoEventRequest.getCategorySeq());
+        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq());
         EcoEvent ecoEvent = EcoEvent.createEcoEvent(ecoEventRequest, category);
         ecoEventRepository.save(ecoEvent);
         return ecoEvent.getSeq();
@@ -50,7 +50,7 @@ public class EcoEventService {
 
     //이벤트 수정
     public EcoEventDto updateEcoEvents(EcoEventRequest ecoEventRequest, Long ecoEventSeq){
-        Category category = categoryRepository.getCategory(ecoEventRequest.getCategorySeq());
+        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq());
         EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new NoSuchElementException("해당 금융 이벤트가 존재하지 않습니다."));
 
         ecoEvent.changeEcoEvent(ecoEventRequest,category);

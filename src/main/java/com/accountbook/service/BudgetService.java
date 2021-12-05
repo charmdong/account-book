@@ -49,7 +49,7 @@ public class BudgetService {
     //예산 등록
     public Long enrollBudget(BudgetRequest budgetRequest){
         User user = userRepository.findById(budgetRequest.getUserId()).orElseThrow(() -> new NoSuchElementException());
-        Category category = categoryRepository.getCategory(budgetRequest.getCategorySeq());
+        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq());
         Budget budget = Budget.createBudget(budgetRequest, category, user);
 
         budgetRepository.saveBudget(budget);
@@ -59,7 +59,7 @@ public class BudgetService {
     //예산 수정
     public BudgetDto updateBudget(BudgetRequest budgetRequest, Long budgetSeq){
         Budget budget = budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new NoSuchElementException());
-        Category category = categoryRepository.getCategory(budgetRequest.getCategorySeq());
+        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq());
 
         //Dirty checking
         budget.changeBudget(budgetRequest, category);
