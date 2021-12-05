@@ -1,4 +1,4 @@
-package com.accountbook.exception.handler;
+package com.accountbook.exception.common;
 
 import com.accountbook.dto.asset.ApiResponse;
 
