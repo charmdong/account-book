@@ -39,6 +39,7 @@ public class AssetService {
         try {
             Asset asset = Asset.createAsset(assetRequest);
             assetRepository.save(asset);
+            result = Boolean.TRUE;
         } catch (Exception e) {
             log.error("Failed to regist asset : {}", e);
         }
