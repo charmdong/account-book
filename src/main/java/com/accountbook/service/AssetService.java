@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -21,9 +23,9 @@ public class AssetService {
     // 자산 전체 조회
     public List<AssetDto> getAssetList(String userId) {
         List<AssetDto> ret = AssetDto.convertAssetList(assetRepository.findByUserId(userId));
-
         return ret;
     }
+
     // 자산 상세 조회
     public AssetDto getAsset(long assetSeq) {
         AssetDto ret = new AssetDto(assetRepository.findById(assetSeq).orElseThrow());
@@ -31,22 +33,41 @@ public class AssetService {
     }
 
     // 자산 등록
-    @Transactional
-    public void registAsset(AssetRequest assetRequest) {
-        Asset asset = Asset.createAsset(assetRequest);
-        assetRepository.save(asset);
+    @Transactional(readOnly = false)
+    public Boolean registAsset(AssetRequest assetRequest) {
+        Boolean result = Boolean.FALSE;
+        try {
+            Asset asset = Asset.createAsset(assetRequest);
+            assetRepository.save(asset);
+            result = Boolean.TRUE;
+        } catch (Exception e) {
+            log.error("Failed to regist asset : {}", e);
+        }
+        return result;
     }
 
     // 자산 수정
-    @Transactional
-    public void updateAseet(long assetSeq, AssetRequest assetRequest) {
+    @Transactional(readOnly = false)
+    public AssetDto updateAseet(long assetSeq, AssetRequest assetRequest) {
         Asset asset = assetRepository.findById(assetSeq).orElseThrow();
         asset.changeAsset(assetRequest);
+        assetRepository.flush();
+
+        // 업데이트 확인용 조회
+        AssetDto assetDto = new AssetDto(assetRepository.findById(assetSeq).orElseThrow());
+        return assetDto;
     }
 
     // 자산 삭제
-    @Transactional
-    public void removeAsset(long assetSeq) {
-        assetRepository.deleteById(assetSeq);
+    @Transactional(readOnly = false)
+    public Boolean removeAsset(long assetSeq) {
+        Boolean result = Boolean.FALSE;
+        try {
+            assetRepository.deleteById(assetSeq);
+            result = Boolean.TRUE;
+        } catch (Exception e) {
+            log.error("Failed to delete asset : {}", e);
+        }
+        return result;
     }
 }

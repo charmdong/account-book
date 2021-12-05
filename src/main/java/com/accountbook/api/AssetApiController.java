@@ -51,24 +51,24 @@ public class AssetApiController {
     // 자산 등록
     @PostMapping("")
     public ApiResponse postMethodName(@RequestBody @Valid AssetRequest assetRequest) {
-        assetService.registAsset(assetRequest);
-        ApiResponse response = new ApiResponse(null, HttpStatus.OK, "SUCCES");
+        Boolean result = assetService.registAsset(assetRequest);
+        ApiResponse response = new ApiResponse(result, HttpStatus.OK, "SUCCES");
         return response;
     }
 
     // 자산 수정
     @PutMapping("/{assetSeq}")
     public ApiResponse updateAsset(@PathVariable("assetSeq") long assetSeq, @RequestBody @Valid AssetRequest assetRequest) {
-        assetService.updateAseet(assetSeq, assetRequest);
-        ApiResponse response = new ApiResponse(null, HttpStatus.OK, "SUCCES");
+        AssetDto data = assetService.updateAseet(assetSeq, assetRequest);
+        ApiResponse response = new ApiResponse(data, HttpStatus.OK, "SUCCES");
         return response;
     }
 
     // 자산 삭제
     @DeleteMapping("/{assetSeq}")
     public ApiResponse removeAsset(@PathVariable("assetSeq") long assetSeq) {
-        assetService.removeAsset(assetSeq);
-        ApiResponse response = new ApiResponse(null, HttpStatus.OK, "SUCCES");
+        Boolean result = assetService.removeAsset(assetSeq);
+        ApiResponse response = new ApiResponse(result, HttpStatus.OK, "SUCCES");
         return response;
     }
 
