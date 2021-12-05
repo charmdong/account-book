@@ -1,4 +1,4 @@
-package com.accountbook.exception.handler;
+package com.accountbook.exception.user;
 
 import com.accountbook.api.UserApiController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

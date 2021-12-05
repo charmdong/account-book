@@ -1,4 +1,4 @@
-package com.accountbook.exception.handler;
+package com.accountbook.exception.category;
 
 import com.accountbook.api.CategoryApiController;
 import com.accountbook.dto.asset.ApiResponse;
