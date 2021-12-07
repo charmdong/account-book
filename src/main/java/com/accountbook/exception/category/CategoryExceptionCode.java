@@ -8,5 +8,6 @@ package com.accountbook.exception.category;
  */
 public class CategoryExceptionCode {
 
-    private static final int FAIL = 100;
+    public static final int FIND_DETAIL_ERROR = 104;
+
 }
