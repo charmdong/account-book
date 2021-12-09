@@ -43,11 +43,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getUser(String userId) {
 
-        User findUser = userRepository
-                            .findById(userId)
-                            .orElseGet(() -> User.createUser(new UserRequest()));
-
-        return new UserDto(findUser);
+        return new UserDto(userRepository.findById(userId).orElseThrow(NoSuchFieldError::new));
     }
 
     /**
