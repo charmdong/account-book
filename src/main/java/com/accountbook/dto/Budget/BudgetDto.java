@@ -5,8 +5,13 @@ import com.accountbook.domain.entity.User;
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.enums.PeriodType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Optional;
+
 
 @Data
+@NoArgsConstructor
 public class BudgetDto {
     private Long seq;
 
@@ -18,13 +23,6 @@ public class BudgetDto {
 
     private User user;
 
-    public BudgetDto(Long seq, Category category, PeriodType periodType, Long amount, User user) {
-        this.seq = seq;
-        this.category = category;
-        this.periodType = periodType;
-        this.amount = amount;
-        this.user = user;
-    }
     public BudgetDto(Budget budget){
         this.seq = budget.getSeq();
         this.category = budget.getCategory();
@@ -33,3 +31,4 @@ public class BudgetDto {
         this.user = budget.getUser();
     }
 }
+

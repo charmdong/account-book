@@ -11,18 +11,18 @@ import java.time.LocalDateTime;
 @Data
 public class EcoEventRequest {
 
-    @NotEmpty
+    @NotEmpty(message = "이벤트 타입 누락")
     private EventType eventType;
 
     private LocalDateTime useDate;
 
-    @NotEmpty
+    @NotEmpty(message = "금액 누락")
     private Long amount;
 
-    @NotEmpty
+    @NotEmpty(message = "자산 타입 누락")
     private AssetType assetType;
 
-    @NotEmpty
+    @NotEmpty(message = "카테고리 누락")
     private Long categorySeq;
 
     public EcoEventRequest(EventType eventType, LocalDateTime useDate,Long amount, AssetType assetType, Long categorySeq) {
