@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +63,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDto getCategory(Long seq) {
 
-        return new CategoryDto(categoryRepository.findBySeq(seq));
+        return new CategoryDto(categoryRepository.findBySeq(seq).orElseThrow(NoSuchElementException::new));
     }
 
     /**
@@ -93,7 +94,7 @@ public class CategoryService {
     public CategoryDto updateCategory(Long seq, CategoryRequest request) {
 
         // 1. 사용자 category 조회
-        Category category = categoryRepository.findBySeq(seq);
+        Category category = categoryRepository.findBySeq(seq).orElseThrow(NoSuchElementException::new);
 
         // 2. category 공통 코드 조회
         ComCategory comCategory = getComCategory(request);
@@ -103,7 +104,7 @@ public class CategoryService {
 
         // 4. flush & find
         categoryRepository.flush();
-        Category updatedCategory = categoryRepository.findBySeq(category.getSeq());
+        Category updatedCategory = categoryRepository.findBySeq(category.getSeq()).orElseThrow(NoSuchElementException::new);
 
         // 5. category seq 반환
         return new CategoryDto(updatedCategory);
@@ -120,7 +121,7 @@ public class CategoryService {
         User user = userRepository.findById(userId).get();
 
         // 사용자 카테고리 조회
-        Category category = categoryRepository.findBySeq(seq);
+        Category category = categoryRepository.findBySeq(seq).orElseThrow(NoSuchElementException::new);
 
         // 사용자 카테고리 목록 수정
         category.updateUserCategoryList(user);
@@ -128,11 +129,7 @@ public class CategoryService {
         // 사용자 카테고리 삭제
         categoryRepository.deleteBySeq(seq);
 
-        if(categoryRepository.findBySeq(seq) == null) {
-            throw new CategoryNotDeletedException("사용자 카테고리 삭제 오류");
-        }
-
-        return true;
+        return categoryRepository.findBySeq(seq).isEmpty();
     }
 
     /**

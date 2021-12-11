@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -43,11 +44,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getUser(String userId) {
 
-        User findUser = userRepository
-                            .findById(userId)
-                            .orElseGet(() -> User.createUser(new UserRequest()));
-
-        return new UserDto(findUser);
+        return new UserDto(userRepository.findById(userId).orElseThrow(NoSuchElementException::new));
     }
 
     /**
