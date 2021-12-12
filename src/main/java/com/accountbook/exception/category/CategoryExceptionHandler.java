@@ -17,27 +17,65 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice(basePackageClasses = {CategoryApiController.class})
 public class CategoryExceptionHandler {
 
-    @ExceptionHandler
-    public ApiResponse CategoryExceptionHandler(CategoryException ce) {
-
-        if(ce instanceof CategoryNotDeletedException) {
-            return new ApiResponse("", HttpStatus.EXPECTATION_FAILED, ce.getMessage());
-        }
-
-        else {
-            return new ApiResponse("", HttpStatus.OK, ce.getMessage());
-        }
-    }
+    // TODO Design Pattern 을 적용해서 중복을 줄일 수 있지 않을까?
 
     /**
-     * 상세 조회 예외
+     * 카테고리 정보 추가 예외
      * @param e
      * @return
      */
     @ExceptionHandler
-    public ApiResponse NoSuchElementExceptionHandler(NoSuchElementException e) {
+    public ApiResponse insertExceptionHandler (CategoryNotInsertedException e) {
 
-        return new ApiResponse(CategoryExceptionCode.FIND_DETAIL_ERROR, HttpStatus.EXPECTATION_FAILED, ""); // TODO 메시지 관리
+        return new ApiResponse(
+                CategoryExceptionCode.INSERT_FAIL.getCode(),
+                HttpStatus.EXPECTATION_FAILED,
+                CategoryExceptionCode.INSERT_FAIL.getMessage()
+        );
+    }
 
+    /**
+     * 카테고리 정보 조회 예외
+     * @param e
+     * @return
+     */
+    @ExceptionHandler
+    public ApiResponse foundExceptionHandler (CategoryNotFoundException e) {
+
+        return new ApiResponse(
+                CategoryExceptionCode.NOT_FOUND.getCode(),
+                HttpStatus.EXPECTATION_FAILED,
+                CategoryExceptionCode.NOT_FOUND.getMessage()
+        );
+    }
+
+    /**
+     * 카테고리 정보 수정 예외
+     * @param e
+     * @return
+     */
+    @ExceptionHandler
+    public ApiResponse updateExceptionHandler (CategoryNotUpdatedException e) {
+
+        return new ApiResponse(
+                CategoryExceptionCode.UPDATE_FAIL.getCode(),
+                HttpStatus.EXPECTATION_FAILED,
+                CategoryExceptionCode.UPDATE_FAIL.getMessage()
+        );
+    }
+
+    /**
+     * 카테고리 정보 삭제 예외
+     * @param e
+     * @return
+     */
+    @ExceptionHandler
+    public ApiResponse deleteExceptionHandler (CategoryNotDeletedException e) {
+
+        return new ApiResponse(
+                CategoryExceptionCode.DELETE_FAIL.getCode(),
+                HttpStatus.EXPECTATION_FAILED,
+                CategoryExceptionCode.DELETE_FAIL.getMessage()
+        );
     }
 }
