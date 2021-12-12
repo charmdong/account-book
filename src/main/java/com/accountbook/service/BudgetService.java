@@ -9,6 +9,7 @@ import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.Budget.BudgetDto;
 import com.accountbook.dto.Budget.BudgetRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class BudgetService {
     //예산 상세 조회
     @Transactional(readOnly = true)
     public BudgetDto getOneBudget(Long budgetSeq){
-        return new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new NoSuchElementException()));
+        return new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(()-> new NoSuchElementException()));
     }
 
     //예산 조회 by User
@@ -46,23 +47,40 @@ public class BudgetService {
     }
 
     //예산 등록
-    public void enrollBudget(BudgetRequest budgetRequest){
+    public Long enrollBudget(BudgetRequest budgetRequest){
         User user = userRepository.findById(budgetRequest.getUserId()).orElseThrow(() -> new NoSuchElementException());
-        Category category = categoryRepository.getCategory(budgetRequest.getCategorySeq());
+        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq());
         Budget budget = Budget.createBudget(budgetRequest, category, user);
 
         budgetRepository.saveBudget(budget);
+        return budget.getSeq();
     }
 
     //예산 수정
-    public void updateBudget(BudgetRequest budgetRequest, Long budgetSeq){
+    public BudgetDto updateBudget(BudgetRequest budgetRequest, Long budgetSeq){
         Budget budget = budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new NoSuchElementException());
-        Category category = categoryRepository.getCategory(budgetRequest.getCategorySeq());
+        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq());
+
+        //Dirty checking
         budget.changeBudget(budgetRequest, category);
+
+        //flush 후 조회
+        budgetRepository.flush();
+        BudgetDto findBudgetDto = new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new NoSuchElementException()));
+
+        return findBudgetDto;
     }
 
     //예산 삭제
-    public void deleteBudget(Long budgetSeq){
-        budgetRepository.deleteById(budgetSeq);
+    public Boolean deleteBudget(Long budgetSeq){
+        try {
+            budgetRepository.deleteById(budgetSeq);
+            budgetRepository.findBySeq(budgetSeq).orElseThrow(()-> new NoSuchElementException());
+        }catch (EmptyResultDataAccessException e) {
+            return false;
+        }catch (NoSuchElementException e){
+            return true;
+        }
+        return true;
     }
 }

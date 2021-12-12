@@ -7,6 +7,7 @@ import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,21 +41,35 @@ public class EcoEventService {
     }
 
     //이벤트 등록
-    public void enrollEcoEvents(EcoEventRequest ecoEventRequest){
-        Category category = categoryRepository.getCategory(ecoEventRequest.getCategorySeq());
+    public Long enrollEcoEvents(EcoEventRequest ecoEventRequest){
+        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq());
         EcoEvent ecoEvent = EcoEvent.createEcoEvent(ecoEventRequest, category);
         ecoEventRepository.save(ecoEvent);
+        return ecoEvent.getSeq();
     }
 
     //이벤트 수정
-    public void updateEcoEvents(EcoEventRequest ecoEventRequest, Long ecoEventSeq){
-        Category category = categoryRepository.getCategory(ecoEventRequest.getCategorySeq());
+    public EcoEventDto updateEcoEvents(EcoEventRequest ecoEventRequest, Long ecoEventSeq){
+        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq());
         EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new NoSuchElementException("해당 금융 이벤트가 존재하지 않습니다."));
+
         ecoEvent.changeEcoEvent(ecoEventRequest,category);
+
+        ecoEventRepository.flush();
+        EcoEvent Ecoevent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new NoSuchElementException("해당 금융 이벤트가 존재하지 않습니다."));
+        return new EcoEventDto(Ecoevent);
     }
 
     //이벤트 삭제
-    public void deleteEcoEvents(Long EventsSeq){
-        ecoEventRepository.deleteById(EventsSeq);
+    public Boolean deleteEcoEvents(Long EventsSeq){
+        try {
+            ecoEventRepository.deleteById(EventsSeq);
+            ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new NoSuchElementException());
+        }catch (EmptyResultDataAccessException e) {
+            return false;
+        }catch (NoSuchElementException e){
+            return true;
+        }
+        return true;
     }
 }
