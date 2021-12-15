@@ -4,7 +4,9 @@ import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
+import com.accountbook.exception.user.UserNotDeletedException;
 import com.accountbook.exception.user.UserNotFoundException;
+import com.accountbook.exception.user.UserNotInsertedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,10 @@ public class UserService {
 
         User user = User.createUser(request);
         userRepository.addUser(user);
+
+        if(userRepository.findById(user.getId()).isEmpty()) {
+            throw new UserNotInsertedException();
+        }
 
         return getUser(user.getId());
     }
@@ -82,7 +88,11 @@ public class UserService {
 
         userRepository.deleteById(userId);
 
-        return userRepository.findById(userId).isEmpty();
+        if(userRepository.findById(userId).isEmpty()) {
+            throw new UserNotDeletedException();
+        }
+
+        return true;
     }
 
     /**

@@ -12,15 +12,5 @@ import java.util.NoSuchElementException;
 public class UserExceptionHandler {
 
 
-    /**
-     * 상세 조회 예외
-     * @param e
-     * @return
-     */
-    @ExceptionHandler
-    public ApiResponse NoSuchElementExceptionHandler(NoSuchElementException e) {
 
-        return new ApiResponse(CategoryExceptionCode.FIND_DETAIL_ERROR, HttpStatus.EXPECTATION_FAILED, ""); // TODO 메시지 관리
-
-    }
 }

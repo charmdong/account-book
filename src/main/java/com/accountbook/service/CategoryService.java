@@ -134,7 +134,7 @@ public class CategoryService {
         Category category = categoryRepository.findBySeq(seq).orElseThrow(CategoryNotFoundException::new);
 
         // 사용자 카테고리 목록 수정
-        category.updateUserCategoryList(user);
+        category.removeUserCategoryList(user);
 
         // 사용자 카테고리 삭제
         categoryRepository.deleteBySeq(seq);
