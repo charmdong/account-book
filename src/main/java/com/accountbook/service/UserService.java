@@ -4,15 +4,13 @@ import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
-import com.accountbook.exception.user.UserNotDeletedException;
+import com.accountbook.exception.user.DeleteUserException;
+import com.accountbook.exception.user.UserExceptionCode;
 import com.accountbook.exception.user.UserNotFoundException;
-import com.accountbook.exception.user.UserNotInsertedException;
+import com.accountbook.exception.user.InsertUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * UserService
@@ -37,7 +35,7 @@ public class UserService {
         userRepository.addUser(user);
 
         if(userRepository.findById(user.getId()).isEmpty()) {
-            throw new UserNotInsertedException();
+            throw new InsertUserException(UserExceptionCode.INSERT_FAIL);
         }
 
         return getUser(user.getId());
@@ -51,7 +49,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getUser(String userId) throws Exception {
 
-        return new UserDto(userRepository.findById(userId).orElseThrow(UserNotFoundException::new));
+        return new UserDto(
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND))
+        );
     }
 
     /**
@@ -60,7 +62,10 @@ public class UserService {
      */
     public UserDto updateUser(String userId, UserRequest request) throws Exception {
 
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+
         user.changeUser(request);
 
         userRepository.flush();
@@ -89,7 +94,7 @@ public class UserService {
         userRepository.deleteById(userId);
 
         if(userRepository.findById(userId).isEmpty()) {
-            throw new UserNotDeletedException();
+            throw new DeleteUserException(UserExceptionCode.DELETE_FAIL);
         }
 
         return true;
@@ -105,7 +110,7 @@ public class UserService {
 
         User user = userRepository
                 .findByNameAndEmail(request.getName(), request.getEmail())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         return user.getId();
     }
@@ -120,7 +125,7 @@ public class UserService {
 
         User user = userRepository
                 .findByIdAndEmail(request.getId(), request.getEmail())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         return user.getId();
     }

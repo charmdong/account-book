@@ -8,17 +8,13 @@ import com.accountbook.domain.repository.category.ComCategoryRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.dto.category.CategoryDto;
-import com.accountbook.exception.category.CategoryNotDeletedException;
-import com.accountbook.exception.category.CategoryNotFoundException;
-import com.accountbook.exception.category.CategoryNotInsertedException;
-import com.accountbook.exception.category.CategoryNotUpdatedException;
+import com.accountbook.exception.category.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -66,7 +62,11 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDto getCategory(Long seq) throws Exception {
 
-        return new CategoryDto(categoryRepository.findBySeq(seq).orElseThrow(CategoryNotFoundException::new));
+        return new CategoryDto(
+                categoryRepository
+                        .findBySeq(seq)
+                        .orElseThrow(() -> new CategoryNotFoundException(CategoryExceptionCode.NOT_FOUND))
+        );
     }
 
     /**
@@ -86,7 +86,7 @@ public class CategoryService {
 
         // 3. Category 추가 안 된 경우
         if(categoryRepository.findBySeq(category.getSeq()).isEmpty()) {
-            throw new CategoryNotInsertedException();
+            throw new InsertCategoryException(CategoryExceptionCode.INSERT_FAIL);
         }
 
         // 4. category seq 반환
@@ -102,7 +102,9 @@ public class CategoryService {
     public CategoryDto updateCategory(Long seq, CategoryRequest request) throws Exception {
 
         // 1. 사용자 category 조회
-        Category category = categoryRepository.findBySeq(seq).orElseThrow(CategoryNotFoundException::new);
+        Category category = categoryRepository
+                .findBySeq(seq)
+                .orElseThrow(() -> new CategoryNotFoundException(CategoryExceptionCode.NOT_FOUND));
 
         // 2. category 공통 코드 조회
         ComCategory comCategory = getComCategory(request);
@@ -114,7 +116,7 @@ public class CategoryService {
         categoryRepository.flush();
         Category updatedCategory = categoryRepository
                                     .findBySeq(category.getSeq())
-                                    .orElseThrow(CategoryNotUpdatedException::new);
+                                    .orElseThrow(() -> new UpdateCategoryException(CategoryExceptionCode.UPDATE_FAIL));
 
         // 5. category seq 반환
         return new CategoryDto(updatedCategory);
@@ -131,7 +133,9 @@ public class CategoryService {
         User user = userRepository.findById(userId).get();
 
         // 사용자 카테고리 조회
-        Category category = categoryRepository.findBySeq(seq).orElseThrow(CategoryNotFoundException::new);
+        Category category = categoryRepository
+                .findBySeq(seq)
+                .orElseThrow(() -> new CategoryNotFoundException(CategoryExceptionCode.NOT_FOUND));
 
         // 사용자 카테고리 목록 수정
         category.removeUserCategoryList(user);
@@ -141,7 +145,7 @@ public class CategoryService {
 
         // 삭제되지 않은 경우 예외 발생
         if(categoryRepository.findBySeq(seq).isPresent()) {
-            throw new CategoryNotDeletedException();
+            throw new DeleteCategoryException();
         }
 
         return true;
