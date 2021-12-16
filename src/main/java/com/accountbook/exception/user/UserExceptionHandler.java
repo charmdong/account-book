@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
 /**
  * UserExceptionHandler
  *
@@ -26,13 +25,4 @@ public class UserExceptionHandler {
         );
     }
 
-    @ExceptionHandler(Exception.class)
-    public ApiResponse otherExceptionHandler (Exception e) {
-
-        return new ApiResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.OK,
-                "죄송해요;"
-        );
-    }
 }
