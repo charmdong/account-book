@@ -30,7 +30,7 @@ public class UserExceptionHandler {
     public ApiResponse otherExceptionHandler (Exception e) {
 
         return new ApiResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.OK,
                 "죄송해요;"
         );

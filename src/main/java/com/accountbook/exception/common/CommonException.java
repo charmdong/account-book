@@ -7,14 +7,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * CommonException
+ *
+ * @author donggun
+ * @since 2021/12/17
+ */
 public class CommonException extends RuntimeException {
 
-    private int code;
-    private String customMessage;
+    public CommonException() { /* empty */ }
 
-    public CommonException(int code, String message) {
-    	super(message, new Throwable());
-        this.code = code;
-        this.customMessage = message;
+    public CommonException(String message) {
+        super(message);
     }
 }
