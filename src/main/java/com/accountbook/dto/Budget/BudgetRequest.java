@@ -7,16 +7,16 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class BudgetRequest {
 
-    @NotEmpty
+    @NotEmpty(message = "카테고리 누락")
     private Long categorySeq;
 
-    @NotEmpty
+    @NotEmpty(message = "기간 타입 누락")
     private PeriodType periodType;
 
-    @NotEmpty
+    @NotEmpty(message = "금액 누락")
     private Long amount;
 
-    @NotEmpty
+    @NotEmpty(message = "유저 아이디 누락")
     private String userId;
 
 
