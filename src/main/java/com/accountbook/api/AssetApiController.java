@@ -32,7 +32,7 @@ public class AssetApiController {
 
     // 자산 전체 조회
     @GetMapping("")
-    public ApiResponse getAssetList(@RequestParam String param) {
+    public ApiResponse getAssetList(@RequestParam String param) throws Exception {
         String userId = session.getAttribute("userId").toString();
         List<AssetDto> data = assetService.getAssetList(userId);
 
@@ -42,7 +42,7 @@ public class AssetApiController {
 
     // 자산 상세 조회
     @GetMapping("/{assetSeq}")
-    public ApiResponse getAssetDetail(@PathVariable("assetSeq") long assetSeq) {
+    public ApiResponse getAssetDetail(@PathVariable("assetSeq") long assetSeq) throws Exception {
         AssetDto data =  assetService.getAsset(assetSeq);
         ApiResponse response = new ApiResponse(data, HttpStatus.OK, "SUCCES");
         return response;
@@ -50,7 +50,7 @@ public class AssetApiController {
 
     // 자산 등록
     @PostMapping("")
-    public ApiResponse postMethodName(@RequestBody @Valid AssetRequest assetRequest) {
+    public ApiResponse postMethodName(@RequestBody @Valid AssetRequest assetRequest) throws Exception {
         Boolean result = assetService.registAsset(assetRequest);
         ApiResponse response = new ApiResponse(result, HttpStatus.OK, "SUCCES");
         return response;
@@ -58,7 +58,7 @@ public class AssetApiController {
 
     // 자산 수정
     @PutMapping("/{assetSeq}")
-    public ApiResponse updateAsset(@PathVariable("assetSeq") long assetSeq, @RequestBody @Valid AssetRequest assetRequest) {
+    public ApiResponse updateAsset(@PathVariable("assetSeq") long assetSeq, @RequestBody @Valid AssetRequest assetRequest) throws Exception {
         AssetDto data = assetService.updateAseet(assetSeq, assetRequest);
         ApiResponse response = new ApiResponse(data, HttpStatus.OK, "SUCCES");
         return response;
@@ -66,7 +66,7 @@ public class AssetApiController {
 
     // 자산 삭제
     @DeleteMapping("/{assetSeq}")
-    public ApiResponse removeAsset(@PathVariable("assetSeq") long assetSeq) {
+    public ApiResponse removeAsset(@PathVariable("assetSeq") long assetSeq) throws Exception {
         Boolean result = assetService.removeAsset(assetSeq);
         ApiResponse response = new ApiResponse(result, HttpStatus.OK, "SUCCES");
         return response;
