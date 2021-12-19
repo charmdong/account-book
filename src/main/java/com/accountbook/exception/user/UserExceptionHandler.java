@@ -2,26 +2,27 @@ package com.accountbook.exception.user;
 
 import com.accountbook.api.UserApiController;
 import com.accountbook.dto.asset.ApiResponse;
-import com.accountbook.exception.category.CategoryExceptionCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.NoSuchElementException;
-
+/**
+ * UserExceptionHandler
+ *
+ * @author donggun
+ * @since 2021/12/16
+ */
 @RestControllerAdvice(basePackageClasses = {UserApiController.class})
 public class UserExceptionHandler {
 
+    @ExceptionHandler(UserException.class)
+    public ApiResponse userExceptionHandler (UserException ue) {
 
-    /**
-     * 상세 조회 예외
-     * @param e
-     * @return
-     */
-    @ExceptionHandler
-    public ApiResponse NoSuchElementExceptionHandler(NoSuchElementException e) {
-
-        return new ApiResponse(CategoryExceptionCode.FIND_DETAIL_ERROR, HttpStatus.EXPECTATION_FAILED, ""); // TODO 메시지 관리
-
+        return new ApiResponse(
+                ue.getUserExceptionCode().getCode(), // 에러 코드는 여기서 내려주고
+                HttpStatus.OK, // 예외를 처리한 거니까 통신은 정상적이지 않은가?
+                ue.getUserExceptionCode().getMessage()
+        );
     }
+
 }

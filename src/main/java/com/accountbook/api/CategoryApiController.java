@@ -31,7 +31,7 @@ public class CategoryApiController {
      * @return 사용자 카테고리 목록
      */
     @GetMapping
-    public ApiResponse getCategoryListByUser(HttpSession session) {
+    public ApiResponse getCategoryListByUser(HttpSession session) throws Exception {
 
         String userId = (String) session.getAttribute("userId");
         return new ApiResponse(categoryService.getCategoryListByUser(userId), HttpStatus.OK, "SUCCESS");
@@ -44,7 +44,7 @@ public class CategoryApiController {
      * @return 사용자 카테고리 상세 정보
      */
     @GetMapping("/{categorySeq}")
-    public ApiResponse getCategory(@PathVariable("categorySeq") Long seq) {
+    public ApiResponse getCategory(@PathVariable("categorySeq") Long seq) throws Exception {
 
         return new ApiResponse(categoryService.getCategory(seq), HttpStatus.OK, "SUCCESS");
     }
@@ -55,7 +55,7 @@ public class CategoryApiController {
      * @param request
      */
     @PostMapping
-    public ApiResponse addCategory(@RequestBody @Valid CategoryRequest request) {
+    public ApiResponse addCategory(@RequestBody @Valid CategoryRequest request) throws Exception {
 
         return new ApiResponse(categoryService.addCategory(request), HttpStatus.OK, "SUCCESS");
     }
@@ -68,7 +68,7 @@ public class CategoryApiController {
      */
     @PatchMapping("/{categorySeq}")
     public ApiResponse updateCategory(@PathVariable("categorySeq") Long seq,
-                                   @RequestBody @Valid CategoryRequest request) {
+                                   @RequestBody @Valid CategoryRequest request) throws Exception {
 
         return new ApiResponse(categoryService.updateCategory(seq, request), HttpStatus.OK, "SUCCESS");
     }
@@ -79,7 +79,7 @@ public class CategoryApiController {
      * @param seq
      */
     @DeleteMapping("/{categorySeq}")
-    public ApiResponse deleteCategory(@PathVariable("categorySeq") Long seq, HttpSession session) {
+    public ApiResponse deleteCategory(@PathVariable("categorySeq") Long seq, HttpSession session) throws Exception {
 
         String userId = String.valueOf(session.getAttribute("userId"));
         return new ApiResponse(categoryService.deleteCategory(seq, userId), HttpStatus.OK, "SUCCESS");

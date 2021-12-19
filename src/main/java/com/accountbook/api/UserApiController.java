@@ -30,7 +30,7 @@ public class UserApiController {
      * @return 추가된 사용자 정보
      */
     @PostMapping
-    public ApiResponse addUser(@RequestBody @Valid UserRequest request) {
+    public ApiResponse addUser(@RequestBody @Valid UserRequest request) throws Exception {
 
         userService.addUser(request);
         UserDto createdUser = userService.getUser(request.getId());
@@ -44,7 +44,7 @@ public class UserApiController {
      * @return 사용자 정보
      */
     @GetMapping("/{userId}")
-    public ApiResponse getUser(@PathVariable("userId") String userId) {
+    public ApiResponse getUser(@PathVariable("userId") String userId) throws Exception {
 
         return new ApiResponse(userService.getUser(userId), HttpStatus.OK, "SUCCESS");
     }
@@ -56,7 +56,7 @@ public class UserApiController {
      * @return 수정된 사용자 정보
      */
     @PutMapping("/{userId}")
-    public ApiResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest request) {
+    public ApiResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest request) throws Exception {
 
         userService.updateUser(userId, request);
         UserDto updatedUser = userService.getUser(userId);
@@ -71,7 +71,7 @@ public class UserApiController {
      * @return
      */
     @PutMapping("/password/{userId}")
-    public ApiResponse changePassword(@PathVariable("userId") String userId, @RequestBody UserRequest request) {
+    public ApiResponse changePassword(@PathVariable("userId") String userId, @RequestBody UserRequest request) throws Exception {
 
         userService.changePassword(userId, request.getPassword());
         return new ApiResponse(true, HttpStatus.OK, "SUCCESS");
@@ -83,7 +83,7 @@ public class UserApiController {
      * @return 삭제 여부
      */
     @DeleteMapping("/{userId}")
-    public ApiResponse deleteUser(@PathVariable("userId") String userId) {
+    public ApiResponse deleteUser(@PathVariable("userId") String userId) throws Exception {
 
         userService.deleteUser(userId);
 
@@ -97,7 +97,7 @@ public class UserApiController {
      * @return 사용자 아이디
      */
     @PostMapping("/id")
-    public ApiResponse findUserId(@RequestBody UserRequest request) {
+    public ApiResponse findUserId(@RequestBody UserRequest request) throws Exception {
 
         return new ApiResponse(userService.findUserId(request), HttpStatus.OK, "SUCCESS");
     }
@@ -108,7 +108,7 @@ public class UserApiController {
      * @return 사용자 패스워드
      */
     @PostMapping("/password")
-    public ApiResponse findUserPassword(@RequestBody UserRequest request) {
+    public ApiResponse findUserPassword(@RequestBody UserRequest request) throws Exception {
         // TODO 사용자 패스워드를 반환하면 안됨. 이메일로 쏘든지 해야함.
         return new ApiResponse(userService.findPassword(request), HttpStatus.OK, "SUCCESS");
     }

@@ -54,7 +54,7 @@ public class Category extends BaseTimeInfo {
         user.getCategoryList().add(this);
     }
 
-    public void updateUserCategoryList(User user) {
+    public void removeUserCategoryList(User user) {
 
         user.getCategoryList().remove(this);
     }

@@ -4,12 +4,13 @@ import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
+import com.accountbook.exception.user.DeleteUserException;
+import com.accountbook.exception.user.UserExceptionCode;
+import com.accountbook.exception.user.UserNotFoundException;
+import com.accountbook.exception.user.InsertUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * UserService
@@ -28,10 +29,14 @@ public class UserService {
      * 회원가입
      * @param request
      */
-    public UserDto addUser(UserRequest request) {
+    public UserDto addUser(UserRequest request) throws Exception {
 
         User user = User.createUser(request);
         userRepository.addUser(user);
+
+        if(userRepository.findById(user.getId()).isEmpty()) {
+            throw new InsertUserException(UserExceptionCode.INSERT_FAIL);
+        }
 
         return getUser(user.getId());
     }
@@ -42,18 +47,25 @@ public class UserService {
      * @return
      */
     @Transactional(readOnly = true)
-    public UserDto getUser(String userId) {
+    public UserDto getUser(String userId) throws Exception {
 
-        return new UserDto(userRepository.findById(userId).orElseThrow(NoSuchElementException::new));
+        return new UserDto(
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND))
+        );
     }
 
     /**
      * 사용자 정보 수정
      * @param request
      */
-    public UserDto updateUser(String userId, UserRequest request) {
+    public UserDto updateUser(String userId, UserRequest request) throws Exception {
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+
         user.changeUser(request);
 
         userRepository.flush();
@@ -66,9 +78,9 @@ public class UserService {
      * @param userId
      * @param password
      */
-    public void changePassword(String userId, String password) {
+    public void changePassword(String userId, String password) throws Exception {
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.changePassword(password);
     }
 
@@ -77,11 +89,15 @@ public class UserService {
      * @param userId
      * @return 삭제 여부
      */
-    public Boolean deleteUser(String userId) {
+    public Boolean deleteUser(String userId) throws Exception {
 
         userRepository.deleteById(userId);
 
-        return userRepository.findById(userId).isEmpty();
+        if(userRepository.findById(userId).isEmpty()) {
+            throw new DeleteUserException(UserExceptionCode.DELETE_FAIL);
+        }
+
+        return true;
     }
 
     /**
@@ -90,9 +106,13 @@ public class UserService {
      * @return
      */
     @Transactional(readOnly = true)
-    public String findUserId(UserRequest request) {
+    public String findUserId(UserRequest request) throws Exception {
 
-        return userRepository.findByNameAndEmail(request.getName(), request.getEmail()).get().getId();
+        User user = userRepository
+                .findByNameAndEmail(request.getName(), request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+
+        return user.getId();
     }
 
     /**
@@ -101,8 +121,12 @@ public class UserService {
      * @return
      */
     @Transactional(readOnly = true)
-    public String findPassword(UserRequest request) {
+    public String findPassword(UserRequest request) throws Exception {
 
-        return userRepository.findByIdAndEmail(request.getId(), request.getEmail()).get().getPassword();
+        User user = userRepository
+                .findByIdAndEmail(request.getId(), request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+
+        return user.getId();
     }
 }
