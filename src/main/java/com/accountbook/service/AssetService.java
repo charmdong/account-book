@@ -43,9 +43,10 @@ public class AssetService {
         assetRepository.save(asset);
         assetRepository.flush();
 
-        // asset uid 확인 방법..?
-        Long seq = asset.getSeq();
-        System.out.println("@@@@@@@@@@@ : " + seq);
+        asset = assetRepository.findById(asset.getSeq()).orElse(null);
+        if (asset == null) {
+            throw new AssetException(AssetExceptionCode.FAILED_REGIST_ACCOUNT);
+        }
 
         return result;
     }
