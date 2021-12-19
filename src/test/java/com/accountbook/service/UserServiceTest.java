@@ -33,7 +33,7 @@ public class UserServiceTest {
 
     }
 
-    private UserRequest addUserSample () {
+    private UserRequest addUserSample () throws Exception {
         UserRequest request = new UserRequest();
 
         request.setId("test1");
