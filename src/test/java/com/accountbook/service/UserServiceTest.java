@@ -31,6 +31,7 @@ public class UserServiceTest {
         // given
         UserRequest request = addUserSample();
 
+        // when
     }
 
     private UserRequest addUserSample () throws Exception {
