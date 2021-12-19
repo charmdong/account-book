@@ -6,6 +6,9 @@ import com.accountbook.domain.entity.Asset;
 import com.accountbook.domain.repository.asset.AssetRepository;
 import com.accountbook.dto.asset.AssetDto;
 import com.accountbook.dto.asset.AssetRequest;
+import com.accountbook.exception.account.AssetException;
+import com.accountbook.exception.account.AssetExceptionCode;
+import com.accountbook.exception.account.AssetNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +31,7 @@ public class AssetService {
 
     // 자산 상세 조회
     public AssetDto getAsset(long assetSeq) throws Exception {
-        AssetDto ret = new AssetDto(assetRepository.findById(assetSeq).orElseThrow());
+        AssetDto ret = new AssetDto(assetRepository.findById(assetSeq).orElseThrow(() -> new AssetNotFoundException(AssetExceptionCode.NOT_FOUND_ACCOUNT)));
         return ret;
     }
 
@@ -39,26 +42,41 @@ public class AssetService {
         Asset asset = Asset.createAsset(assetRequest);
         assetRepository.save(asset);
         assetRepository.flush();
-        
+
+        // asset uid 확인 방법..?
+        // Asset asset = assetRepository.findById(assetSeq).orElse(null);
+        // if (asset == null) {
+        //     throw new AssetException(AssetExceptionCode.FAILED_REGIST_ACCOUNT);
+        // }
+
         return result;
     }
 
     // 자산 수정
     @Transactional(readOnly = false)
     public AssetDto updateAseet(long assetSeq, AssetRequest assetRequest) throws Exception {
-        Asset asset = assetRepository.findById(assetSeq).orElseThrow();
-        asset.changeAsset(assetRequest);
-        assetRepository.flush();
+        try {
+            Asset asset = assetRepository.findById(assetSeq).orElseThrow();
+            asset.changeAsset(assetRequest);
+            assetRepository.flush();
+        } catch (Exception e) {
+            throw new AssetException(AssetExceptionCode.FAILED_UPDATE_ACCOUNT);
+        }
 
         // 업데이트 확인용 조회
-        AssetDto assetDto = new AssetDto(assetRepository.findById(assetSeq).orElseThrow());
+        AssetDto assetDto = new AssetDto(assetRepository.findById(assetSeq).orElseThrow(() -> new AssetNotFoundException(AssetExceptionCode.NOT_FOUND_ACCOUNT)));
         return assetDto;
     }
 
     // 자산 삭제
     @Transactional(readOnly = false)
     public Boolean removeAsset(long assetSeq) throws Exception {
-        assetRepository.deleteById(assetSeq);
+        try {
+            assetRepository.deleteById(assetSeq);
+        } catch (Exception e) {
+            throw new AssetException(AssetExceptionCode.FAILED_DELETE_ACCOUNT);
+        }
+
         return Boolean.TRUE;
     }
 }
