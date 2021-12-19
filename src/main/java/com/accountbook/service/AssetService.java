@@ -43,10 +43,7 @@ public class AssetService {
         assetRepository.save(asset);
         assetRepository.flush();
 
-        asset = assetRepository.findById(asset.getSeq()).orElse(null);
-        if (asset == null) {
-            throw new AssetException(AssetExceptionCode.FAILED_REGIST_ACCOUNT);
-        }
+        asset = assetRepository.findById(asset.getSeq()).orElseThrow(() -> new AssetException(AssetExceptionCode.FAILED_REGIST_ACCOUNT));
 
         return result;
     }
@@ -64,6 +61,10 @@ public class AssetService {
 
         // 업데이트 확인용 조회
         AssetDto assetDto = new AssetDto(assetRepository.findById(assetSeq).orElseThrow(() -> new AssetNotFoundException(AssetExceptionCode.NOT_FOUND_ACCOUNT)));
+        
+        // 업데이트 확인 logic
+        
+
         return assetDto;
     }
 
