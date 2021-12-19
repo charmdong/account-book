@@ -1,6 +1,7 @@
 package com.accountbook.service;
 
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.List;
 
 import com.accountbook.domain.entity.User;
@@ -8,6 +9,7 @@ import com.accountbook.domain.enums.AssetType;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.asset.AssetDto;
 import com.accountbook.dto.asset.AssetRequest;
+import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 
 import org.junit.Test;
@@ -59,13 +61,18 @@ public class AssetServiceTest {
     @Test
     @Rollback(value = false)
     public void registAsset() throws Exception{
-        LocalDateTime localDateTime = LocalDateTime.now();
-        UserRequest userRequest = new UserRequest("test", "password", "Mingeon", "mingeon@kakao.com", localDateTime);
-        User user = User.createUser(userRequest);
-        userService.addUser(userRequest);
-        user = userRepository.findById("test").orElseThrow();
+        UserRequest request = new UserRequest();
 
-        AssetRequest assetRequest = new AssetRequest("월급", "regist test", 20000L, AssetType.BANK, user, true, localDateTime, localDateTime, localDateTime, true);
+        request.setId("test");
+        request.setPassword("password");
+        request.setName("testName");
+        request.setEmail("test@naver.com");
+        request.setBirthDate(Year.of(1993).atMonth(11).atDay(17).atTime(14,59));
+
+        UserDto userDto = userService.addUser(request);
+        User user = userRepository.findById("test1").orElseThrow();
+
+        AssetRequest assetRequest = new AssetRequest("월급", "regist test", 20000L, AssetType.BANK, user, true, LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), true);
         assetService.registAsset(assetRequest);
 
         var asset = assetService.getAssetList("test");
