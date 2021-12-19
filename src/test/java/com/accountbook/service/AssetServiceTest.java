@@ -70,7 +70,7 @@ public class AssetServiceTest {
         request.setBirthDate(Year.of(1993).atMonth(11).atDay(17).atTime(14,59));
 
         UserDto userDto = userService.addUser(request);
-        User user = userRepository.findById("test1").orElseThrow();
+        User user = userRepository.findById("test").orElseThrow();
 
         AssetRequest assetRequest = new AssetRequest("월급", "regist test", 20000L, AssetType.BANK, user, true, LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), true);
         assetService.registAsset(assetRequest);
