@@ -28,34 +28,26 @@ public class EcoEventApiController {
 
     //금융 이벤트 조회
     @GetMapping("/{eventSeq}")
-    public ApiResponse getOneBudget(@PathVariable long ecoEventSeq){
-        EcoEventDto ecoEventDto = ecoEventService.getOneEcoEvent(ecoEventSeq);
-        ApiResponse apiResponse = new ApiResponse(ecoEventDto, HttpStatus.OK, "SUCCESS");
-        return apiResponse;
+    public ApiResponse getOneBudget(@PathVariable long ecoEventSeq) throws Exception {
+        return new ApiResponse(ecoEventService.getOneEcoEvent(ecoEventSeq), HttpStatus.OK, "SUCCESS");
     }
 
     //금융 이벤트 등록
     @PostMapping("/")
-    public ApiResponse create(@RequestBody @Valid EcoEventRequest ecoEventRequest){
-        Long ecoEvenSeq = ecoEventService.enrollEcoEvents(ecoEventRequest);
-        ApiResponse apiResponse = new ApiResponse(ecoEvenSeq, HttpStatus.OK, "SUCCESS");
-        return apiResponse;
+    public ApiResponse create(@RequestBody @Valid EcoEventRequest ecoEventRequest) throws Exception {
+        return new ApiResponse(ecoEventService.enrollEcoEvents(ecoEventRequest), HttpStatus.OK, "SUCCESS");
     }
 
     //금융 이벤트 수정
     @PatchMapping("/{eventSeq}")
-    public ApiResponse update(@RequestBody @Valid EcoEventRequest ecoEventRequest, @PathVariable long ecoEventSeq){
-        EcoEventDto ecoEventDto = ecoEventService.updateEcoEvents(ecoEventRequest, ecoEventSeq);
-        ApiResponse apiResponse = new ApiResponse(ecoEventDto, HttpStatus.OK, "SUCCESS");
-        return apiResponse;
+    public ApiResponse update(@RequestBody @Valid EcoEventRequest ecoEventRequest, @PathVariable long ecoEventSeq) throws Exception {
+        return new ApiResponse(ecoEventService.updateEcoEvents(ecoEventRequest, ecoEventSeq), HttpStatus.OK, "SUCCESS");
     }
 
     //금융 이벤트 삭제
     @DeleteMapping("/{eventSeq}")
-    public ApiResponse delete(@PathVariable long ecoEventSeq){
-        Boolean result = ecoEventService.deleteEcoEvents(ecoEventSeq);
-        ApiResponse apiResponse = new ApiResponse(result, HttpStatus.OK, "SUCCESS");
-        return apiResponse;
+    public ApiResponse delete(@PathVariable long ecoEventSeq) throws Exception {
+        return new ApiResponse(ecoEventService.deleteEcoEvents(ecoEventSeq), HttpStatus.OK, "SUCCESS");
     }
 }
 
