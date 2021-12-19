@@ -38,7 +38,7 @@ class BudgetServiceTest {
 
     //예산 등록
     @Test
-    void enroll_Budget() {
+    void enroll_Budget() throws Exception{
         //given
         BudgetRequest budgetRequest = createBudgetRequest();
 
@@ -53,7 +53,7 @@ class BudgetServiceTest {
 
     //예산 수정
     @Test
-    public void update_Budget() {
+    public void update_Budget() throws Exception{
         //given
         //1. 예산 등록
         BudgetRequest budgetRequest = createBudgetRequest();
@@ -74,7 +74,7 @@ class BudgetServiceTest {
 
     //예산 삭제
     @Test
-    public void delete_Budget() {
+    public void delete_Budget() throws Exception{
         //given
         BudgetRequest budgetRequest = createBudgetRequest();
         Long budgetSeq = budgetService.enrollBudget(budgetRequest);
@@ -89,7 +89,7 @@ class BudgetServiceTest {
     }
 
     //테스트용 budgetRequest 생성
-    private BudgetRequest createBudgetRequest() {
+    private BudgetRequest createBudgetRequest() throws Exception{
         String testUserId = getUser();
         Long testCategorySeq = getCategory(testUserId);
         BudgetRequest budgetRequest = new BudgetRequest(testCategorySeq, PeriodType.MONTHLY, 100000L, testUserId);
@@ -98,7 +98,7 @@ class BudgetServiceTest {
     }
 
     //테스트용 User 생성
-    public String getUser(){
+    public String getUser() throws Exception{
         UserRequest request = new UserRequest();
         String userId = "rlfehd1";
 
@@ -114,7 +114,7 @@ class BudgetServiceTest {
     }
 
     //테스트용 Category 생성
-    private Long getCategory(String userId) {
+    private Long getCategory(String userId) throws Exception{
 
         CategoryRequest categoryRequest = new CategoryRequest();
 

@@ -40,7 +40,7 @@ class EcoEventServiceTest {
 
     //금융 이벤트 등록
     @Test
-    public void enrollEcoEvnet(){
+    public void enrollEcoEvnet() throws Exception{
         //given
         int prevSize = ecoEventService.getAllEcoEvent().size();
         EcoEventRequest ecoEventRequest = getEcoEventRequest();
@@ -53,7 +53,7 @@ class EcoEventServiceTest {
 
     //금융 이벤트 수정
     @Test
-    public void updateEcoEvent(){
+    public void updateEcoEvent() throws Exception{
         //given
         EcoEventRequest ecoEventRequest = getEcoEventRequest();
         ecoEventService.enrollEcoEvents(ecoEventRequest);
@@ -74,7 +74,7 @@ class EcoEventServiceTest {
     //@Test(expected = Not)
     @Test
     @Rollback(false)
-    public void deleteEcoEvnet(){
+    public void deleteEcoEvnet() throws Exception{
         //given
         EcoEventRequest ecoEventRequest = getEcoEventRequest();
         ecoEventService.enrollEcoEvents(ecoEventRequest);
@@ -88,7 +88,7 @@ class EcoEventServiceTest {
         ecoEventService.getOneEcoEvent(ecoEventDto.getSeq());
     }
 
-    public EcoEventRequest getEcoEventRequest(){
+    public EcoEventRequest getEcoEventRequest() throws Exception{
         String userId = getUser();
         Long categorySeq = getCategory(userId);
 
@@ -97,7 +97,7 @@ class EcoEventServiceTest {
     }
 
     //테스트용 User 생성
-    private String getUser() {
+    private String getUser() throws Exception{
         UserRequest request = new UserRequest();
         String userId = "rlfehd1";
 
@@ -113,7 +113,7 @@ class EcoEventServiceTest {
     }
 
     //테스트용 Category 생성
-    private Long getCategory(String userId) {
+    private Long getCategory(String userId) throws Exception{
 
         CategoryRequest categoryRequest = new CategoryRequest();
 
