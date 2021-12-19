@@ -13,11 +13,6 @@ import java.util.NoSuchElementException;
 public class BudgetExceptionHandler {
 
     @ExceptionHandler
-    public ApiResponse NotExpectedExceptionHandler(Exception e){
-        return new ApiResponse(BudgetExceptionCode.NOT_EXPECTED_ERROR.getCode(),HttpStatus.EXPECTATION_FAILED,BudgetExceptionCode.NOT_EXPECTED_ERROR.getMsg());
-    }
-
-    @ExceptionHandler
     public ApiResponse NoSuchElementExceptionHandler(NoSuchElementException e){
         return new ApiResponse(BudgetExceptionCode.BUDGET_NOT_FOUND.getCode(), HttpStatus.EXPECTATION_FAILED,BudgetExceptionCode.BUDGET_NOT_FOUND.getMsg());
     }
@@ -25,5 +20,10 @@ public class BudgetExceptionHandler {
     @ExceptionHandler
     public ApiResponse EmptyResultDataAccessExceptionHandler(EmptyResultDataAccessException e){
         return new ApiResponse(BudgetExceptionCode.ACCESS_EMPTY_DATA.getCode(), HttpStatus.EXPECTATION_FAILED,BudgetExceptionCode.ACCESS_EMPTY_DATA.getMsg());
+    }
+
+    @ExceptionHandler
+    public ApiResponse NotExpectedExceptionHandler(Exception e){
+        return new ApiResponse(BudgetExceptionCode.NOT_EXPECTED_ERROR.getCode(),HttpStatus.EXPECTATION_FAILED,BudgetExceptionCode.NOT_EXPECTED_ERROR.getMsg());
     }
 }

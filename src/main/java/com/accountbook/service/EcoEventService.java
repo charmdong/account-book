@@ -33,7 +33,7 @@ public class EcoEventService {
     //이벤트 상세 조회
     @Transactional(readOnly = true)
     public EcoEventDto getOneEcoEvent(Long ecoEventSeq) throws Exception{
-        return new EcoEventDto(ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new NoSuchElementException("해당 금융 이벤트가 존재하지 않습니다.")));
+        return new EcoEventDto(ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new NoSuchElementException()));
     }
 
     @Transactional(readOnly = true)
@@ -53,12 +53,12 @@ public class EcoEventService {
     //이벤트 수정
     public EcoEventDto updateEcoEvents(EcoEventRequest ecoEventRequest, Long ecoEventSeq) throws Exception{
         Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()->new RelatedCategoryNotFoundException());
-        EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new NoSuchElementException("해당 금융 이벤트가 존재하지 않습니다."));
+        EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new NoSuchElementException());
 
         ecoEvent.changeEcoEvent(ecoEventRequest,category);
 
         ecoEventRepository.flush();
-        EcoEvent Ecoevent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new EcoEventUpdateException("해당 금융 이벤트 수정에 실패했습니다."));
+        EcoEvent Ecoevent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new EcoEventUpdateException());
         return new EcoEventDto(Ecoevent);
     }
 

@@ -13,24 +13,23 @@ import java.util.NoSuchElementException;
 public class EcoEventExceptionHandler {
 
     @ExceptionHandler
-    public ApiResponse NotExpectedExceptionHandler(Exception e){
-        return new ApiResponse(EcoEventExceptionCode.NOT_EXPECTED_ERROR.getCode(),HttpStatus.EXPECTATION_FAILED,EcoEventExceptionCode.NOT_EXPECTED_ERROR.getMsg());
+    public ApiResponse NoSuchElementExceptionHandler(NoSuchElementException e){
+        return new ApiResponse(EcoEventExceptionCode.ECOEVENT_NOT_FOUND.getCode(), HttpStatus.EXPECTATION_FAILED,EcoEventExceptionCode.ECOEVENT_NOT_FOUND.getMsg());
     }
 
     @ExceptionHandler
-    public ApiResponse NoSuchElementExceptionHandler(NoSuchElementException e){
-        return new ApiResponse(EcoEventExceptionCode.ECOEVENT_NOT_FOUND.getCode(), HttpStatus.EXPECTATION_FAILED,EcoEventExceptionCode.ECOEVENT_NOT_FOUND.getMsg());
+    public ApiResponse RelatedCategoryNotFoundHandler(RelatedCategoryNotFoundException e){
+        return new ApiResponse(EcoEventExceptionCode.CATEGORY_NOT_FOUND.getCode(), HttpStatus.EXPECTATION_FAILED,EcoEventExceptionCode.CATEGORY_NOT_FOUND.getMsg());
     }
 
     @ExceptionHandler
     public ApiResponse EmptyResultDataAccessExceptionHandler(EmptyResultDataAccessException e){
         return new ApiResponse(EcoEventExceptionCode.ACCESS_EMPTY_DATA.getCode(), HttpStatus.EXPECTATION_FAILED,EcoEventExceptionCode.ACCESS_EMPTY_DATA.getMsg());
     }
-
+    
     @ExceptionHandler
-    public ApiResponse RelatedCateforyNotFoundHandler(RelatedCategoryNotFoundException e){
-        return new ApiResponse(EcoEventExceptionCode.CATEGORY_NOT_FOUND.getCode(), HttpStatus.EXPECTATION_FAILED,EcoEventExceptionCode.CATEGORY_NOT_FOUND.getMsg());
+    public ApiResponse NotExpectedExceptionHandler(Exception e){
+        return new ApiResponse(EcoEventExceptionCode.NOT_EXPECTED_ERROR.getCode(),HttpStatus.EXPECTATION_FAILED,EcoEventExceptionCode.NOT_EXPECTED_ERROR.getMsg());
     }
-
 
 }
