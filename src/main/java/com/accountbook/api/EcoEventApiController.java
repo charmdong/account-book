@@ -1,8 +1,8 @@
 package com.accountbook.api;
 
+import com.accountbook.api.responseModel.ApiResponse;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
-import com.accountbook.dto.asset.ApiResponse;
 import com.accountbook.service.EcoEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
