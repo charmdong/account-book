@@ -25,6 +25,8 @@ public class UserService {
     /**
      * 회원가입
      * @param request
+     * @return UserDto
+     * @throws Exception
      */
     public UserDto addUser(UserRequest request) throws Exception {
 
@@ -41,7 +43,8 @@ public class UserService {
     /**
      * 사용자 정보 조회
      * @param userId
-     * @return
+     * @return UserDto
+     * @throws Exception
      */
     @Transactional(readOnly = true)
     public UserDto getUser(String userId) throws Exception {
@@ -56,6 +59,8 @@ public class UserService {
     /**
      * 사용자 정보 수정
      * @param request
+     * @return UserDto
+     * @throws Exception
      */
     public UserDto updateUser(String userId, UserRequest request) throws Exception {
 
@@ -76,6 +81,7 @@ public class UserService {
      * 사용자 비밀번호 변경
      * @param userId
      * @param password
+     * @throws Exception
      */
     public void changePassword(String userId, String password) throws Exception {
 
@@ -92,6 +98,7 @@ public class UserService {
      * 사용자 탈퇴
      * @param userId
      * @return 삭제 여부
+     * @throws Exception
      */
     public Boolean deleteUser(String userId) throws Exception {
 
@@ -107,7 +114,8 @@ public class UserService {
     /**
      * 사용자 아이디 찾기
      * @param request
-     * @return
+     * @return userId
+     * @throws Exception
      */
     @Transactional(readOnly = true)
     public String findUserId(UserRequest request) throws Exception {
@@ -122,7 +130,8 @@ public class UserService {
     /**
      * 사용자 패스워드 찾기
      * @param request
-     * @return
+     * @return password
+     * @throws Exception
      */
     @Transactional(readOnly = true)
     public String findPassword(UserRequest request) throws Exception {
