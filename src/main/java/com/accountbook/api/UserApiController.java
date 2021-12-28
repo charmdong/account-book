@@ -3,16 +3,13 @@ package com.accountbook.api;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.api.responseModel.ApiResponse;
 import com.accountbook.dto.user.UserDto;
+import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 사용자 API Controller
@@ -35,7 +32,7 @@ public class UserApiController {
         userService.addUser(request);
         UserDto createdUser = userService.getUser(request.getId());
 
-        return new ApiResponse(createdUser, HttpStatus.OK, "SUCCESS");
+        return new ApiResponse(createdUser, HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -46,7 +43,7 @@ public class UserApiController {
     @GetMapping("/{userId}")
     public ApiResponse getUser(@PathVariable("userId") String userId) throws Exception {
 
-        return new ApiResponse(userService.getUser(userId), HttpStatus.OK, "SUCCESS");
+        return new ApiResponse(userService.getUser(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -61,7 +58,7 @@ public class UserApiController {
         userService.updateUser(userId, request);
         UserDto updatedUser = userService.getUser(userId);
 
-        return new ApiResponse(updatedUser, HttpStatus.OK, "SUCCESS");
+        return new ApiResponse(updatedUser, HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -74,7 +71,7 @@ public class UserApiController {
     public ApiResponse changePassword(@PathVariable("userId") String userId, @RequestBody UserRequest request) throws Exception {
 
         userService.changePassword(userId, request.getPassword());
-        return new ApiResponse(true, HttpStatus.OK, "SUCCESS");
+        return new ApiResponse(true, HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -88,7 +85,7 @@ public class UserApiController {
         userService.deleteUser(userId);
 
         // TODO 삭제 여부 어떻게 확인? Service 단에서 삭제 됐는 지 확인 후 예외 던지기?
-        return new ApiResponse("", HttpStatus.OK, "SUCCESS");
+        return new ApiResponse("", HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -99,7 +96,7 @@ public class UserApiController {
     @PostMapping("/id")
     public ApiResponse findUserId(@RequestBody UserRequest request) throws Exception {
 
-        return new ApiResponse(userService.findUserId(request), HttpStatus.OK, "SUCCESS");
+        return new ApiResponse(userService.findUserId(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -110,7 +107,7 @@ public class UserApiController {
     @PostMapping("/password")
     public ApiResponse findUserPassword(@RequestBody UserRequest request) throws Exception {
         // TODO 사용자 패스워드를 반환하면 안됨. 이메일로 쏘든지 해야함.
-        return new ApiResponse(userService.findPassword(request), HttpStatus.OK, "SUCCESS");
+        return new ApiResponse(userService.findPassword(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
 }
