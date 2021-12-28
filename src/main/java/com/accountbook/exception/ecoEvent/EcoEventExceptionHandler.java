@@ -1,7 +1,7 @@
 package com.accountbook.exception.ecoEvent;
 
 import com.accountbook.api.EcoEventApiController;
-import com.accountbook.api.responseModel.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

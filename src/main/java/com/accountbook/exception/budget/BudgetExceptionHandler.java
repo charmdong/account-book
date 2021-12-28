@@ -1,7 +1,7 @@
 package com.accountbook.exception.budget;
 
 import com.accountbook.api.BudgetApiController;
-import com.accountbook.api.responseModel.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

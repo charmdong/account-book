@@ -1,6 +1,6 @@
 package com.accountbook.exception.common;
 
-import com.accountbook.api.responseModel.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

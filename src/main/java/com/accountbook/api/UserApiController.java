@@ -1,7 +1,7 @@
 package com.accountbook.api;
 
 import com.accountbook.dto.user.UserRequest;
-import com.accountbook.api.responseModel.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.UserService;

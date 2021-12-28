@@ -1,4 +1,4 @@
-package com.accountbook.api.responseModel;
+package com.accountbook.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

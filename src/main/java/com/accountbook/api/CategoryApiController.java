@@ -1,6 +1,6 @@
 package com.accountbook.api;
 
-import com.accountbook.api.responseModel.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.CategoryService;

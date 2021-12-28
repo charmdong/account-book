@@ -1,6 +1,6 @@
 package com.accountbook.api;
 
-import com.accountbook.api.responseModel.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import com.accountbook.service.EcoEventService;
