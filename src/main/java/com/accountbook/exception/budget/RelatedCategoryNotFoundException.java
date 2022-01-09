@@ -1,6 +1,6 @@
 package com.accountbook.exception.budget;
 
-public class RelatedCategoryNotFoundException extends RuntimeException{
+public class RelatedCategoryNotFoundException extends BudgetException{
     public RelatedCategoryNotFoundException() {
         super();
     }

@@ -18,6 +18,6 @@ public interface EcoEventRepository extends JpaRepository<EcoEvent, Long> ,EcoEv
     Optional<EcoEvent> findBySeq(Long ecoEventSeq);
 
     //금융 이벤트  삭제
-    void deleteById(Long ecoEventSeq);
+    void deleteBySeq(Long ecoEventSeq);
 
 }

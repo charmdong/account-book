@@ -5,15 +5,14 @@ import lombok.Getter;
 @Getter
 public enum EcoEventExceptionCode {
 
-    NOT_EXPECTED_ERROR(5000, "Not expected error."),
-    ECOEVENT_NOT_FOUND(5001, "EcoEvent does not existed."),
-    ACCESS_EMPTY_DATA(5002, "Access empty data"),
-    CATEGORY_NOT_FOUND(5003,"Check related Category");
+    NOT_EXPECTED_ERROR(5000L, "Not expected error."),
+    ECOEVENT_NOT_FOUND(5001L, "EcoEvent does not existed."),
+    CATEGORY_NOT_FOUND(5003L,"Check related Category");
 
-    public int code;
+    public Long code;
     public String msg;
 
-    EcoEventExceptionCode(int code, String msg) {
+    EcoEventExceptionCode(Long code, String msg) {
         this.code = code;
         this.msg = msg;
     }

@@ -2,6 +2,7 @@ package com.accountbook.service;
 
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.enums.PeriodType;
+import com.accountbook.domain.repository.budget.BudgetRepository;
 import com.accountbook.dto.Budget.BudgetDto;
 import com.accountbook.dto.Budget.BudgetRequest;
 import com.accountbook.dto.category.CategoryDto;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
@@ -35,6 +37,9 @@ class BudgetServiceTest {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private BudgetRepository budgetRepository;
 
     //예산 등록
     @Test
@@ -74,18 +79,21 @@ class BudgetServiceTest {
 
     //예산 삭제
     @Test
+    @Rollback(value = false)
     public void delete_Budget() throws Exception{
         //given
         BudgetRequest budgetRequest = createBudgetRequest();
         Long budgetSeq = budgetService.enrollBudget(budgetRequest);
 
+        //budgetRepository.flush();
+        System.err.println(budgetSeq);
         //when
         boolean result1 = budgetService.deleteBudget(budgetSeq);
-        boolean result2 = budgetService.deleteBudget(100L);
-
+        //boolean result2 = budgetService.deleteBudget(100L);
+        System.err.println(result1);
         //then
         assertTrue(result1);
-        assertFalse(result2);
+
     }
 
     //테스트용 budgetRequest 생성

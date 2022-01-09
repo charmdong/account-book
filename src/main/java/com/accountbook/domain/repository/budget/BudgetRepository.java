@@ -17,7 +17,7 @@ public interface BudgetRepository extends JpaRepository<Budget, Long>, BudgetRep
     Optional<Budget> findBySeq(Long budgetSeq);
 
     //예산 삭제
-    void deleteById(Long budgetSeq);
+    void deleteBySeq(Long budgetSeq);
 
     //예산 조회 by User
     List<Budget> findByUserId(String userId);

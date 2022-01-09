@@ -1,6 +1,6 @@
 package com.accountbook.exception.ecoEvent;
 
-public class RelatedCategoryNotFoundException extends RuntimeException{
+public class RelatedCategoryNotFoundException extends EcoEventException{
     public RelatedCategoryNotFoundException() {
         super();
     }
