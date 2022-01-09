@@ -6,9 +6,10 @@ import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
-import com.accountbook.exception.ecoEvent.EcoEventUpdateException;
-import com.accountbook.exception.ecoEvent.RelatedCategoryNotFoundException;
+import com.accountbook.exception.ecoEvent.EcoEventException;
+import com.accountbook.exception.ecoEvent.EcoEventExceptionCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ public class EcoEventService {
     //이벤트 상세 조회
     @Transactional(readOnly = true)
     public EcoEventDto getOneEcoEvent(Long ecoEventSeq) throws Exception{
-        return new EcoEventDto(ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new NoSuchElementException()));
+        return new EcoEventDto(ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT)));
     }
 
     @Transactional(readOnly = true)
@@ -43,7 +44,7 @@ public class EcoEventService {
 
     //이벤트 등록
     public Long enrollEcoEvents(EcoEventRequest ecoEventRequest) throws Exception{
-        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()-> new RelatedCategoryNotFoundException());
+        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_CATEGORY));
         EcoEvent ecoEvent = EcoEvent.createEcoEvent(ecoEventRequest, category);
         ecoEventRepository.save(ecoEvent);
 
@@ -52,20 +53,24 @@ public class EcoEventService {
 
     //이벤트 수정
     public EcoEventDto updateEcoEvents(EcoEventRequest ecoEventRequest, Long ecoEventSeq) throws Exception{
-        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()->new RelatedCategoryNotFoundException());
-        EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new NoSuchElementException());
+        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_CATEGORY));
+        EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
 
         ecoEvent.changeEcoEvent(ecoEventRequest,category);
 
         ecoEventRepository.flush();
-        EcoEvent Ecoevent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new EcoEventUpdateException());
-        return new EcoEventDto(Ecoevent);
+        return new EcoEventDto(ecoEventRepository.findBySeq(ecoEventSeq).get());
     }
 
     //이벤트 삭제
     public Boolean deleteEcoEvents(Long EventsSeq) throws Exception{
         try {
             ecoEventRepository.deleteById(EventsSeq);
+        }catch(EmptyResultDataAccessException e){
+            e.printStackTrace();
+            return false;
+        }
+        try{
             ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new NoSuchElementException());
         }catch (NoSuchElementException e){
             return true;
