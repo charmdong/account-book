@@ -115,10 +115,14 @@ public class CategoryService {
         // 4. flush & find
         categoryRepository.flush();
         Category updatedCategory = categoryRepository
-                                    .findBySeq(category.getSeq())
-                                    .orElseThrow(() -> new UpdateCategoryException(CategoryExceptionCode.UPDATE_FAIL));
+                                    .findBySeq(category.getSeq()).get();
 
-        // 5. category seq 반환
+        // 5. check update result
+        if (updatedCategory == null || updatedCategory.checkUpdateResult(request) == false) {
+            throw new UpdateCategoryException(CategoryExceptionCode.UPDATE_FAIL);
+        }
+
+        // 6. category 반환
         return new CategoryDto(updatedCategory);
     }
 

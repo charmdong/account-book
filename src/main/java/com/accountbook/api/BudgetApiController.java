@@ -1,7 +1,7 @@
 package com.accountbook.api;
 
+import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.Budget.BudgetRequest;
-import com.accountbook.dto.asset.ApiResponse;
 import com.accountbook.service.BudgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

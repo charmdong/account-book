@@ -1,7 +1,8 @@
 package com.accountbook.exception.category;
 
 import com.accountbook.api.CategoryApiController;
-import com.accountbook.dto.asset.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

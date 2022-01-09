@@ -1,4 +1,4 @@
-package com.accountbook.dto.asset;
+package com.accountbook.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -14,7 +14,9 @@ public enum UserExceptionCode {
     INSERT_FAIL (3001L, "사용자 등록에 실패했습니다."),
     NOT_FOUND (3002L, "사용자 조회에 실패했습니다."),
     UPDATE_FAIL (3003L, "사용자 수정에 실패했습니다."),
-    DELETE_FAIL (3004L, "사용자 삭제에 실패했습니다.")
+    DELETE_FAIL (3004L, "사용자 삭제에 실패했습니다."),
+    PWD_UPDATE_FAIL (3005L, "패스워드 변경에 실패했습니다."),
+
 
     ;
 

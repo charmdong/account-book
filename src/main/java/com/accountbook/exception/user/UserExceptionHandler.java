@@ -1,7 +1,8 @@
 package com.accountbook.exception.user;
 
 import com.accountbook.api.UserApiController;
-import com.accountbook.dto.asset.ApiResponse;
+import com.accountbook.dto.response.ApiResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,8 +20,8 @@ public class UserExceptionHandler {
     public ApiResponse userExceptionHandler (UserException ue) {
 
         return new ApiResponse(
-                ue.getUserExceptionCode().getCode(), // 에러 코드는 여기서 내려주고
-                HttpStatus.OK, // 예외를 처리한 거니까 통신은 정상적이지 않은가?
+                ue.getUserExceptionCode().getCode(),
+                HttpStatus.OK,
                 ue.getUserExceptionCode().getMessage()
         );
     }

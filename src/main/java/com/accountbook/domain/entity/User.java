@@ -71,4 +71,22 @@ public class User extends BaseTimeInfo {
         this.password = password;
     }
 
+    public Boolean checkInfoUpdate (UserRequest request) {
+
+        if (StringUtils.hasText(request.getName())) {
+            if (!request.getName().equals(name)) return false;
+        }
+
+        if (StringUtils.hasText(request.getEmail())) {
+            if (!request.getEmail().equals(email)) return false;
+        }
+
+        return true;
+    }
+
+    public Boolean checkPwdUpdate (String password) {
+
+        return password.equals(this.password);
+    }
+
 }
