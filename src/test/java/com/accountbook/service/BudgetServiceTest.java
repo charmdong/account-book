@@ -2,6 +2,7 @@ package com.accountbook.service;
 
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.enums.PeriodType;
+import com.accountbook.domain.repository.budget.BudgetRepository;
 import com.accountbook.dto.Budget.BudgetDto;
 import com.accountbook.dto.Budget.BudgetRequest;
 import com.accountbook.dto.category.CategoryDto;
@@ -31,6 +32,9 @@ class BudgetServiceTest {
     private BudgetService budgetService;
 
     @Autowired
+    private BudgetRepository budgetRepository;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -48,6 +52,7 @@ class BudgetServiceTest {
         //then
         List<BudgetDto> budgetDtoList = budgetService.getBudgetByUser(budgetRequest.getUserId());
         assertEquals(budgetRequest.getAmount(),budgetDtoList.get(budgetDtoList.size()-1).getAmount());
+        log.info("사이즈는 "+budgetDtoList.size() + " Id는 "+budgetRequest.getUserId());
     }
 
 
@@ -81,11 +86,11 @@ class BudgetServiceTest {
 
         //when
         boolean result1 = budgetService.deleteBudget(budgetSeq);
-        boolean result2 = budgetService.deleteBudget(100L);
 
         //then
         assertTrue(result1);
-        assertFalse(result2);
+
+
     }
 
     //테스트용 budgetRequest 생성
@@ -100,7 +105,7 @@ class BudgetServiceTest {
     //테스트용 User 생성
     public String getUser() throws Exception{
         UserRequest request = new UserRequest();
-        String userId = "rlfehd1";
+        String userId = "gildong1";
 
         request.setId(userId);
         request.setPassword("ghdrlfehed123!");
@@ -118,7 +123,7 @@ class BudgetServiceTest {
 
         CategoryRequest categoryRequest = new CategoryRequest();
 
-        categoryRequest.setUserId("rlfehd1");
+        categoryRequest.setUserId("gildong1");
         categoryRequest.setName("chicken");
         categoryRequest.setEventType(EventType.EXPENDITURE);
         categoryRequest.setUseYn(true);

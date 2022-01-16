@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
@@ -27,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-class EcoEventServiceTest {
+public class EcoEventServiceTest {
 
     @Autowired
     private EcoEventService ecoEventService;
@@ -55,37 +54,30 @@ class EcoEventServiceTest {
     @Test
     public void updateEcoEvent() throws Exception{
         //given
-        EcoEventRequest ecoEventRequest = getEcoEventRequest();
-        ecoEventService.enrollEcoEvents(ecoEventRequest);
-        List<EcoEventDto> ecoEventDtos = ecoEventService.getAllEcoEvent();
-        EcoEventDto ecoEventDto = ecoEventDtos.get(ecoEventDtos.size()-1);
+        Long categorySeq = getCategory(getUser());
+        Long ecoEventSeq =  ecoEventService.enrollEcoEvents(getEcoEventRequest());
 
         //when
-        EcoEventRequest ecoEventUpdateRequest = new EcoEventRequest(null,null,40000L, AssetType.CASH,null);
-        ecoEventService.updateEcoEvents(ecoEventUpdateRequest, ecoEventDto.getSeq());
+        EcoEventRequest ecoEventUpdateRequest = new EcoEventRequest(null,null,40000L, AssetType.CASH, null);
+        ecoEventService.updateEcoEvents(ecoEventUpdateRequest, ecoEventSeq);
 
         //then
-        EcoEventDto ecoEventUpdateDto = ecoEventService.getOneEcoEvent(ecoEventDto.getSeq());
+        EcoEventDto ecoEventUpdateDto = ecoEventService.getOneEcoEvent(ecoEventSeq);
         assertEquals(ecoEventUpdateDto.getAmount(), 40000L);
         assertEquals(ecoEventUpdateDto.getAssetType(), AssetType.CASH);
     }
 
     //금융 이벤트 삭제
-    //@Test(expected = Not)
     @Test
-    @Rollback(false)
     public void deleteEcoEvnet() throws Exception{
         //given
-        EcoEventRequest ecoEventRequest = getEcoEventRequest();
-        ecoEventService.enrollEcoEvents(ecoEventRequest);
-        List<EcoEventDto> ecoEventDtos = ecoEventService.getAllEcoEvent();
-        EcoEventDto ecoEventDto = ecoEventDtos.get(ecoEventDtos.size()-1);
+        Long ecoEventSeq = ecoEventService.enrollEcoEvents(getEcoEventRequest());
 
         //when
-        ecoEventService.deleteEcoEvents(ecoEventDto.getSeq());
+        boolean result = ecoEventService.deleteEcoEvents(ecoEventSeq);
 
         //then
-        ecoEventService.getOneEcoEvent(ecoEventDto.getSeq());
+        assertTrue(result);
     }
 
     public EcoEventRequest getEcoEventRequest() throws Exception{
@@ -99,7 +91,7 @@ class EcoEventServiceTest {
     //테스트용 User 생성
     private String getUser() throws Exception{
         UserRequest request = new UserRequest();
-        String userId = "rlfehd1";
+        String userId = "gildong1";
 
         request.setId(userId);
         request.setPassword("ghdrlfehed123!");
@@ -117,7 +109,7 @@ class EcoEventServiceTest {
 
         CategoryRequest categoryRequest = new CategoryRequest();
 
-        categoryRequest.setUserId("rlfehd1");
+        categoryRequest.setUserId("gildong1");
         categoryRequest.setName("chicken");
         categoryRequest.setEventType(EventType.EXPENDITURE);
         categoryRequest.setUseYn(true);
