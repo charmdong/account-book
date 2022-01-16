@@ -10,8 +10,8 @@
 <a href="https://github.com/sooomni" title="Soomin">
   <img src="https://github.com/sooomni.png" width="100">
 </a>
-<a href="https://github.com/chungdk1993" title="Donggun">
-  <img src="https://github.com/chungdk1993.png" width="100">
+<a href="https://github.com/charmdong" title="Donggun">
+  <img src="https://github.com/charmdong.png" width="100">
 </a>
 <a href="https://github.com/KimMingeon0625" title="Mingeon">
   <img src="https://github.com/KimMingeon0625.png" width="100">
