@@ -6,7 +6,7 @@ import lombok.Getter;
 public class BudgetException extends RuntimeException{
     private BudgetExceptionCode budgetExceptionCode;
 
-    public BudgetException() {
+    public BudgetException(){
         super();
     }
     public BudgetException(String message) {
@@ -16,5 +16,4 @@ public class BudgetException extends RuntimeException{
     public BudgetException(BudgetExceptionCode budgetExceptionCode) {
         this.budgetExceptionCode = budgetExceptionCode;
     }
-
 }

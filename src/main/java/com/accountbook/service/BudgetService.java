@@ -8,12 +8,11 @@ import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.Budget.BudgetDto;
 import com.accountbook.dto.Budget.BudgetRequest;
-import com.accountbook.exception.budget.BudgetException;
 import com.accountbook.exception.budget.BudgetExceptionCode;
+import com.accountbook.exception.budget.BudgetException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,7 +37,7 @@ public class BudgetService {
     //예산 상세 조회
     @Transactional(readOnly = true)
     public BudgetDto getOneBudget(Long budgetSeq) throws Exception{
-        return new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(()-> new BudgetException(BudgetExceptionCode.BUDGET_NOT_FOUND)));
+        return new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(()-> new BudgetException(BudgetExceptionCode.NOT_FOUND_BUDGET)));
     }
 
     //예산 조회 by User
@@ -49,8 +48,9 @@ public class BudgetService {
 
     //예산 등록
     public Long enrollBudget(BudgetRequest budgetRequest) throws Exception{
-        User user = userRepository.findById(budgetRequest.getUserId()).orElseThrow(() -> new BudgetException(BudgetExceptionCode.BUDGET_NOT_FOUND));
-        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq()).orElseThrow(()-> new BudgetException(BudgetExceptionCode.CATEGORY_NOT_FOUND));
+        User user = userRepository.findById(budgetRequest.getUserId()).orElseThrow(() -> new BudgetException(BudgetExceptionCode.NOT_FOUND_BUDGET));
+        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq()).orElseThrow(()-> new BudgetException(BudgetExceptionCode.NOT_FOUND_BUDGET));
+
         Budget budget = Budget.createBudget(budgetRequest, category, user);
 
         budgetRepository.saveBudget(budget);
@@ -59,24 +59,27 @@ public class BudgetService {
 
     //예산 수정
     public BudgetDto updateBudget(BudgetRequest budgetRequest, Long budgetSeq) throws Exception{
-        Budget budget = budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new BudgetException(BudgetExceptionCode.BUDGET_NOT_FOUND));
-        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq()).orElseThrow(()-> new BudgetException(BudgetExceptionCode.CATEGORY_NOT_FOUND));
+        Budget budget = budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new BudgetException(BudgetExceptionCode.NOT_FOUND_BUDGET));
+        Category category = categoryRepository.findBySeq(budgetRequest.getCategorySeq()).orElseThrow(()-> new BudgetException(BudgetExceptionCode.NOT_FOUND_CATEGORY));
 
         //Dirty checking
         budget.changeBudget(budgetRequest, category);
 
         //flush 후 조회
         budgetRepository.flush();
-        BudgetDto findBudgetDto = new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new BudgetException(BudgetExceptionCode.BUDGET_NOT_FOUND)));
 
+        BudgetDto findBudgetDto = new BudgetDto(budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new BudgetException(BudgetExceptionCode.NOT_FOUND_BUDGET)));
         return findBudgetDto;
     }
 
     //예산 삭제
     public Boolean deleteBudget(Long budgetSeq) throws Exception{
-        try {
-            budgetRepository.deleteBySeq(budgetSeq);
-            budgetRepository.findBySeq(budgetSeq).orElseThrow(()-> new NoSuchElementException());
+
+        Budget budget = budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new BudgetException(BudgetExceptionCode.NOT_FOUND_BUDGET));
+        //budget.getUser().getBudgetList().removeIf(b -> b.getSeq().equals(budget.getSeq()));
+        budgetRepository.deleteBySeq(budgetSeq);
+        try{
+            budgetRepository.findBySeq(budgetSeq);
         }catch (NoSuchElementException e){
             return true;
         }

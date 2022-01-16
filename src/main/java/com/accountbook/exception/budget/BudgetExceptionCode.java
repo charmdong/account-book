@@ -5,15 +5,15 @@ import lombok.Getter;
 @Getter
 public enum BudgetExceptionCode {
 
-    NOT_EXPECTED_ERROR(4000L, "Not Expected Error."),
-    BUDGET_NOT_FOUND(4001L, "Budget does not existed."),
-    CATEGORY_NOT_FOUND(4003L,"Check related Category");
+    NOT_EXPECTED_ERROR(4000L, "서버 오류입니다."),
+    NOT_FOUND_BUDGET(4001L, "예산을 찾을 수 없습니다."),
+    NOT_FOUND_CATEGORY(4002L,"카테고리를 찾을 수 없습니다.");
 
-    public Long code;
-    public String msg;
+    private Long code;
+    private String message;
 
-    BudgetExceptionCode(Long code, String msg) {
+    BudgetExceptionCode(Long code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 }

@@ -9,6 +9,7 @@ public class EcoEventException extends RuntimeException{
     public EcoEventException() {
         super();
     }
+
     public EcoEventException(String message) {
         super(message);
     }

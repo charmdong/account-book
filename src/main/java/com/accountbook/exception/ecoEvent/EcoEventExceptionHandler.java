@@ -14,9 +14,9 @@ import java.util.NoSuchElementException;
 public class EcoEventExceptionHandler {
 
     @ExceptionHandler
-    public ApiResponse NoSuchElementExceptionHandler(EcoEventException e){
-        e.printStackTrace();
-        return new ApiResponse(e.getEcoEventExceptionCode().getCode(), HttpStatus.OK,e.getEcoEventExceptionCode().getMsg());
+    public ApiResponse EcoEventExceptionHandler(EcoEventException e){
+        return new ApiResponse(e.getEcoEventExceptionCode().getCode(),
+                HttpStatus.OK,
+                e.getEcoEventExceptionCode().getMessage());
     }
-
 }
