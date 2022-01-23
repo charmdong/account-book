@@ -1,0 +1,26 @@
+version: "3"
+services:
+#  test_web:
+#    image: nginx
+#    ports:
+#      - 80:80
+#    volumes:
+#      - ./nginx/conf.d:/etc/nginx/conf.d
+#    depends_on:
+#      - test_application
+
+  test_database:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: accountdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+
+  test_application:
+    build: .
+    expose:
+      - 8080
+    depends_on:
+      - test_database
