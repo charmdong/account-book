@@ -3,11 +3,14 @@ package com.accountbook.exception.account;
 import com.accountbook.api.AssetApiController;
 import com.accountbook.api.responseModel.ApiResponse;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackageClasses = {AssetApiController.class})
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class AssetExceptionHandler {
 
     @ExceptionHandler(AssetException.class)
