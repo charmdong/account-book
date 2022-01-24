@@ -21,7 +21,7 @@ services:
   test_application:
     build: .
     image: chungdk1117/account-book
-    expose:
-      - 8080
+    ports:
+      - 8080:8080
     depends_on:
       - test_database
