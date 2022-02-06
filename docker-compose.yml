@@ -1,15 +1,7 @@
 version: "3"
 services:
-#  test_web:
-#    image: nginx
-#    ports:
-#      - 80:80
-#    volumes:
-#      - ./nginx/conf.d:/etc/nginx/conf.d
-#    depends_on:
-#      - test_application
 
-  test_database:
+  spring-db:
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: accountdb
@@ -18,10 +10,10 @@ services:
     ports:
       - 3306:3306
 
-  test_application:
+  application:
     build: .
     image: chungdk1117/account-book
     ports:
       - 8080:8080
     depends_on:
-      - test_database
+      - spring-db
