@@ -3,6 +3,8 @@ services:
 
   spring-db:
     image: mysql:5.7
+    volumes:
+    - ./data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: accountdb
       MYSQL_ROOT_PASSWORD: root
