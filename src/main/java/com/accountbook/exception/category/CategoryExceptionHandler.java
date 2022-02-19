@@ -21,7 +21,7 @@ public class CategoryExceptionHandler {
 
     @ExceptionHandler(CategoryException.class)
     public ApiResponse CategoryExceptionHandler (CategoryException ce) {
-
+        ce.printStackTrace();
         return new ApiResponse(
                 ce.getCategoryExceptionCode().getCode(),
                 HttpStatus.OK,
