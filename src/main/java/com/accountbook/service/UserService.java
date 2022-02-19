@@ -141,6 +141,6 @@ public class UserService {
                 .findByIdAndEmail(request.getId(), request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
-        return user.getId();
+        return user.getPassword();
     }
 }
