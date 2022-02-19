@@ -81,7 +81,7 @@ public class UserService {
     /**
      * 사용자 비밀번호 변경
      * @param userId
-     * @param request 
+     * @param request
      * @throws Exception
      */
     public void changePassword(String userId, PasswordRequest request) throws Exception {
