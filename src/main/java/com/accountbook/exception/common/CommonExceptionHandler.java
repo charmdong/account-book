@@ -22,7 +22,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler
     public ApiResponse unExpectedExceptionHandler (Exception e) {
-
+        e.printStackTrace();
         return new ApiResponse(
                 CommonExceptionCode.UNEXPECTED_ERROR.getCode(),
                 HttpStatus.OK,
