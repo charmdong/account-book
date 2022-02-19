@@ -1,5 +1,6 @@
 package com.accountbook.api;
 
+import com.accountbook.dto.user.PasswordRequest;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.user.UserDto;
@@ -68,9 +69,9 @@ public class UserApiController {
      * @return
      */
     @PutMapping("/password/{userId}")
-    public ApiResponse changePassword(@PathVariable("userId") String userId, @RequestBody UserRequest request) throws Exception {
+    public ApiResponse changePassword(@PathVariable("userId") String userId, @RequestBody PasswordRequest request) throws Exception {
 
-        userService.changePassword(userId, request.getPassword());
+        userService.changePassword(userId, request);
         return new ApiResponse(true, HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 

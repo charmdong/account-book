@@ -2,6 +2,7 @@ package com.accountbook.service;
 
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
+import com.accountbook.dto.user.PasswordRequest;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.exception.user.*;
@@ -80,18 +81,18 @@ public class UserService {
     /**
      * 사용자 비밀번호 변경
      * @param userId
-     * @param password
+     * @param request
      * @throws Exception
      */
-    public void changePassword(String userId, String password) throws Exception {
+    public void changePassword(String userId, PasswordRequest request) throws Exception {
 
         User user = userRepository.findById(userId).get();
 
-        if (!user.checkPwdUpdate(password)) {
+        if (!user.checkPwdUpdate(request.getOriginPassword())) {
             throw new UpdateUserException(UserExceptionCode.PWD_UPDATE_FAIL);
         }
 
-        user.changePassword(password);
+        user.changePassword(request.getNewPassword());
     }
 
     /**
