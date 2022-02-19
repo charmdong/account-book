@@ -28,7 +28,7 @@ public class CategoryRequest {
     @NotNull(message = "자산타입 누락")
     private EventType eventType;
 
-    @NotEmpty(message = "사용여부 누락")
+    @NotNull(message = "사용여부 누락")
     private Boolean useYn;
 
 }
