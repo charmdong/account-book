@@ -33,7 +33,7 @@ public class UserApiController {
         userService.addUser(request);
         UserDto createdUser = userService.getUser(request.getId());
 
-        return new ApiResponse(createdUser, HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(createdUser, HttpStatus.CREATED, CommonResponseMessage.SUCCESS);
     }
 
     /**
