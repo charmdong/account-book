@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,13 +77,11 @@ public class BudgetService {
     public Boolean deleteBudget(Long budgetSeq) throws Exception{
 
         Budget budget = budgetRepository.findBySeq(budgetSeq).orElseThrow(() -> new BudgetException(BudgetExceptionCode.NOT_FOUND_BUDGET));
-        //budget.getUser().getBudgetList().removeIf(b -> b.getSeq().equals(budget.getSeq()));
+
+        budget.removeBudget(budget.getUser());
         budgetRepository.deleteBySeq(budgetSeq);
-        try{
-            budgetRepository.findBySeq(budgetSeq);
-        }catch (NoSuchElementException e){
-            return true;
-        }
-        return false;
+        Optional<Budget> findBudget = budgetRepository.findBySeq(budgetSeq);
+
+        return findBudget.isEmpty() ? true : false;
     }
 }
