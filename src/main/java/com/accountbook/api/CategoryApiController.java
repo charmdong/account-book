@@ -33,8 +33,7 @@ public class CategoryApiController {
     @GetMapping
     public ApiResponse getCategoryListByUser(HttpSession session) throws Exception {
 
-        // String userId = (String) session.getAttribute("userId");
-        String userId = "member1";
+        String userId = (String) session.getAttribute("userId");
         return new ApiResponse(categoryService.getCategoryListByUser(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
