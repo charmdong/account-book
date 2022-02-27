@@ -20,8 +20,8 @@ public class AssetRequest {
     private AssetType assetType;
     private User user;
     private Boolean initYn;
-    private LocalDateTime initDate;
-    private LocalDateTime settlementDate;
+    private LocalDateTime initDate; // 초기화 일자
+    private LocalDateTime settlementDate; // 결제 일자
     private LocalDateTime paymentDate;
     private Boolean autoYn;
 }

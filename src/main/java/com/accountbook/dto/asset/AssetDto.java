@@ -8,22 +8,24 @@ import com.accountbook.domain.entity.Asset;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
+@Getter
+@Setter
 @ToString
 public class AssetDto {
-    protected Long seq;
+    private Long seq;
 
-    protected String name;
-    protected String memo;
-    protected Long balance;
+    private String name;
+    private String memo;
+    private Long balance;
 
-    protected AssetType assetType;
+    private AssetType assetType;
 
-    protected User user;
-
-    protected Boolean initYn;
-    protected LocalDateTime initDate;
+    private Boolean initYn;
+    private LocalDateTime initDate;
 
     private LocalDateTime settlementDate;
     private LocalDateTime paymentDate;
@@ -35,7 +37,6 @@ public class AssetDto {
         this.memo = asset.getMemo();
         this.balance = asset.getBalance();
         this.assetType = asset.getAssetType();
-        this.user = asset.getUser();
         this.initYn = asset.getInitYn();
         this.initDate = asset.getInitDate();
         this.settlementDate = asset.getSettlementDate();
