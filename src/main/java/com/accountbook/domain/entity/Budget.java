@@ -54,4 +54,8 @@ public class Budget extends BaseInfo{
         this.periodType = budgetRequest.getPeriodType();
         this.amount =  budgetRequest.getAmount();
     }
+
+    public void removeBudget(User user){
+        user.getBudgetList().remove(this);
+    }
 }

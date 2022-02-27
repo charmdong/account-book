@@ -60,6 +60,7 @@ public class EcoEventService {
         ecoEvent.changeEcoEvent(ecoEventRequest,category);
 
         ecoEventRepository.flush();
+
         return new EcoEventDto(ecoEventRepository.findBySeq(ecoEventSeq).get());
     }
 
