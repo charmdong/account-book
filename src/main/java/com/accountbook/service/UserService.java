@@ -4,6 +4,7 @@ import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.PasswordRequest;
 import com.accountbook.dto.user.UserDto;
+import com.accountbook.dto.user.UserLoginRequest;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.exception.user.*;
 import lombok.RequiredArgsConstructor;
@@ -142,5 +143,13 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         return user.getPassword();
+    }
+
+    public UserDto login(UserLoginRequest request) {
+        User user = userRepository.findById(request.getId()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+        if (!user.getPassword().equals(request.getPassword())) {
+            new UserNotFoundException(UserExceptionCode.PWD_NOT_MATCHED);
+        }
+        return new UserDto(user);
     }
 }

@@ -16,6 +16,7 @@ public enum UserExceptionCode {
     UPDATE_FAIL (3003L, "사용자 수정에 실패했습니다."),
     DELETE_FAIL (3004L, "사용자 삭제에 실패했습니다."),
     PWD_UPDATE_FAIL (3005L, "패스워드 변경에 실패했습니다."),
+    PWD_NOT_MATCHED (3006L, "올바른 패스워드가 아닙니다.")
 
 
     ;

@@ -1,16 +1,30 @@
 package com.accountbook.api;
 
-import com.accountbook.dto.user.PasswordRequest;
-import com.accountbook.dto.user.UserRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import com.accountbook.dto.response.ApiResponse;
+import com.accountbook.dto.user.PasswordRequest;
 import com.accountbook.dto.user.UserDto;
+import com.accountbook.dto.user.UserLoginRequest;
+import com.accountbook.dto.user.UserRequest;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * 사용자 API Controller
@@ -111,4 +125,12 @@ public class UserApiController {
         return new ApiResponse(userService.findPassword(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
+    @PostMapping("/login")
+    public ApiResponse login(HttpServletRequest servletRequest, HttpServletResponse response, @RequestBody UserLoginRequest request) throws Exception {
+        UserDto loginUser = userService.login(request);
+        HttpSession session = servletRequest.getSession();
+        session.setAttribute("user", loginUser);
+
+        return new ApiResponse(loginUser, HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
 }
