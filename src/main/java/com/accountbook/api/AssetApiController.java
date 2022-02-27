@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.accountbook.common.utils.CookieUtils;
 import com.accountbook.dto.asset.AssetDto;
 import com.accountbook.dto.asset.AssetRequest;
 import com.accountbook.dto.response.ApiResponse;
@@ -33,17 +34,7 @@ public class AssetApiController {
     // 자산 전체 조회
     @GetMapping("")
     public ApiResponse getAssetList(HttpServletRequest request) throws Exception {
-        Cookie[] cookies = request.getCookies();
-        String userId = "";
-        if(cookies!=null){
-            for (Cookie c : cookies) {
-                String name = c.getName(); // 쿠키 이름 가져오기
-                String value = c.getValue(); // 쿠키 값 가져오기
-                if (name.equals("userId")) {
-                    userId = value;
-                }
-            }
-        }
+        String userId = CookieUtils.getCookieByName(request.getCookies(), "userId");
         List<AssetDto> data = assetService.getAssetList(userId);
         ApiResponse response = new ApiResponse(data, HttpStatus.OK, "SUCCES");
         return response;
