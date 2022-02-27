@@ -43,7 +43,7 @@ class BudgetServiceTest {
 
     //예산 등록
     @Test
-    void enroll_Budget() throws Exception{
+    void 예산_등록() throws Exception{
         //given
         BudgetRequest budgetRequest = createBudgetRequest();
 
@@ -59,7 +59,7 @@ class BudgetServiceTest {
 
     //예산 수정
     @Test
-    public void update_Budget() throws Exception{
+    public void 예산_수정() throws Exception{
         //given
         //1. 예산 등록
         BudgetRequest budgetRequest = createBudgetRequest();
@@ -81,13 +81,11 @@ class BudgetServiceTest {
     //예산 삭제
     @Test
     @Rollback(value = false)
-    public void delete_Budget() throws Exception{
+    public void 예산_삭제() throws Exception{
         //given
         BudgetRequest budgetRequest = createBudgetRequest();
         Long budgetSeq = budgetService.enrollBudget(budgetRequest);
 
-        //budgetRepository.flush();
-        System.err.println(budgetSeq);
         //when
         boolean result1 = budgetService.deleteBudget(budgetSeq);
 

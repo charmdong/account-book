@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
@@ -39,7 +40,7 @@ public class EcoEventServiceTest {
 
     //금융 이벤트 등록
     @Test
-    public void enrollEcoEvnet() throws Exception{
+    public void 금융이벤트_등록() throws Exception{
         //given
         int prevSize = ecoEventService.getAllEcoEvent().size();
         EcoEventRequest ecoEventRequest = getEcoEventRequest();
@@ -52,13 +53,13 @@ public class EcoEventServiceTest {
 
     //금융 이벤트 수정
     @Test
-    public void updateEcoEvent() throws Exception{
+    public void 금융이벤트_수정() throws Exception{
         //given
-        Long categorySeq = getCategory(getUser());
-        Long ecoEventSeq =  ecoEventService.enrollEcoEvents(getEcoEventRequest());
+        EcoEventRequest ecoEventRequest = getEcoEventRequest();
+        Long ecoEventSeq =  ecoEventService.enrollEcoEvents(ecoEventRequest);
 
         //when
-        EcoEventRequest ecoEventUpdateRequest = new EcoEventRequest(null,null,40000L, AssetType.CASH, null);
+        EcoEventRequest ecoEventUpdateRequest = new EcoEventRequest(EventType.INCOME,null,40000L, AssetType.CASH, ecoEventRequest.getCategorySeq());
         ecoEventService.updateEcoEvents(ecoEventUpdateRequest, ecoEventSeq);
 
         //then
