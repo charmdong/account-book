@@ -13,8 +13,8 @@
 <a href="https://github.com/charmdong" title="Donggun">
   <img src="https://github.com/charmdong.png" width="100">
 </a>
-<a href="https://github.com/KimMingeon0625" title="Mingeon">
-  <img src="https://github.com/KimMingeon0625.png" width="100">
+<a href="https://github.com/machine-geon" title="Mingeon">
+  <img src="https://github.com/machine-geon.png" width="100">
 </a>
 </p>
 
