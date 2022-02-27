@@ -57,7 +57,7 @@ public class CategoryApiController {
     @PostMapping
     public ApiResponse addCategory(@RequestBody @Valid CategoryRequest request) throws Exception {
 
-        return new ApiResponse(categoryService.addCategory(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(categoryService.addCategory(request), HttpStatus.CREATED, CommonResponseMessage.SUCCESS);
     }
 
     /**

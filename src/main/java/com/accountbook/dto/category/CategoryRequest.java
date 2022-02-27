@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * CategoryRequest
@@ -24,10 +25,10 @@ public class CategoryRequest {
     @NotEmpty(message = "카테고리명 누락")
     private String name;
 
-    @NotEmpty(message = "자산타입 누락")
+    @NotNull(message = "자산타입 누락")
     private EventType eventType;
 
-    @NotEmpty(message = "사용여부 누락")
+    @NotNull(message = "사용여부 누락")
     private Boolean useYn;
 
 }

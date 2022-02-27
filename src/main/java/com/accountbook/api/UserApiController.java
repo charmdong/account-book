@@ -1,5 +1,6 @@
 package com.accountbook.api;
 
+import com.accountbook.dto.user.PasswordRequest;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.user.UserDto;
@@ -32,7 +33,7 @@ public class UserApiController {
         userService.addUser(request);
         UserDto createdUser = userService.getUser(request.getId());
 
-        return new ApiResponse(createdUser, HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(createdUser, HttpStatus.CREATED, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -68,9 +69,9 @@ public class UserApiController {
      * @return
      */
     @PutMapping("/password/{userId}")
-    public ApiResponse changePassword(@PathVariable("userId") String userId, @RequestBody UserRequest request) throws Exception {
+    public ApiResponse changePassword(@PathVariable("userId") String userId, @Valid @RequestBody PasswordRequest request) throws Exception {
 
-        userService.changePassword(userId, request.getPassword());
+        userService.changePassword(userId, request);
         return new ApiResponse(true, HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
@@ -85,12 +86,12 @@ public class UserApiController {
         userService.deleteUser(userId);
 
         // TODO 삭제 여부 어떻게 확인? Service 단에서 삭제 됐는 지 확인 후 예외 던지기?
-        return new ApiResponse("", HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(true, HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
      * 사용자 아이디 찾기
-     * @param request
+     * @param request (name, email)
      * @return 사용자 아이디
      */
     @PostMapping("/id")
@@ -101,7 +102,7 @@ public class UserApiController {
 
     /**
      * 사용자 패스워드 찾기
-     * @param request
+     * @param request (id, email)
      * @return 사용자 패스워드
      */
     @PostMapping("/password")

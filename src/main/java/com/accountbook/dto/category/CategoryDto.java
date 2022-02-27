@@ -14,10 +14,12 @@ public class CategoryDto {
     private Long seq;
     private String name;
     private EventType eventType;
+    private Boolean useYn;
 
     public CategoryDto(Category category) {
         this.seq = category.getSeq();
         this.name = category.getComCategory().getName();
         this.eventType = category.getComCategory().getEventType();
+        this.useYn = category.getComCategory().getUseYn();
     }
 }
