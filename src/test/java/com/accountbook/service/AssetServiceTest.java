@@ -37,7 +37,7 @@ public class AssetServiceTest {
 
     // asset list 조회
     @Test
-    public void getAssetList() {
+    public void getAssetList() throws Exception{
         String userId = "test";
         List<AssetDto> assetList = assetService.getAssetList(userId);
 
@@ -48,7 +48,7 @@ public class AssetServiceTest {
 
     // asset 상세 조회
     @Test
-    public void getAsset(){
+    public void getAsset() throws Exception{
         long assetSeq = 13;
         AssetDto asset = assetService.getAsset(assetSeq);
 
@@ -58,7 +58,7 @@ public class AssetServiceTest {
     // asset 등록
     @Test
     @Rollback(value = false)
-    public void registAsset(){
+    public void registAsset() throws Exception{
         LocalDateTime localDateTime = LocalDateTime.now();
         UserRequest userRequest = new UserRequest("test", "password", "Mingeon", "mingeon@kakao.com", localDateTime);
         User user = User.createUser(userRequest);
@@ -75,7 +75,7 @@ public class AssetServiceTest {
     // asset 수정
     @Test
     @Rollback(value = false)
-    public void updateAseet(){
+    public void updateAseet() throws Exception{
         LocalDateTime localDateTime = LocalDateTime.now();
         User user = userRepository.findById("test").orElseThrow();
 
@@ -88,7 +88,7 @@ public class AssetServiceTest {
     // asset 삭제
     @Test
     @Rollback(value = false)
-    public void removeAsset(){
+    public void removeAsset() throws Exception{
         long assetSeq = 1;
         Boolean result = assetService.removeAsset(assetSeq);
         log.info(" >> removeAsset : {} ", result);
