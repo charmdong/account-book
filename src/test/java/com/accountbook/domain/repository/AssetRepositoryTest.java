@@ -1,0 +1,83 @@
+package com.accountbook.domain.repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import com.accountbook.domain.entity.Asset;
+import com.accountbook.domain.entity.User;
+import com.accountbook.domain.enums.AssetType;
+import com.accountbook.domain.repository.asset.AssetRepository;
+import com.accountbook.domain.repository.user.UserRepository;
+import com.accountbook.dto.asset.AssetRequest;
+import com.accountbook.dto.user.UserRequest;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.extern.slf4j.Slf4j;
+
+@SpringBootTest
+@Transactional
+@RunWith(SpringJUnit4ClassRunner.class)
+@Slf4j
+public class AssetRepositoryTest {
+
+    @Autowired
+    AssetRepository assetRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    // asset 등록
+    @Test
+    @Rollback(value = false)
+    public void registAsset() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        UserRequest userRequest = new UserRequest("test", "password", "Mingeon", "mingeon@kakao.com", localDateTime);
+        User user = User.createUser(userRequest);
+        // userRepository.save(user);
+
+        AssetRequest assetRequest = new AssetRequest("월급", "test", 20000L, AssetType.BANK, user, true, localDateTime, localDateTime, localDateTime, true);
+        Asset asset = Asset.createAsset(assetRequest);
+
+        assetRepository.save(asset);
+        log.info("Add asset : " + asset.toString());
+    }
+
+    // assetlist 조회
+    @Test
+    public void getAssetList() {
+        String userId = "test";
+        List<Asset> assetList = assetRepository.findByUserId(userId);
+
+        for (Asset asset : assetList) {
+            log.info("Get asset list : " + asset.toString());
+        }
+    }
+
+    // asset 상세 조회
+    @Test
+    public void getDetailAsset() {
+        long assetSeq = 13;
+        Asset asset = assetRepository.findById(assetSeq).orElseThrow();
+
+        log.info("Get detail asset : " + asset.toString());
+    }
+
+    // asset 삭제
+    @Test
+    public void deleteAsset(){
+        long assetSeq = 13;
+        assetRepository.deleteById(assetSeq);
+
+        log.info("seq : {} asset have been deleted.",assetSeq);
+    }
+}
