@@ -38,29 +38,21 @@ public class UserApiController {
      */
     @PostMapping("/login")
     public ApiResponse loginWithSession (@RequestParam("userId") String userId,
-                             @RequestParam("password") String password,
-                             HttpServletRequest request, HttpServletResponse response) {
+                                         @RequestParam("password") String password,
+                                         HttpServletRequest request, HttpServletResponse response) {
 
         // 1. Check session id
-        String sessionId = CookieUtils.getCookieByName(request.getCookies(), "JSESSION_ID");
+        String sessionId = CookieUtils.getCookieByName(request.getCookies(), "SESSION_ID");
         UserDto loginInfo = null;
 
         if(sessionId != null) {
             // 2.1. Login by id, session id
-            loginInfo = userService.loginBySessionId(sessionId);
-
-            // 2.1.1. Set cookie name JSESSION_ID
+            loginInfo = userService.loginByIdSession(userId, sessionId, request, response);
         }
         else {
             // 2.2. Login by id, password & save session id
+            loginInfo = userService.loginIdPassword(userId, password, request, response);
         }
-
-        // 3. Set session attribute
-        HttpSession session = request.getSession();
-        session.setAttribute("loginInfo", loginInfo);
-        session.setMaxInactiveInterval(60 * 30);
-
-        // 4. Set cookie
 
         return new ApiResponse(loginInfo.getId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }

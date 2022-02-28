@@ -1,7 +1,6 @@
 package com.accountbook.api;
 
 import com.accountbook.domain.repository.user.UserRepository;
-import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HomeController {
 
     private final UserRepository userRepository;
-    private static final String SESSION_ID = "JSESSION_ID";
+    private static final String SESSION_ID = "SESSION_ID";
 
     @GetMapping
     public String home(HttpServletRequest request) {
@@ -27,9 +26,11 @@ public class HomeController {
             String value = cookie.getValue();
 
             if(SESSION_ID.equals(name)) {
-
+                // session 으로 로그인
             }
         }
+
+        return "login";
     }
 
 }
