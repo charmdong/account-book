@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 /**
  * UserService
  *
@@ -24,37 +22,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    /**
-     * 로그인
-     * @param userId
-     * @param password
-     * @return
-     * @throws Exception
-     */
-    public UserDto login(String userId, String password) throws RuntimeException {
-
-        Optional<User> findUser = userRepository.findById(userId);
-
-        // 해당 아이디가 없는 경우
-        if(findUser.isEmpty()) {
-            throw new UserNotFoundException(UserExceptionCode.NOT_FOUND);
-        }
-
-        // 비밀번호가 다른 경우
-        if(password.equals(findUser.get().getPassword())) {
-            throw new InvalidPasswordException(UserExceptionCode.INVALID_PWD);
-        }
-
-        // TODO session id 저장
-
-        return new UserDto(findUser.get());
-    }
-
-
-    public UserDto loginBySessionId (String sessionId) {
-        return null;
-    }
 
     /**
      * 회원가입
@@ -176,5 +143,4 @@ public class UserService {
 
         return user.getPassword();
     }
-
 }

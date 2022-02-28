@@ -1,26 +1,19 @@
 package com.accountbook.api;
 
-import com.accountbook.common.utils.CookieUtils;
-import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.user.PasswordRequest;
-import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.response.ApiResponse;
+import com.accountbook.dto.user.UserDto;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
- * UserApiController
- *
- * @author donggun
- * @since 2022/02/28
+ * 사용자 API Controller
  */
 @RestController
 @RequiredArgsConstructor
@@ -28,55 +21,6 @@ import javax.validation.Valid;
 public class UserApiController {
 
     private final UserService userService;
-
-    /**
-     * 로그인
-     * @param userId
-     * @param password
-     * @param request
-     * @return 사용자 아이디
-     */
-    @PostMapping("/login")
-    public ApiResponse loginWithSession (@RequestParam("userId") String userId,
-                             @RequestParam("password") String password,
-                             HttpServletRequest request, HttpServletResponse response) {
-
-        // 1. Check session id
-        String sessionId = CookieUtils.getCookieByName(request.getCookies(), "JSESSION_ID");
-        UserDto loginInfo = null;
-
-        if(sessionId != null) {
-            // 2.1. Login by id, session id
-            loginInfo = userService.loginBySessionId(sessionId);
-
-            // 2.1.1. Set cookie name JSESSION_ID
-        }
-        else {
-            // 2.2. Login by id, password & save session id
-        }
-
-        // 3. Set session attribute
-        HttpSession session = request.getSession();
-        session.setAttribute("loginInfo", loginInfo);
-        session.setMaxInactiveInterval(60 * 30);
-
-        // 4. Set cookie
-
-        return new ApiResponse(loginInfo.getId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
-    }
-
-    /**
-     * 로그아웃
-     * @param session
-     * @return 사용자 아이디
-     */
-    @GetMapping("/logout")
-    public ApiResponse logout (HttpSession session) {
-
-        UserDto loginInfo = (UserDto) session.getAttribute("loginInfo");
-        session.invalidate();
-        return new ApiResponse(loginInfo.getId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
-    }
 
     /**
      * 사용자 등록
