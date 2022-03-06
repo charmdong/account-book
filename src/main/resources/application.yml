@@ -1,4 +1,7 @@
 spring:
+  output:
+    ansi:
+      enabled: always
   # datasource Setting
   datasource:
     url: jdbc:h2:tcp://localhost/~/accountbook
@@ -12,7 +15,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        #show_sql: true
+        show_sql: true
         format_sql: true
 
 # Logging Setting
@@ -20,3 +23,5 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace # query parameter ??
+
+
