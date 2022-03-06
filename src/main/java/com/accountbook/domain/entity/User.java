@@ -30,7 +30,8 @@ public class User extends BaseTimeInfo {
     private String name;
     private String email;
     private LocalDateTime birthDate;
-    private String sessionId;
+    private String uid;
+    private LocalDateTime expireDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final List<Budget> budgetList = new ArrayList<>();
@@ -90,7 +91,8 @@ public class User extends BaseTimeInfo {
         return password.equals(this.password);
     }
 
-    public void changeSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void changeSessionInfo(String uid, LocalDateTime expireDate) {
+        this.uid = uid;
+        this.expireDate = expireDate;
     }
 }

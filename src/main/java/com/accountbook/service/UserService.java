@@ -15,7 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -41,76 +41,37 @@ public class UserService {
      * @return
      * @throws RuntimeException
      */
-    public UserDto loginIdPassword (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
-        log.info("LOGIN BY ID, PASSWORD ...");
-        Optional<User> findUser = userRepository.findById(userId);
+    public UserDto login (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
 
-        // 해당 아이디가 없는 경우
-        if (findUser.isEmpty()) {
-            throw new UserNotFoundException(UserExceptionCode.NOT_FOUND);
+        // 1. id로 사용자 찾기
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+
+        // 2. password 비교
+        if(!user.getPassword().equals(password)) {
+            throw new UserException(UserExceptionCode.INVALID_PWD);
         }
 
-        // 비밀번호가 다른 경우
-        if (!password.equals(findUser.get().getPassword())) {
-            throw new InvalidPasswordException(UserExceptionCode.INVALID_PWD);
-        }
+        // 3. UID 생성 및 만료 기한 설정
+        String uid = UUID.randomUUID().toString();
+        LocalDateTime expireDate = LocalDateTime.now().plusDays(14);
 
-        // session id 생성 및 저장
-        String sessionId = UUID.randomUUID().toString();
-        findUser.get().changeSessionId(sessionId);
+        // 4. UID, expireDate 저장하기
+        user.changeSessionInfo(uid, expireDate);
 
-        // 세션 생성
-        createSession(request, new UserDto(findUser.get()));
+        UserDto loginInfo = new UserDto(user);
 
-        // 쿠키 생성
-        setSessionCookie(sessionId, response);
-
-
-        return new UserDto(findUser.get());
-    }
-
-    /**
-     * 아이디, 세션 아이디 기반 세션 성립
-     * @param userId
-     * @param sessionId
-     * @param request
-     * @param response
-     * @return
-     * @throws RuntimeException
-     */
-    @Transactional(readOnly = true)
-    public UserDto loginByIdSession (String userId, String sessionId, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
-        log.info("LOGIN BY ID, SESSION ...");
-        Optional<User> findUser = userRepository.findById(userId);
-
-        // 해당 아이디가 없는 경우
-        if (findUser.isEmpty()) {
-            throw new UserNotFoundException(UserExceptionCode.NOT_FOUND);
-        }
-
-        // 세션 아이디가 다른 경우
-        if (!sessionId.equals(findUser.get().getSessionId())) {
-            throw new InvalidPasswordException(UserExceptionCode.INVALID_SESSION_ID);
-        }
-
-        // 세션 생성
-        createSession(request, new UserDto(findUser.get()));
-
-        // 쿠키 생성
-        setSessionCookie(sessionId, response);
-
-        return new UserDto(findUser.get());
-    }
-
-    private void setSessionCookie (String sessionId, HttpServletResponse response) {
-        Cookie sessionCookie = new Cookie("SESSION_ID", sessionId);
-        response.addCookie(sessionCookie);
-    }
-
-    private void createSession (HttpServletRequest request, UserDto loginInfo) {
+        // 5. Session 생성
         HttpSession session = request.getSession();
         session.setAttribute("loginInfo", loginInfo);
         session.setMaxInactiveInterval(60 * 30);
+
+        // 6. Cookie 생성
+        Cookie cookie = new Cookie("UID", uid);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 14); // 2 weeks
+        response.addCookie(cookie);
+
+        return loginInfo;
     }
 
     /**

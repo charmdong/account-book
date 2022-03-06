@@ -1,6 +1,5 @@
 package com.accountbook.api;
 
-import com.accountbook.common.utils.CookieUtils;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.user.PasswordRequest;
 import com.accountbook.dto.user.UserDto;
@@ -37,22 +36,11 @@ public class UserApiController {
      * @return 사용자 아이디
      */
     @PostMapping("/login")
-    public ApiResponse loginWithSession (@RequestParam("userId") String userId,
+    public ApiResponse login (@RequestParam("userId") String userId,
                                          @RequestParam("password") String password,
                                          HttpServletRequest request, HttpServletResponse response) {
 
-        // 1. Check session id
-        String sessionId = CookieUtils.getCookieByName(request.getCookies(), "SESSION_ID");
-        UserDto loginInfo = null;
-
-        if(sessionId != null) {
-            // 2.1. Login by id, session id
-            loginInfo = userService.loginByIdSession(userId, sessionId, request, response);
-        }
-        else {
-            // 2.2. Login by id, password & save session id
-            loginInfo = userService.loginIdPassword(userId, password, request, response);
-        }
+        UserDto loginInfo = userService.login(userId, password, request, response);
 
         return new ApiResponse(loginInfo.getId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
