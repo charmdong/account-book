@@ -2,8 +2,12 @@ package com.accountbook.domain.repository.user;
 
 import com.accountbook.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -20,6 +24,10 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 
     // 회원 정보 조회 by UID
     User findByUid(String uid);
+
+    @Modifying(clearAutomatically = true)
+    @Query("update User u set u.expireDate = :expireDate where u.uid = :uid")
+    int updateExpireDateByUid(@Param("uid") String uid, @Param("expireDate") LocalDateTime expireDate);
 
     // 이름, 이메일 기반 사용자 정보 조회 -> 아이디 찾기
     Optional<User> findByNameAndEmail(String name, String email);

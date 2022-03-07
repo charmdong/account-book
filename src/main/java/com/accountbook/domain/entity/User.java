@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Getter
-@ToString(of = {"id", "password", "name", "email", "birthDate", "categoryList"})
+@ToString(of = {"id", "password", "name", "email", "birthDate", "uid", "expireDate", "categoryList"})
 @NoArgsConstructor
 @DynamicUpdate
 public class User extends BaseTimeInfo {
