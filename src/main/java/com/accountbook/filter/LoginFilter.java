@@ -6,6 +6,7 @@ import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -15,6 +16,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * LoginFilter
+ *
+ * @author donggun
+ * @since 2022/03/08
+ */
 @Slf4j
 public class LoginFilter implements Filter {
 
@@ -32,6 +39,7 @@ public class LoginFilter implements Filter {
     }
 
     @Override
+    @Transactional
     public void doFilter (ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         log.info("LoginFilter...");
@@ -60,19 +68,20 @@ public class LoginFilter implements Filter {
                 userRepository.updateExpireDateByUid(uid, now.plusDays(14));
 
                 // 6. 사용자가 이동하려고 했던 페이지로 리다이렉트
+                log.info("자동로그인 성공");
                 String requestURI = httpRequest.getRequestURI();
-                httpResponse.sendRedirect(requestURI);
+                //httpResponse.sendRedirect(requestURI);
             }
             // 기한 만료
             else {
                 log.info("Login expireDate is over...");
-                httpResponse.sendRedirect("/login"); // 로그인 페이지로 이동: 이렇게 하면 localhost:8080/login 으로 요청을 보내는 거 아닌가
+                //httpResponse.sendRedirect("/login"); // 로그인 페이지로 이동: 이렇게 하면 localhost:8080/login 으로 요청을 보내는 거 아닌가
             }
         }
         // uid 없음
         else {
             log.info("No cookie with name [UID]...");
-            httpResponse.sendRedirect("/login"); // 로그인 페이지로 이동: 이렇게 하면 localhost:8080/login 으로 요청을 보내는 거 아닌가
+            //httpResponse.sendRedirect("/login"); // 로그인 페이지로 이동: 이렇게 하면 localhost:8080/login 으로 요청을 보내는 거 아닌가
         }
     }
 }

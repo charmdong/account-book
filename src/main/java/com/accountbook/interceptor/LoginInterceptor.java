@@ -53,21 +53,21 @@ public class LoginInterceptor implements HandlerInterceptor {
 
                 // 6. 사용자가 이동하려고 했던 페이지로 리다이렉트
                 String requestURI = request.getRequestURI();
-                response.sendRedirect(requestURI);
+                //response.sendRedirect(requestURI);
                 return true;
             }
 
             // 기한 만료
             else {
                 log.info("Login expireDate is over...");
-                // response.sendRedirect("/login");
+                //response.sendRedirect("/login");
                 return false;
             }
         }
         // uid 없는 경우
         else {
             log.info("No cookie with name [UID]...");
-            // response.sendRedirect("/login");
+            //response.sendRedirect("/login");
             return false;
         }
 

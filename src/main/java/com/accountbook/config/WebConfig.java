@@ -40,7 +40,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean logFilter() {
+    public FilterRegistrationBean loginFilterBean() {
         // 스프링 부트 사용하는 경우 FilterRegistrationBean 이용
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
 
@@ -48,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
         filterRegistrationBean.setOrder(1); // 순서 등록
 
         // 필터를 적용할 URL 패턴 지정. 여러개 한 번에 지정 가능
-        filterRegistrationBean.addUrlPatterns("/api/users/login");
+        filterRegistrationBean.addUrlPatterns("/api/users/*");
 
         return filterRegistrationBean;
     }
