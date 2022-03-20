@@ -49,39 +49,53 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         Cookie cookie = CookieUtils.getCookieByName(httpRequest.getCookies(), "UID");
 
-        // 2. uid로 사용자 정보 조회
-        if(cookie != null) {
+        // 2. 세션 정보 확인
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            chain.doFilter(request, response);
+        }
+
+        // 3. uid로 사용자 정보 조회
+        if (cookie != null) {
             String uid = cookie.getValue();
             User user = userRepository.findByUid(uid);
 
-            // 3. expireDate
+            // 3.1. check loginIp
+            String requestIp = httpRequest.getRemoteAddr();
+            String loginIp = user.getLoginIp();
+            if (!loginIp.equals(requestIp)) {
+                log.info("Incorrect Ip...");
+                httpResponse.sendRedirect("/login.html");
+            }
+
+            // 3.2. expireDate 유효성 판단
             LocalDateTime now = LocalDateTime.now();
-            if(now.isBefore(user.getExpireDate())) {
+            if (now.isBefore(user.getExpireDate())) {
 
-                // 4. Session 생성
-                HttpSession session = httpRequest.getSession();
-                session.setAttribute("loginInfo", new UserDto(user));
-                session.setMaxInactiveInterval(60 * 30);
+                // 3.2.1. Session 생성
+                HttpSession userSession = httpRequest.getSession();
+                userSession.setAttribute("loginInfo", new UserDto(user));
+                userSession.setMaxInactiveInterval(60 * 30);
 
-                // 5. cookie 만료 기간 갱신 및 DB 업데이트
+                // 3.2.2. cookie 만료 기간 갱신 및 DB 업데이트
                 cookie.setMaxAge(60 * 60 * 24 * 14);
                 userRepository.updateExpireDateByUid(uid, now.plusDays(14));
 
-                // 6. 사용자가 이동하려고 했던 페이지로 리다이렉트
+                // 3.2.3. 사용자가 이동하려고 했던 페이지로 리다이렉트
                 log.info("자동로그인 성공");
                 String requestURI = httpRequest.getRequestURI();
-                //httpResponse.sendRedirect(requestURI);
+                chain.doFilter(request, response);
             }
-            // 기한 만료
+            // 3.3. 기한 만료
             else {
                 log.info("Login expireDate is over...");
-                //httpResponse.sendRedirect("/login"); // 로그인 페이지로 이동: 이렇게 하면 localhost:8080/login 으로 요청을 보내는 거 아닌가
+                httpResponse.sendRedirect("/login.html");
             }
         }
-        // uid 없음
+        // 4. uid 없음
         else {
             log.info("No cookie with name [UID]...");
-            //httpResponse.sendRedirect("/login"); // 로그인 페이지로 이동: 이렇게 하면 localhost:8080/login 으로 요청을 보내는 거 아닌가
+            httpResponse.sendRedirect("/login.html");
         }
     }
 }

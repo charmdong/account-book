@@ -56,7 +56,7 @@ public class UserService {
         LocalDateTime expireDate = LocalDateTime.now().plusDays(14);
 
         // 4. UID, expireDate 저장하기
-        user.changeSessionInfo(uid, expireDate);
+        user.changeSessionInfo(uid, expireDate, request.getRemoteAddr());
 
         UserDto loginInfo = new UserDto(user);
 
