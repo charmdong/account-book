@@ -36,7 +36,7 @@ class UserRepositoryTest {
         userRequest.setPassword("password");
 
         User user = User.createUser(userRequest);
-        user.changeSessionInfo("uid1", LocalDateTime.now().plusDays(10));
+        user.changeSessionInfo("uid1", LocalDateTime.now().plusDays(10), "127.0.0.1");
 
         userRepository.addUser(user);
     }
