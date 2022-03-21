@@ -22,6 +22,8 @@
 - Java 11
 - Spring Boot (2.5.6)
 - JPA
+- Docker
+- AWS EC2
 - H2
 - Gradle
 - IntelliJ (2021.02)
