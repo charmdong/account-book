@@ -7,15 +7,27 @@ import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.exception.user.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+<<<<<<< HEAD
+=======
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+>>>>>>> dd6c9ccc403dda91cc33d556b3d5011d3019af42
 /**
  * UserService
  *
  * @author donggun
  * @since 2021/11/23
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,6 +36,51 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
+<<<<<<< HEAD
+=======
+     * 아이디, 패스워드 기반 세션 성립
+     * @param userId
+     * @param password
+     * @param request
+     * @param response
+     * @return
+     * @throws RuntimeException
+     */
+    public UserDto login (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
+
+        // 1. id로 사용자 찾기
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+
+        // 2. password 비교
+        if(!user.getPassword().equals(password)) {
+            throw new UserException(UserExceptionCode.INVALID_PWD);
+        }
+
+        // 3. UID 생성 및 만료 기한 설정
+        String uid = UUID.randomUUID().toString();
+        LocalDateTime expireDate = LocalDateTime.now().plusDays(14);
+
+        // 4. UID, expireDate 저장하기
+        user.changeSessionInfo(uid, expireDate, request.getRemoteAddr());
+
+        UserDto loginInfo = new UserDto(user);
+
+        // 5. Session 생성
+        HttpSession session = request.getSession();
+        session.setAttribute("loginInfo", loginInfo);
+        session.setMaxInactiveInterval(60 * 30);
+
+        // 6. Cookie 생성
+        Cookie cookie = new Cookie("UID", uid);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 14); // 2 weeks
+        response.addCookie(cookie);
+
+        return loginInfo;
+    }
+
+    /**
+>>>>>>> dd6c9ccc403dda91cc33d556b3d5011d3019af42
      * 회원가입
      * @param request
      * @return UserDto
@@ -50,11 +107,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getUser(String userId) throws Exception {
 
-        return new UserDto(
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND))
-        );
+        return new UserDto(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND)));
     }
 
     /**

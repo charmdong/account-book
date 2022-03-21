@@ -4,5 +4,6 @@ import com.accountbook.domain.entity.User;
 
 public interface UserRepositoryCustom {
 
-    void addUser(User user);
+    void addUser (User user);
+
 }

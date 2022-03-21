@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Getter
-@ToString(of = {"id", "password", "name", "email", "birthDate", "categoryList"})
+@ToString(of = {"id", "password", "name", "email", "birthDate", "uid", "expireDate", "categoryList"})
 @NoArgsConstructor
 @DynamicUpdate
 public class User extends BaseTimeInfo {
@@ -30,6 +30,10 @@ public class User extends BaseTimeInfo {
     private String name;
     private String email;
     private LocalDateTime birthDate;
+    private String uid;
+    private LocalDateTime expireDate;
+
+    private String loginIp;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final List<Budget> budgetList = new ArrayList<>();
@@ -89,4 +93,9 @@ public class User extends BaseTimeInfo {
         return password.equals(this.password);
     }
 
+    public void changeSessionInfo(String uid, LocalDateTime expireDate, String loginIp) {
+        this.uid = uid;
+        this.expireDate = expireDate;
+        this.loginIp = loginIp;
+    }
 }
