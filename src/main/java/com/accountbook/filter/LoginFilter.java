@@ -81,8 +81,8 @@ public class LoginFilter implements Filter {
                 cookie.setMaxAge(60 * 60 * 24 * 14);
                 userRepository.updateExpireDateByUid(uid, now.plusDays(14));
 
-                // 3.2.3. 사용자가 이동하려고 했던 페이지로 리다이렉트
-                log.info("자동로그인 성공");
+                // 3.2.3. 사용자 요청 처리
+                log.info("Login...");
                 String requestURI = httpRequest.getRequestURI();
                 chain.doFilter(request, response);
             }
@@ -94,7 +94,7 @@ public class LoginFilter implements Filter {
         }
         // 4. uid 없음
         else {
-            log.info("No cookie with name [UID]...");
+            log.info("Non-login User...");
             httpResponse.sendRedirect("/login.html");
         }
     }
