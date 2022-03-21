@@ -7,10 +7,16 @@ import com.accountbook.dto.user.UserDto;
 import com.accountbook.dto.user.UserRequest;
 import com.accountbook.exception.user.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * UserService
@@ -18,6 +24,7 @@ import java.util.Optional;
  * @author donggun
  * @since 2021/11/23
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -26,34 +33,45 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
-     * 로그인
+     * 아이디, 패스워드 기반 세션 성립
      * @param userId
      * @param password
+     * @param request
+     * @param response
      * @return
-     * @throws Exception
+     * @throws RuntimeException
      */
-    public UserDto login(String userId, String password) throws RuntimeException {
+    public UserDto login (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
 
-        Optional<User> findUser = userRepository.findById(userId);
+        // 1. id로 사용자 찾기
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
-        // 해당 아이디가 없는 경우
-        if(findUser.isEmpty()) {
-            throw new UserNotFoundException(UserExceptionCode.NOT_FOUND);
+        // 2. password 비교
+        if(!user.getPassword().equals(password)) {
+            throw new UserException(UserExceptionCode.INVALID_PWD);
         }
 
-        // 비밀번호가 다른 경우
-        if(password.equals(findUser.get().getPassword())) {
-            throw new InvalidPasswordException(UserExceptionCode.INVALID_PWD);
-        }
+        // 3. UID 생성 및 만료 기한 설정
+        String uid = UUID.randomUUID().toString();
+        LocalDateTime expireDate = LocalDateTime.now().plusDays(14);
 
-        // TODO session id 저장
+        // 4. UID, expireDate 저장하기
+        user.changeSessionInfo(uid, expireDate, request.getRemoteAddr());
 
-        return new UserDto(findUser.get());
-    }
+        UserDto loginInfo = new UserDto(user);
 
+        // 5. Session 생성
+        HttpSession session = request.getSession();
+        session.setAttribute("loginInfo", loginInfo);
+        session.setMaxInactiveInterval(60 * 30);
 
-    public UserDto loginBySessionId (String sessionId) {
-        return null;
+        // 6. Cookie 생성
+        Cookie cookie = new Cookie("UID", uid);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 14); // 2 weeks
+        response.addCookie(cookie);
+
+        return loginInfo;
     }
 
     /**
@@ -83,11 +101,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto getUser(String userId) throws Exception {
 
-        return new UserDto(
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND))
-        );
+        return new UserDto(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND)));
     }
 
     /**

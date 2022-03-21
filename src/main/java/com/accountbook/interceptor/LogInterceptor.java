@@ -38,7 +38,7 @@ public class LogInterceptor implements HandlerInterceptor {
         log.info("RESPONSE \tUUID:[{}]\tURI:[{}]", uuid, requestURI);
 
         if(ex != null) {
-            log.error("An ERROR has occurred...!", ex);
+            log.error("An Exception has occurred...!", ex);
         }
     }
 }
