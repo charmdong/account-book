@@ -1,7 +1,6 @@
 package com.accountbook.domain.repository.user;
 
 import com.accountbook.domain.entity.User;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;

@@ -1,29 +1,18 @@
 package com.accountbook.api;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import com.accountbook.common.utils.CookieUtils;
 import com.accountbook.dto.asset.AssetDto;
 import com.accountbook.dto.asset.AssetRequest;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.service.AssetService;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +23,7 @@ public class AssetApiController {
     // 자산 전체 조회
     @GetMapping("")
     public ApiResponse getAssetList(HttpServletRequest request) throws Exception {
-        String userId = CookieUtils.getCookieByName(request.getCookies(), "userId");
+        String userId = CookieUtils.getCookieValueByName(request.getCookies(), "userId");
         List<AssetDto> data = assetService.getAssetList(userId);
         ApiResponse response = new ApiResponse(data, HttpStatus.OK, "SUCCES");
         return response;
