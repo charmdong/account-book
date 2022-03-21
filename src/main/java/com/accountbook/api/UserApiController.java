@@ -1,13 +1,9 @@
 package com.accountbook.api;
 
-<<<<<<< HEAD
-=======
 import com.accountbook.dto.response.ApiResponse;
->>>>>>> dd6c9ccc403dda91cc33d556b3d5011d3019af42
 import com.accountbook.dto.user.PasswordRequest;
-import com.accountbook.dto.user.UserRequest;
-import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.user.UserDto;
+import com.accountbook.dto.user.UserRequest;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;
