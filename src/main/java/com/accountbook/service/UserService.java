@@ -10,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-<<<<<<< HEAD
-=======
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
->>>>>>> dd6c9ccc403dda91cc33d556b3d5011d3019af42
 /**
  * UserService
  *
@@ -36,8 +32,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
-<<<<<<< HEAD
-=======
      * 아이디, 패스워드 기반 세션 성립
      * @param userId
      * @param password
@@ -80,7 +74,6 @@ public class UserService {
     }
 
     /**
->>>>>>> dd6c9ccc403dda91cc33d556b3d5011d3019af42
      * 회원가입
      * @param request
      * @return UserDto
