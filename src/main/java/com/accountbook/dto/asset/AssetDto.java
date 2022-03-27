@@ -29,10 +29,12 @@ public class AssetDto {
     @Schema(description = "정기적인 자산 초기화 일자")
     private LocalDateTime initDate;
 
-    @Schema(description = "결제일")
+    // credit에 대한 정보
+    @Schema(description = "정산 일자")
     private LocalDateTime settlementDate;
-    @Schema(description = "결제일")
+    @Schema(description = "결제 일자")
     private LocalDateTime paymentDate;
+    @Schema(description = "자동 결제 여부")
     private Boolean autoYn;
 
     public AssetDto(Asset asset) {
