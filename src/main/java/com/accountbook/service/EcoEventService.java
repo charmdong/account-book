@@ -2,9 +2,11 @@ package com.accountbook.service;
 
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.entity.EcoEvent;
+import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
+import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import com.accountbook.exception.ecoEvent.EcoEventException;
 import com.accountbook.exception.ecoEvent.EcoEventExceptionCode;
@@ -13,6 +15,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -37,9 +40,24 @@ public class EcoEventService {
         return new EcoEventDto(ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT)));
     }
 
+    //이벤트 조회 by User
     @Transactional(readOnly = true)
     public List<EcoEventDto> getEcoEventByUser(String userId){
         return ecoEventRepository.findByUserId(userId).stream().map(EcoEventDto::new).collect(Collectors.toList());
+    }
+
+    //이벤트 조회 by User, EventType, UseDate
+    @Transactional(readOnly = true)
+    public List<EcoEventDto> getAllEcoEvnetByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) {
+        String userId = ecoEventReadRequest.getUserId();
+        LocalDateTime startDate = ecoEventReadRequest.getStartDate();
+        LocalDateTime endDate = ecoEventReadRequest.getEndDate();
+        EventType eventType = ecoEventReadRequest.getEventType();
+
+        return ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,endDate,eventType)
+                                 .stream()
+                                 .map(EcoEventDto::new)
+                                 .collect(Collectors.toList());
     }
 
     //이벤트 등록
