@@ -6,22 +6,21 @@ import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import com.accountbook.dto.category.CategoryDto;
 import com.accountbook.dto.category.CategoryRequest;
-import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Slf4j
@@ -91,7 +90,7 @@ public class EcoEventServiceTest {
 
     //테스트용 User 생성
     private String getUser() throws Exception{
-        UserRequest request = new UserRequest();
+        UserCreateRequest request = new UserCreateRequest();
         String userId = "gildong1";
 
         if(userService.getUser(userId) == null) {

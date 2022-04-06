@@ -2,9 +2,7 @@ package com.accountbook.service;
 
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
-import com.accountbook.dto.user.PasswordRequest;
-import com.accountbook.dto.user.UserDto;
-import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.user.*;
 import com.accountbook.exception.user.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +77,7 @@ public class UserService {
      * @return UserDto
      * @throws Exception
      */
-    public UserDto addUser(UserRequest request) throws Exception {
+    public UserDto addUser(UserCreateRequest request) throws Exception {
 
         User user = User.createUser(request);
         userRepository.addUser(user);
@@ -109,11 +107,11 @@ public class UserService {
      * @return UserDto
      * @throws Exception
      */
-    public UserDto updateUser(String userId, UserRequest request) throws Exception {
+    public UserDto updateUser(String userId, UserUpdateRequest request) throws Exception {
 
         User user = userRepository.findById(userId).get();
 
-        if (user == null || user.checkInfoUpdate(request)) {
+        if (user == null) {
             throw new UpdateUserException(UserExceptionCode.UPDATE_FAIL);
         }
 
@@ -165,7 +163,7 @@ public class UserService {
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public String findUserId(UserRequest request) throws Exception {
+    public String findUserId(UserInfoRequest request) throws Exception {
 
         User user = userRepository
                 .findByNameAndEmail(request.getName(), request.getEmail())
@@ -181,7 +179,7 @@ public class UserService {
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public String findPassword(UserRequest request) throws Exception {
+    public String findPassword(UserInfoRequest request) throws Exception {
 
         User user = userRepository
                 .findByIdAndEmail(request.getId(), request.getEmail())

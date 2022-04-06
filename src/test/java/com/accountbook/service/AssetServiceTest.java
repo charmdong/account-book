@@ -1,15 +1,12 @@
 package com.accountbook.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.asset.AssetDto;
 import com.accountbook.dto.asset.AssetRequest;
-import com.accountbook.dto.user.UserRequest;
-
+import com.accountbook.dto.user.UserCreateRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -60,7 +58,14 @@ public class AssetServiceTest {
     @Rollback(value = false)
     public void registAsset() throws Exception{
         LocalDateTime localDateTime = LocalDateTime.now();
-        UserRequest userRequest = new UserRequest("test", "password", "Mingeon", "mingeon@kakao.com", localDateTime);
+        UserCreateRequest userRequest = new UserCreateRequest();
+
+        userRequest.setId("test");
+        userRequest.setPassword("password!");
+        userRequest.setName("Mingeon");
+        userRequest.setEmail("mingeon@kakao.com");
+        userRequest.setBirthDate(localDateTime);
+
         User user = User.createUser(userRequest);
         userService.addUser(userRequest);
         user = userRepository.findById("test").orElseThrow();

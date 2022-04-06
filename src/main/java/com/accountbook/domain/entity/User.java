@@ -1,6 +1,7 @@
 package com.accountbook.domain.entity;
 
-import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.user.UserCreateRequest;
+import com.accountbook.dto.user.UserUpdateRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -45,7 +46,7 @@ public class User extends BaseTimeInfo {
     private final List<Category> categoryList = new ArrayList<>();
 
     // 생성자 메서드
-    public static User createUser(UserRequest request) {
+    public static User createUser(UserCreateRequest request) {
 
         User user = new User();
 
@@ -59,7 +60,7 @@ public class User extends BaseTimeInfo {
     }
 
     // 비즈니스 로직 메서드
-    public void changeUser(UserRequest request) {
+    public void changeUser(UserUpdateRequest request) {
 
         if(StringUtils.hasText(request.getName())) {
             this.name = request.getName();
@@ -73,19 +74,6 @@ public class User extends BaseTimeInfo {
     public void changePassword(String password) {
 
         this.password = password;
-    }
-
-    public Boolean checkInfoUpdate (UserRequest request) {
-
-        if (StringUtils.hasText(request.getName())) {
-            if (!request.getName().equals(name)) return false;
-        }
-
-        if (StringUtils.hasText(request.getEmail())) {
-            if (!request.getEmail().equals(email)) return false;
-        }
-
-        return true;
     }
 
     public Boolean checkPwdUpdate (String password) {

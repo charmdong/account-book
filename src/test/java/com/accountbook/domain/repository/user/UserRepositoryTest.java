@@ -1,7 +1,7 @@
 package com.accountbook.domain.repository.user;
 
 import com.accountbook.domain.entity.User;
-import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ class UserRepositoryTest {
 
     @BeforeEach
     void before() throws Exception {
-        UserRequest userRequest = new UserRequest();
+        UserCreateRequest userRequest = new UserCreateRequest();
 
         userRequest.setName("tester");
         userRequest.setBirthDate(LocalDateTime.now());

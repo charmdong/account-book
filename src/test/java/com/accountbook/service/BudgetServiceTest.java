@@ -7,7 +7,7 @@ import com.accountbook.dto.Budget.BudgetDto;
 import com.accountbook.dto.Budget.BudgetRequest;
 import com.accountbook.dto.category.CategoryDto;
 import com.accountbook.dto.category.CategoryRequest;
-import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,6 @@ import java.time.Year;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Slf4j
@@ -104,7 +103,7 @@ class BudgetServiceTest {
 
     //테스트용 User 생성
     public String getUser() throws Exception{
-        UserRequest request = new UserRequest();
+        UserCreateRequest request = new UserCreateRequest();
         String userId = "gildong1";
 
         request.setId(userId);
