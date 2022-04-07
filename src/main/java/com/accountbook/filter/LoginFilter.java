@@ -1,9 +1,10 @@
 package com.accountbook.filter;
 
 import com.accountbook.common.utils.CookieUtils;
+import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
-import com.accountbook.dto.user.UserDto;
+import com.accountbook.dto.user.LoginInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,9 @@ import java.time.LocalDateTime;
 public class LoginFilter implements Filter {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    private static final String REDIRECT_URL = "/login.html";
 
     @Override
     public void init (FilterConfig filterConfig) throws ServletException {
@@ -47,7 +50,7 @@ public class LoginFilter implements Filter {
         // 1. UID 라는 cookie를 가지고 있는가?
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        Cookie cookie = CookieUtils.getCookieByName(httpRequest.getCookies(), "UID");
+        Cookie cookie = CookieUtils.getCookieByName(httpRequest.getCookies(), CookieUtils.LOGIN_CHECK_COOKIE);
 
         // 2. 세션 정보 확인
         HttpSession session = httpRequest.getSession(false);
@@ -65,7 +68,7 @@ public class LoginFilter implements Filter {
             String loginIp = user.getLoginIp();
             if (!loginIp.equals(requestIp)) {
                 log.info("Incorrect Ip...");
-                httpResponse.sendRedirect("/login.html");
+                httpResponse.sendRedirect(REDIRECT_URL);
             }
 
             // 3.2. expireDate 유효성 판단
@@ -74,12 +77,12 @@ public class LoginFilter implements Filter {
 
                 // 3.2.1. Session 생성
                 HttpSession userSession = httpRequest.getSession();
-                userSession.setAttribute("loginInfo", new UserDto(user));
-                userSession.setMaxInactiveInterval(60 * 30);
+                userSession.setAttribute(SessionUtils.LOGIN_INFO, new LoginInfo(user));
+                userSession.setMaxInactiveInterval(SessionUtils.SESSION_TIME);
 
                 // 3.2.2. cookie 만료 기간 갱신 및 DB 업데이트
-                cookie.setMaxAge(60 * 60 * 24 * 14);
-                userRepository.updateExpireDateByUid(uid, now.plusDays(14));
+                cookie.setMaxAge(CookieUtils.COOKIE_MAX_AGE);
+                userRepository.updateExpireDateByUid(uid, now.plusDays(CookieUtils.PLUS_DAY));
 
                 // 3.2.3. 사용자 요청 처리
                 log.info("Login...");
@@ -89,13 +92,13 @@ public class LoginFilter implements Filter {
             // 3.3. 기한 만료
             else {
                 log.info("Login expireDate is over...");
-                httpResponse.sendRedirect("/login.html");
+                httpResponse.sendRedirect(REDIRECT_URL);
             }
         }
         // 4. uid 없음
         else {
             log.info("Non-login User...");
-            httpResponse.sendRedirect("/login.html");
+            httpResponse.sendRedirect(REDIRECT_URL);
         }
     }
 }

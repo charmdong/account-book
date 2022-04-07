@@ -1,5 +1,7 @@
 package com.accountbook.service;
 
+import com.accountbook.common.utils.CookieUtils;
+import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.*;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +41,7 @@ public class UserService {
      * @return
      * @throws RuntimeException
      */
-    public UserDto login (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
+    public LoginInfo login (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
 
         // 1. id로 사용자 찾기
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
@@ -50,22 +53,22 @@ public class UserService {
 
         // 3. UID 생성 및 만료 기한 설정
         String uid = UUID.randomUUID().toString();
-        LocalDateTime expireDate = LocalDateTime.now().plusDays(14);
+        LocalDateTime expireDate = LocalDateTime.now().plusDays(CookieUtils.PLUS_DAY);
 
         // 4. UID, expireDate 저장하기
         user.changeSessionInfo(uid, expireDate, request.getRemoteAddr());
 
-        UserDto loginInfo = new UserDto(user);
+        LoginInfo loginInfo = new LoginInfo(user);
 
         // 5. Session 생성
         HttpSession session = request.getSession();
-        session.setAttribute("loginInfo", loginInfo);
-        session.setMaxInactiveInterval(60 * 30);
+        session.setAttribute(SessionUtils.LOGIN_INFO, loginInfo);
+        session.setMaxInactiveInterval(SessionUtils.SESSION_TIME);
 
         // 6. Cookie 생성
-        Cookie cookie = new Cookie("UID", uid);
+        Cookie cookie = new Cookie(CookieUtils.LOGIN_CHECK_COOKIE, uid);
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24 * 14); // 2 weeks
+        cookie.setMaxAge(CookieUtils.COOKIE_MAX_AGE); // 2 weeks
         response.addCookie(cookie);
 
         return loginInfo;

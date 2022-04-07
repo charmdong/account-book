@@ -19,7 +19,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CategoryRequest {
 
-    @NotEmpty
     private String userId;
 
     @NotEmpty(message = "카테고리명 누락")
