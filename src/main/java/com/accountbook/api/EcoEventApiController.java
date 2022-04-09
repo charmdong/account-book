@@ -1,5 +1,6 @@
 package com.accountbook.api;
 
+import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
@@ -20,7 +21,7 @@ public class EcoEventApiController {
 
     //금융 이벤트 전체 조회
     @GetMapping("/")
-    public ApiResponse getAllBudget(){
+    public ApiResponse getAllEcoEvent(){
         List<EcoEventDto> ecoEventDtoList = ecoEventService.getAllEcoEvent();
         ApiResponse apiResponse = new ApiResponse(ecoEventDtoList, HttpStatus.OK, "SUCCESS");
         return apiResponse;
@@ -28,8 +29,20 @@ public class EcoEventApiController {
 
     //금융 이벤트 조회
     @GetMapping("/{eventSeq}")
-    public ApiResponse getOneBudget(@PathVariable long ecoEventSeq) throws Exception {
+    public ApiResponse getOneEcoEvent(@PathVariable long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.getOneEcoEvent(ecoEventSeq), HttpStatus.OK, "SUCCESS");
+    }
+
+    //금융 이벤트 조건 조회 - user
+    @GetMapping("/{userId}")
+    public ApiResponse getAllEcoEvnetByUser(@PathVariable String userId) throws Exception {
+        return new ApiResponse(ecoEventService.getEcoEventByUser(userId), HttpStatus.OK, "SUCCESS");
+    }
+
+    //금융 이벤트 조건 조회 - user,eventType,useDate
+    @GetMapping("/condition")
+    public ApiResponse getAllEcoEvnetByEventTypeAndUseDate(@RequestBody @Valid EcoEventReadRequest ecoEventReadRequest) throws Exception {
+        return new ApiResponse(ecoEventService.getAllEcoEvnetByEventTypeAndUseDate(ecoEventReadRequest), HttpStatus.OK, "SUCCESS");
     }
 
     //금융 이벤트 등록

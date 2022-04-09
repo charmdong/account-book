@@ -94,13 +94,15 @@ public class EcoEventServiceTest {
         UserRequest request = new UserRequest();
         String userId = "gildong1";
 
-        request.setId(userId);
-        request.setPassword("ghdrlfehed123!");
-        request.setName("홍길동");
-        request.setEmail("ghdrlfehd@gmail.com");
-        request.setBirthDate(Year.of(2000).atMonth(12).atDay(31).atTime(14,03));
+        if(userService.getUser(userId) == null) {
+            request.setId(userId);
+            request.setPassword("ghdrlfehed123!");
+            request.setName("홍길동");
+            request.setEmail("ghdrlfehd@gmail.com");
+            request.setBirthDate(Year.of(2000).atMonth(12).atDay(31).atTime(14, 03));
 
-        userService.addUser(request);
+            userService.addUser(request);
+        }
 
         return userId;
     }
