@@ -1,6 +1,8 @@
 package com.accountbook.domain.repository.user;
 
+import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.User;
+import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +26,9 @@ class UserRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CustomSettingRepository settingRepository;
 
     @BeforeEach
     void before() throws Exception {
@@ -49,11 +54,29 @@ class UserRepositoryTest {
 
         // when
         LocalDateTime now = LocalDateTime.now();
-        userRepository.updateExpireDateByUid("uid1", now);
-        User user = userRepository.findByUid("uid1");
+        userRepository.updateExpireDateByToken("uid1", now);
+        User user = userRepository.findByToken("uid1");
 
         // then
         assertThat(user.getExpireDate().getMonth()).isEqualTo(now.getMonth());
+    }
+
+    @Test
+    @DisplayName("사용자 설정 정보 조회 테스트")
+    public void userSettingTest() throws Exception {
+        User user = userRepository.findById("user1").get();
+
+        CustomSetting setting = CustomSetting.createCustomSetting();
+
+        setting.setUser(user);
+        user.setSetting(setting);
+
+        settingRepository.addSetting(setting);
+
+        User result = userRepository.findById("user1").get();
+        CustomSetting findSetting = settingRepository.findById("user1").get();
+
+        assertThat(result.getSetting()).isEqualTo(findSetting);
     }
 
 }

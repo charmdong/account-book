@@ -60,8 +60,8 @@ public class LoginFilter implements Filter {
 
         // 3. uid로 사용자 정보 조회
         if (cookie != null) {
-            String uid = cookie.getValue();
-            User user = userRepository.findByUid(uid);
+            String token = cookie.getValue();
+            User user = userRepository.findByToken(token);
 
             // 3.1. check loginIp
             String requestIp = httpRequest.getRemoteAddr();
@@ -82,7 +82,7 @@ public class LoginFilter implements Filter {
 
                 // 3.2.2. cookie 만료 기간 갱신 및 DB 업데이트
                 cookie.setMaxAge(CookieUtils.COOKIE_MAX_AGE);
-                userRepository.updateExpireDateByUid(uid, now.plusDays(CookieUtils.PLUS_DAY));
+                userRepository.updateExpireDateByToken(token, now.plusDays(CookieUtils.PLUS_DAY));
 
                 // 3.2.3. 사용자 요청 처리
                 log.info("Login...");

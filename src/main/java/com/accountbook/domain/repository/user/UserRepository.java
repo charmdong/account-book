@@ -22,12 +22,12 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     // 회원 정보 조회
     Optional<User> findById(String userId);
 
-    // 회원 정보 조회 by UID
-    User findByUid(String uid);
+    // 회원 정보 조회 by token
+    User findByToken(String token);
 
     @Modifying(clearAutomatically = true)
-    @Query("update User u set u.expireDate = :expireDate where u.uid = :uid")
-    int updateExpireDateByUid(@Param("uid") String uid, @Param("expireDate") LocalDateTime expireDate);
+    @Query("update User u set u.expireDate = :expireDate where u.token = :token")
+    int updateExpireDateByToken(@Param("token") String token, @Param("expireDate") LocalDateTime expireDate);
 
     // 이름, 이메일 기반 사용자 정보 조회 -> 아이디 찾기
     Optional<User> findByNameAndEmail(String name, String email);

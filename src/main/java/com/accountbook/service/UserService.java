@@ -2,7 +2,9 @@ package com.accountbook.service;
 
 import com.accountbook.common.utils.CookieUtils;
 import com.accountbook.common.utils.SessionUtils;
+import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.User;
+import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.*;
 import com.accountbook.exception.user.*;
@@ -31,9 +33,11 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CustomSettingRepository settingRepository;
 
     /**
      * 아이디, 패스워드 기반 세션 성립
+     *
      * @param userId
      * @param password
      * @param request
@@ -47,7 +51,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         // 2. password 비교
-        if(!user.getPassword().equals(password)) {
+        if (!user.getPassword().equals(password)) {
             throw new UserException(UserExceptionCode.INVALID_PWD);
         }
 
@@ -76,41 +80,55 @@ public class UserService {
 
     /**
      * 회원가입
+     *
      * @param request
      * @return UserDto
      * @throws Exception
      */
-    public UserDto addUser(UserCreateRequest request) throws Exception {
+    public UserDto addUser (UserCreateRequest request) throws Exception {
 
         User user = User.createUser(request);
         userRepository.addUser(user);
 
-        if(userRepository.findById(user.getId()).isEmpty()) {
+        if (userRepository.findById(user.getId()).isEmpty()) {
             throw new InsertUserException(UserExceptionCode.INSERT_FAIL);
         }
+
+        // 사용자 설정 추가
+        CustomSetting setting = CustomSetting.createCustomSetting();
+        setting.setUser(user);
+        settingRepository.addSetting(setting);
+
+        if (settingRepository.findById(user.getId()).isEmpty()) {
+            throw new InsertUserException(UserExceptionCode.SETTING_FAIL);
+        }
+
+        user.setSetting(setting);
 
         return getUser(user.getId());
     }
 
     /**
      * 사용자 정보 조회
+     *
      * @param userId
      * @return UserDto
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public UserDto getUser(String userId) throws Exception {
+    public UserDto getUser (String userId) throws Exception {
 
         return new UserDto(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND)));
     }
 
     /**
      * 사용자 정보 수정
+     *
      * @param request
      * @return UserDto
      * @throws Exception
      */
-    public UserDto updateUser(String userId, UserUpdateRequest request) throws Exception {
+    public UserDto updateUser (String userId, UserUpdateRequest request) throws Exception {
 
         User user = userRepository.findById(userId).get();
 
@@ -127,11 +145,12 @@ public class UserService {
 
     /**
      * 사용자 비밀번호 변경
+     *
      * @param userId
      * @param request
      * @throws Exception
      */
-    public void changePassword(String userId, PasswordRequest request) throws Exception {
+    public void changePassword (String userId, PasswordRequest request) throws Exception {
 
         User user = userRepository.findById(userId).get();
 
@@ -144,15 +163,16 @@ public class UserService {
 
     /**
      * 사용자 탈퇴
+     *
      * @param userId
      * @return 삭제 여부
      * @throws Exception
      */
-    public Boolean deleteUser(String userId) throws Exception {
+    public Boolean deleteUser (String userId) throws Exception {
 
         userRepository.deleteById(userId);
 
-        if(userRepository.findById(userId).isPresent()) {
+        if (userRepository.findById(userId).isPresent()) {
             throw new DeleteUserException(UserExceptionCode.DELETE_FAIL);
         }
 
@@ -161,33 +181,51 @@ public class UserService {
 
     /**
      * 사용자 아이디 찾기
+     *
      * @param request
      * @return userId
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public String findUserId(UserInfoRequest request) throws Exception {
+    public String findUserId (UserInfoRequest request) throws Exception {
 
-        User user = userRepository
-                .findByNameAndEmail(request.getName(), request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+        User user = userRepository.findByNameAndEmail(request.getName(), request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         return user.getId();
     }
 
     /**
      * 사용자 패스워드 찾기
+     *
      * @param request
      * @return password
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public String findPassword(UserInfoRequest request) throws Exception {
+    public String findPassword (UserInfoRequest request) throws Exception {
 
-        User user = userRepository
-                .findByIdAndEmail(request.getId(), request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+        User user = userRepository.findByIdAndEmail(request.getId(), request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         return user.getPassword();
+    }
+
+    /**
+     * 사용자 설정 수정하기
+     *
+     * @param userId
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Boolean updateCustomSetting (String userId, UpdateSettingRequest request) throws Exception {
+
+        // userId에 해당하는 setting 찾기
+        CustomSetting setting = settingRepository.findById(userId)
+                .orElseThrow(() -> new SettingNotFoundException(UserExceptionCode.SETTING_NOT_FOUND));
+
+        // setting 수정
+        setting.updateSetting(request);
+
+        return true;
     }
 }

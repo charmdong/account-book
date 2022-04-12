@@ -2,6 +2,7 @@ package com.accountbook.domain.entity;
 
 import com.accountbook.dto.user.UserCreateRequest;
 import com.accountbook.dto.user.UserUpdateRequest;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -10,40 +11,37 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * 사용자 엔티티
+ * User
+ *
+ * @author donggun
+ * @since 2022/04/12
  */
 @Entity
 @Getter
-@ToString(of = {"id", "password", "name", "email", "birthDate", "uid", "expireDate", "categoryList"})
-@NoArgsConstructor
+@ToString(of = {"id", "password", "name", "email", "birthDate", "token", "expireDate", "setting"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class User extends BaseTimeInfo {
 
     @Id
     @Column(name = "USER_ID")
     private String id;
-
     private String password;
     private String name;
     private String email;
     private LocalDateTime birthDate;
-    private String uid;
-    private LocalDateTime expireDate;
 
+    // 자동 로그인 대상 여부 판단
+    private String token;
+    private LocalDateTime expireDate;
     private String loginIp;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private final List<Budget> budgetList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private final List<Asset> assetList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private final List<Category> categoryList = new ArrayList<>();
+    // 사용자 설정
+    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CustomSetting setting;
 
     // 생성자 메서드
     public static User createUser(UserCreateRequest request) {
@@ -60,6 +58,11 @@ public class User extends BaseTimeInfo {
     }
 
     // 비즈니스 로직 메서드
+    public void setSetting(CustomSetting setting) {
+        this.setting = setting;
+    }
+
+
     public void changeUser(UserUpdateRequest request) {
 
         if(StringUtils.hasText(request.getName())) {
@@ -72,17 +75,15 @@ public class User extends BaseTimeInfo {
     }
 
     public void changePassword(String password) {
-
         this.password = password;
     }
 
     public Boolean checkPwdUpdate (String password) {
-
         return password.equals(this.password);
     }
 
-    public void changeSessionInfo(String uid, LocalDateTime expireDate, String loginIp) {
-        this.uid = uid;
+    public void changeSessionInfo(String token, LocalDateTime expireDate, String loginIp) {
+        this.token = token;
         this.expireDate = expireDate;
         this.loginIp = loginIp;
     }

@@ -1,5 +1,6 @@
 package com.accountbook.api;
 
+import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.user.*;
 import com.accountbook.exception.common.CommonResponseMessage;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -109,4 +111,11 @@ public class UserApiController {
         return new ApiResponse(userService.findPassword(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
+    @PatchMapping("/{userId}/setting")
+    public ApiResponse updateCustomSetting(HttpSession session, @RequestBody UpdateSettingRequest request) throws Exception {
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(SessionUtils.LOGIN_INFO);
+        String userId = loginInfo.getUserId();
+
+        return new ApiResponse(userService.updateCustomSetting(userId, request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
 }
