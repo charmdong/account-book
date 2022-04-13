@@ -20,7 +20,7 @@ public class CustomSetting {
     private String id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 

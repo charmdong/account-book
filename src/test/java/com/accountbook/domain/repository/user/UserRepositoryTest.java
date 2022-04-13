@@ -2,10 +2,11 @@ package com.accountbook.domain.repository.user;
 
 import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.User;
+import com.accountbook.domain.enums.DisplayOption;
 import com.accountbook.domain.repository.setting.CustomSettingRepository;
+import com.accountbook.dto.user.UpdateSettingRequest;
 import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,14 +27,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class UserRepositoryTest {
 
+    @PersistenceContext
+    EntityManager em;
+
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     CustomSettingRepository settingRepository;
 
-    @BeforeEach
+    /*@BeforeEach
     void before() throws Exception {
+        addUser();
+    }*/
+
+    private void addUser () {
         UserCreateRequest userRequest = new UserCreateRequest();
 
         userRequest.setName("tester");
@@ -62,8 +72,55 @@ class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("사용자 설정 정보 조회 테스트")
+    @DisplayName("사용자 설정 정보 등록 및 조회 테스트")
     public void userSettingTest() throws Exception {
+        UserCreateRequest userRequest = new UserCreateRequest();
+
+        userRequest.setName("tester");
+        userRequest.setBirthDate(LocalDateTime.now());
+        userRequest.setEmail("test@gmail.com");
+        userRequest.setId("user");
+        userRequest.setPassword("password");
+
+        User user = User.createUser(userRequest);
+
+        CustomSetting setting = CustomSetting.createCustomSetting();
+        setting.setUser(user);
+        user.setSetting(setting);
+
+        userRepository.addUser(user);
+        User findUser = userRepository.findById("user").get();
+        log.info("User={}", findUser);
+    }
+
+    @Test
+    @DisplayName("사용자 설정 정보 삭제 테스트")
+    public void deleteUserSettingTest() throws Exception {
+        UserCreateRequest userRequest = new UserCreateRequest();
+
+        userRequest.setName("tester");
+        userRequest.setBirthDate(LocalDateTime.now());
+        userRequest.setEmail("test@gmail.com");
+        userRequest.setId("user");
+        userRequest.setPassword("password");
+
+        User user = User.createUser(userRequest);
+
+        CustomSetting setting = CustomSetting.createCustomSetting();
+        setting.setUser(user);
+        user.setSetting(setting);
+
+        userRepository.addUser(user);
+        User findUser = userRepository.findById("user").get();
+        log.info("User={}", findUser);
+
+        CustomSetting result = settingRepository.findById("user").get();
+        assertThat(result.getId()).isEqualTo("user");
+    }
+
+    @Test
+    @DisplayName("사용자 설정 정보 수정 테스트")
+    public void updateUserSettingTest() throws Exception {
         User user = userRepository.findById("user1").get();
 
         CustomSetting setting = CustomSetting.createCustomSetting();
@@ -72,11 +129,18 @@ class UserRepositoryTest {
         user.setSetting(setting);
 
         settingRepository.addSetting(setting);
-
-        User result = userRepository.findById("user1").get();
         CustomSetting findSetting = settingRepository.findById("user1").get();
 
-        assertThat(result.getSetting()).isEqualTo(findSetting);
+        UpdateSettingRequest request = new UpdateSettingRequest();
+        request.setInitDay(20);
+        request.setOption(DisplayOption.MONTH_BALANCE);
+        findSetting.updateSetting(request);
+
+        CustomSetting result = settingRepository.findById("user1").get();
+
+        assertThat(result.getInitDay()).isEqualTo(20);
+        assertThat(result.getOption()).isEqualTo(DisplayOption.MONTH_BALANCE);
     }
+
 
 }

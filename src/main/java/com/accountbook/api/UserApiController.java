@@ -111,6 +111,13 @@ public class UserApiController {
         return new ApiResponse(userService.findPassword(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
+    /**
+     * 사용자 설정 정보 수정
+     * @param session
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @PatchMapping("/{userId}/setting")
     public ApiResponse updateCustomSetting(HttpSession session, @RequestBody UpdateSettingRequest request) throws Exception {
         LoginInfo loginInfo = (LoginInfo) session.getAttribute(SessionUtils.LOGIN_INFO);

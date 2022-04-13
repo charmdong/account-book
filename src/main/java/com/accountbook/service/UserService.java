@@ -42,7 +42,7 @@ public class UserService {
      * @param password
      * @param request
      * @param response
-     * @return
+     * @return LoginInfo
      * @throws RuntimeException
      */
     public LoginInfo login (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
