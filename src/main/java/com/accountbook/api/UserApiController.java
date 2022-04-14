@@ -30,8 +30,7 @@ public class UserApiController {
     @PostMapping
     public ApiResponse addUser(@RequestBody @Valid UserCreateRequest request) throws Exception {
 
-        userService.addUser(request);
-        UserDto createdUser = userService.getUser(request.getId());
+        UserDto createdUser = userService.addUser(request);
 
         return new ApiResponse(createdUser, HttpStatus.CREATED, CommonResponseMessage.SUCCESS);
     }

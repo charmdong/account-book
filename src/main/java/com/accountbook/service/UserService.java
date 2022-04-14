@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -87,25 +88,27 @@ public class UserService {
      */
     public UserDto addUser (UserCreateRequest request) throws Exception {
 
+        // 사용자 엔티티 생성
         User user = User.createUser(request);
-        userRepository.addUser(user);
 
-        if (userRepository.findById(user.getId()).isEmpty()) {
-            throw new InsertUserException(UserExceptionCode.INSERT_FAIL);
-        }
-
-        // 사용자 설정 추가
+        // 사용자 설정 엔티티 생성
         CustomSetting setting = CustomSetting.createCustomSetting();
         setting.setUser(user);
-        settingRepository.addSetting(setting);
+        user.setSetting(setting);
+
+        userRepository.addUser(user);
 
         if (settingRepository.findById(user.getId()).isEmpty()) {
             throw new InsertUserException(UserExceptionCode.SETTING_FAIL);
         }
 
-        user.setSetting(setting);
+        Optional<User> createdUser = userRepository.findById(user.getId());
 
-        return getUser(user.getId());
+        if (createdUser.isEmpty()) {
+            throw new InsertUserException(UserExceptionCode.INSERT_FAIL);
+        }
+
+        return new UserDto(createdUser.get());
     }
 
     /**
@@ -137,8 +140,6 @@ public class UserService {
         }
 
         user.changeUser(request);
-
-        userRepository.flush();
 
         return getUser(userId);
     }
@@ -217,7 +218,7 @@ public class UserService {
      * @return
      * @throws Exception
      */
-    public Boolean updateCustomSetting (String userId, UpdateSettingRequest request) throws Exception {
+    public CustomSettingDto updateCustomSetting (String userId, UpdateSettingRequest request) throws Exception {
 
         // userId에 해당하는 setting 찾기
         CustomSetting setting = settingRepository.findById(userId)
@@ -226,6 +227,22 @@ public class UserService {
         // setting 수정
         setting.updateSetting(request);
 
-        return true;
+        return getCustomSetting(userId);
+    }
+
+    /**
+     * 사용자 설정 조회하기
+     *
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public CustomSettingDto getCustomSetting (String userId) throws Exception {
+
+        // userId에 해당하는 setting 찾기
+        CustomSetting setting = settingRepository.findById(userId)
+                .orElseThrow(() -> new SettingNotFoundException(UserExceptionCode.SETTING_NOT_FOUND));
+
+        return new CustomSettingDto(setting);
     }
 }
