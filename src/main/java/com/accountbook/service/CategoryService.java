@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.dto.category.CategoryRankDto;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +27,15 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryDto> getCategoryList() throws Exception {
 
-        List<CategoryDto> result = categoryRepository.findAll().stream()
-                                                                .map(CategoryDto::new)
-                                                                .collect(Collectors.toList());
+        var result = categoryRepository.findAll().stream()
+                .map(CategoryDto::new)
+                .collect(Collectors.toList());
 
         return result;
     }
 
-    
+    public List<CategoryRankDto> getCategoryRank(String userId) {
+        var rank = CategoryRankDto.rank(categoryRepository.findByUserId(userId));
+        return rank;
+    }
 }

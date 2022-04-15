@@ -8,6 +8,7 @@ import com.accountbook.service.CategoryService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,9 +28,14 @@ public class CategoryApiController {
      * @return 
      */
     @GetMapping
-    public ApiResponse getCategoryListByUser(HttpSession session) throws Exception {
+    public ApiResponse getCategoryList(HttpSession session) throws Exception {
 
         return new ApiResponse(categoryService.getCategoryList(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
+
+    @GetMapping("/rank/{user-id}")
+    public ApiResponse getCategoryRank(@PathVariable("user-id") String userId) throws Exception {
+        return new ApiResponse(categoryService.getCategoryRank(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
 }

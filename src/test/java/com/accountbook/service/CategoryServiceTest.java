@@ -19,4 +19,10 @@ public class CategoryServiceTest {
         log.info(" >> category List : {}", categoryList.toString());
 
     }
+
+    @Test
+    void testGetCategoryRank() {
+        var rank = categoryService.getCategoryRank("test");
+        log.info(" >> category rank : {}", rank.toString());
+    }
 }

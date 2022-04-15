@@ -14,9 +14,11 @@ import javax.persistence.OneToMany;
 import com.accountbook.domain.enums.EventType;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Entity
 @Getter
+@ToString(exclude = "ecoEventList")
 public class Category extends BaseTimeInfo {
 
     @Id
