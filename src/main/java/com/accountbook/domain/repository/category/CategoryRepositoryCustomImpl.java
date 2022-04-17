@@ -1,36 +1,32 @@
 package com.accountbook.domain.repository.category;
 
-import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.entity.User;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-
-import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
-import static com.accountbook.domain.entity.QCategory.category;
+import com.accountbook.domain.entity.Category;
+import com.accountbook.domain.entity.QCategory;
+import com.accountbook.domain.entity.QEcoEvent;
+import com.accountbook.domain.entity.QUser;
 
-@RequiredArgsConstructor
-public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-    private final EntityManager em;
-    private final JPAQueryFactory queryFactory;
+public class CategoryRepositoryCustomImpl extends QuerydslRepositorySupport implements CategoryRepositoryCustom {
+
+    public CategoryRepositoryCustomImpl() {
+        super(Category.class);
+    }
 
     @Override
-    public Optional<List<Category>> getCategoryListByUser(User user) {
+    public List<Category> findByUserId(String userId) {
+        QCategory category = QCategory.category;
+        QEcoEvent ecoEvent = QEcoEvent.ecoEvent;
+        QUser user = QUser.user;
 
-        List<Category> categoryList = queryFactory
-                .selectFrom(category)
-                .where(category.user.eq(user))
+        return from(category)
+                .innerJoin(category.ecoEventList, ecoEvent).fetchJoin()
+                .innerJoin(ecoEvent.user, user).fetchJoin()
+                .where(user.id.eq(userId))
                 .fetch();
 
-        return Optional.ofNullable(categoryList);
     }
 
-    @Override
-    public void addCategory(Category category) {
-
-        em.persist(category);
-    }
 }

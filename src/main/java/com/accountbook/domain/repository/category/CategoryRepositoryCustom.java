@@ -1,14 +1,17 @@
 package com.accountbook.domain.repository.category;
 
-import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.entity.User;
-
 import java.util.List;
-import java.util.Optional;
+
+import com.accountbook.domain.entity.Category;
 
 public interface CategoryRepositoryCustom {
 
-    Optional<List<Category>> getCategoryListByUser(User user);
+    /**
+     * category 조회 by userId
+     * 
+     * @param userId
+     * @return
+     */
+    public List<Category> findByUserId(String userId);
 
-    void addCategory(Category category);
 }

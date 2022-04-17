@@ -1,82 +1,39 @@
 package com.accountbook.domain.entity;
 
-import com.accountbook.dto.category.CategoryRequest;
-import lombok.AccessLevel;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.accountbook.domain.enums.EventType;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.util.StringUtils;
 
-import javax.persistence.*;
-
-/**
- * Category
- *
- * @author donggun
- * @since 2021/11/15
- */
 @Entity
 @Getter
-@ToString(of = {"seq", "comCategory"})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = "ecoEventList")
 public class Category extends BaseTimeInfo {
 
     @Id
     @GeneratedValue
-    @Column(name = "USER_CATEGORY_SEQ")
+    @Column(name = "categorySeq")
     private Long seq;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    private String name;
 
-    @OneToOne
-    @JoinColumn(name = "CATEGORY_CODE")
-    private ComCategory comCategory;
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
 
-    // 생성자 메서드
-    public static Category createCategory (User user, ComCategory comCategory) {
-        Category category = new Category();
+    private Long defaultPrice;
 
-        category.changeUser(user);
-        category.changeComCategory(comCategory);
-
-        return category;
-    }
-
-    // 연관 관계 메서드
-    public void changeComCategory(ComCategory comCategory) {
-
-        this.comCategory = comCategory;
-    }
-
-    public void changeUser(User user) {
-
-        this.user = user;
-        user.getCategoryList().add(this);
-    }
-
-    public void removeUserCategoryList(User user) {
-
-        user.getCategoryList().remove(this);
-    }
-
-    // 비즈니스 로직 메서드
-    public Boolean checkUpdateResult(CategoryRequest request) {
-
-        if (StringUtils.hasText(request.getName())) {
-            if (!request.getName().equals(comCategory.getName())) return false;
-        }
-
-        if (request.getEventType() != null) {
-            if (request.getEventType() != comCategory.getEventType()) return false;
-        }
-
-        if (request.getUseYn() != null) {
-            if (request.getUseYn() != comCategory.getUseYn()) return false;
-        }
-
-        return true;
-    }
+    @OneToMany
+    private List<EcoEvent> ecoEventList = new ArrayList<>(); // N+1 위험 (항상 fetch join으로만 조회)
 
 }
