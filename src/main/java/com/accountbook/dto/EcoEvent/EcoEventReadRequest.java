@@ -11,7 +11,7 @@ public class EcoEventReadRequest {
     @NotEmpty(message = "사용자 누락")
     private String userId;
 
-    private EventType eventType;
+    private EventType eventType; //타입 미 지정 시 전체 조회
 
     private LocalDateTime startDate;
 

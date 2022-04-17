@@ -1,6 +1,5 @@
 package com.accountbook.service;
 
-import com.accountbook.domain.enums.AssetType;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
@@ -12,15 +11,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -37,6 +36,23 @@ public class EcoEventServiceTest {
 
     @Autowired
     private UserService userService;
+
+    //금융 이벤트 조회 By User
+    @Test
+    public void 금융이벤트_조회_by_User() throws Exception{
+        //given
+        String userId = getUser();
+
+        //when
+        List<EcoEventDto> ecoEventList = ecoEventService.getEcoEventByUser(userId);
+
+        //then
+        Optional<EcoEventDto> anyDto = ecoEventList.stream()
+                                                   .filter(dto -> !userId.equals(dto.getUser()))
+                                                   .findAny();
+
+        assertEquals(Optional.empty(), anyDto);
+    }
 
     //금융 이벤트 등록
     @Test
@@ -57,15 +73,16 @@ public class EcoEventServiceTest {
         //given
         EcoEventRequest ecoEventRequest = getEcoEventRequest();
         Long ecoEventSeq =  ecoEventService.enrollEcoEvents(ecoEventRequest);
+        String userId = getUser();
+
 
         //when
-        EcoEventRequest ecoEventUpdateRequest = new EcoEventRequest(EventType.INCOME,null,40000L, AssetType.CASH, ecoEventRequest.getCategorySeq());
+        EcoEventRequest ecoEventUpdateRequest = new EcoEventRequest(userId,EventType.INCOME, now(),40000L,ecoEventRequest.getCategorySeq());
         ecoEventService.updateEcoEvents(ecoEventUpdateRequest, ecoEventSeq);
 
         //then
         EcoEventDto ecoEventUpdateDto = ecoEventService.getOneEcoEvent(ecoEventSeq);
         assertEquals(ecoEventUpdateDto.getAmount(), 40000L);
-        assertEquals(ecoEventUpdateDto.getAssetType(), AssetType.CASH);
     }
 
     //금융 이벤트 삭제
@@ -80,12 +97,12 @@ public class EcoEventServiceTest {
         //then
         assertTrue(result);
     }
-
+    //테스트용 EcoEvent 생성
     public EcoEventRequest getEcoEventRequest() throws Exception{
         String userId = getUser();
         Long categorySeq = getCategory(userId);
 
-        EcoEventRequest ecoEventRequest = new EcoEventRequest(EventType.EXPENDITURE, LocalDateTime.now(), 30000L, AssetType.CASH, categorySeq);
+        EcoEventRequest ecoEventRequest = new EcoEventRequest(userId,EventType.EXPENDITURE, now(),30000L,categorySeq);
         return ecoEventRequest;
     }
 
