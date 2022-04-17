@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class EcoEventDto {
     private Long seq;
 
-    private User user;
+    private String userId;
 
     private EventType eventType;
 
@@ -22,14 +22,14 @@ public class EcoEventDto {
 
     private Long amount;
 
-    private Category category;
+    private Long categorySeq;
 
     public EcoEventDto(EcoEvent ecoEvent){
         this.seq = ecoEvent.getSeq();
+        this.userId = ecoEvent.getUser().getId();
         this.eventType = ecoEvent.getEventType();
         this.useDate = ecoEvent.getUseDate();
         this.amount = ecoEvent.getAmount();
-        this.category = ecoEvent.getCategory();
-
+        this.categorySeq = ecoEvent.getCategory().getSeq();
     }
 }
