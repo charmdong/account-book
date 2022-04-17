@@ -1,6 +1,5 @@
 package com.accountbook.domain.repository;
 
-import com.accountbook.domain.entity.Asset;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.AssetType;
 import com.accountbook.domain.repository.asset.AssetRepository;

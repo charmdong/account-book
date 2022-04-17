@@ -1,6 +1,5 @@
 package com.accountbook.exception.account;
 
-import com.accountbook.api.AssetApiController;
 import com.accountbook.dto.response.ApiResponse;
 
 import org.springframework.core.Ordered;
