@@ -45,6 +45,10 @@ dependencies {
 
     // querydsl
     implementation 'com.querydsl:querydsl-jpa'
+
+    // swagger
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+
 }
 
 test {

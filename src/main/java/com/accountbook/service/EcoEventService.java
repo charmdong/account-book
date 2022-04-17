@@ -2,9 +2,11 @@ package com.accountbook.service;
 
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.entity.EcoEvent;
+import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
+import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class EcoEventService {
     private final EcoEventRepository ecoEventRepository;
+
+    private final UserRepository userRepository;
 
     private final CategoryRepository categoryRepository;
 
@@ -63,8 +67,9 @@ public class EcoEventService {
     //이벤트 등록
     public Long enrollEcoEvents(EcoEventRequest ecoEventRequest) throws Exception{
         Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_CATEGORY));
+        User user = userRepository.findById(ecoEventRequest.getUserId()).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_USER));
 
-        EcoEvent ecoEvent = EcoEvent.createEcoEvent(ecoEventRequest, category);
+        EcoEvent ecoEvent = EcoEvent.createEcoEvent(ecoEventRequest, user, category);
         ecoEventRepository.save(ecoEvent);
 
         return ecoEvent.getSeq();
