@@ -35,6 +35,9 @@ public class EcoEvent extends BaseInfo {
     //금융 이벤트 발생 금액
     private Long amount;
 
+    //금융 이벤트 설명
+    private String desc;
+
     //금융 이벤트 분류
     @OneToOne
     @JoinColumn(name = "CATEGORY_SEQ")

@@ -3,9 +3,7 @@ package com.accountbook.service;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
-import com.accountbook.dto.category.CategoryDto;
-import com.accountbook.dto.category.CategoryRequest;
-import com.accountbook.dto.user.UserRequest;
+import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +46,7 @@ public class EcoEventServiceTest {
 
         //then
         Optional<EcoEventDto> anyDto = ecoEventList.stream()
-                                                   .filter(dto -> !userId.equals(dto.getUser()))
+                                                   .filter(dto -> !userId.equals(dto.getUserId()))
                                                    .findAny();
 
         assertEquals(Optional.empty(), anyDto);
@@ -108,7 +106,8 @@ public class EcoEventServiceTest {
 
     //테스트용 User 생성
     private String getUser() throws Exception{
-        UserRequest request = new UserRequest();
+
+        UserCreateRequest request = new UserCreateRequest();
         String userId = "gildong1";
 
         if(userService.getUser(userId) == null) {
@@ -126,17 +125,6 @@ public class EcoEventServiceTest {
 
     //테스트용 Category 생성
     private Long getCategory(String userId) throws Exception{
-
-        CategoryRequest categoryRequest = new CategoryRequest();
-
-        categoryRequest.setUserId("gildong1");
-        categoryRequest.setName("chicken");
-        categoryRequest.setEventType(EventType.EXPENDITURE);
-        categoryRequest.setUseYn(true);
-
-        categoryService.addCategory(categoryRequest);
-        List<CategoryDto> categoryDtoList = categoryService.getCategoryListByUser(userId);
-
-        return categoryDtoList.get(categoryDtoList.size()-1).getSeq();
+        return categoryService.getCategoryList().get(0).getSeq();
     }
 }
