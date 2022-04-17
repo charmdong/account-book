@@ -1,8 +1,9 @@
 package com.accountbook.api;
 
+import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.dto.response.ApiResponse;
+import com.accountbook.dto.user.LoginInfo;
 import com.accountbook.dto.user.LoginRequest;
-import com.accountbook.dto.user.UserDto;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,10 @@ public class LoginOutController {
     public ApiResponse login (@RequestBody LoginRequest loginRequest,
                               HttpServletRequest request, HttpServletResponse response) {
 
-        UserDto loginInfo = userService.login(loginRequest.getUserId(), loginRequest.getPassword(),
+        LoginInfo loginInfo = userService.login(loginRequest.getUserId(), loginRequest.getPassword(),
                                 request, response);
 
-        return new ApiResponse(loginInfo.getId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(loginInfo.getUserId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
@@ -49,8 +50,8 @@ public class LoginOutController {
     @GetMapping("/logout")
     public ApiResponse logout (HttpSession session) {
 
-        UserDto loginInfo = (UserDto) session.getAttribute("loginInfo");
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(SessionUtils.LOGIN_INFO);
         session.invalidate();
-        return new ApiResponse(loginInfo.getId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(loginInfo.getUserId(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 }

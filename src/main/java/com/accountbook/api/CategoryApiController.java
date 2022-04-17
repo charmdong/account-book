@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< HEAD
+import javax.servlet.http.HttpSession;
+=======
 import lombok.RequiredArgsConstructor;
+>>>>>>> e6985e13a480fd8003400cf1f849ae659705dd81
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +29,11 @@ public class CategoryApiController {
      * 카테고리 목록 조회
      *
      * @param session
+<<<<<<< HEAD
+     * @return
+=======
      * @return 
+>>>>>>> e6985e13a480fd8003400cf1f849ae659705dd81
      */
     @GetMapping
     public ApiResponse getCategoryList(HttpSession session) throws Exception {

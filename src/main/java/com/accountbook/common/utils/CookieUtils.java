@@ -4,6 +4,10 @@ import javax.servlet.http.Cookie;
 
 public class CookieUtils {
 
+    public static final int COOKIE_MAX_AGE = 60 * 60 * 24 * 14;
+    public static final int PLUS_DAY = 14;
+    public static final String LOGIN_CHECK_COOKIE = "TOKEN";
+
     public static Cookie getCookieByName(Cookie[] cookies, String targetName){
         if(cookies!=null){
             for (Cookie c : cookies) {
