@@ -9,9 +9,11 @@ import com.accountbook.domain.enums.EventType;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @ToString(exclude = {"ecoEventList"})
+@Setter
 @Getter
 @RequiredArgsConstructor
 public class CategoryDto {

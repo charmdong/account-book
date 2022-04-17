@@ -9,7 +9,9 @@ import com.accountbook.domain.entity.EcoEvent;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Builder
 public class CategoryRankDto implements Comparable<CategoryRankDto> {
