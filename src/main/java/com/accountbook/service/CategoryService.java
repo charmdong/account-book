@@ -6,7 +6,6 @@ import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.domain.repository.category.ComCategoryRepository;
 import com.accountbook.domain.repository.user.UserRepository;
-import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.dto.category.CategoryDto;
 import com.accountbook.exception.category.*;
 import lombok.RequiredArgsConstructor;

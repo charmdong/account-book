@@ -1,6 +1,5 @@
 package com.accountbook.service;
 
-import com.accountbook.domain.entity.Budget;
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.budget.BudgetRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

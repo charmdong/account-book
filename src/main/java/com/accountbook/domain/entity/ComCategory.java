@@ -1,7 +1,6 @@
 package com.accountbook.domain.entity;
 
 import com.accountbook.domain.enums.EventType;
-import com.accountbook.dto.category.CategoryRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

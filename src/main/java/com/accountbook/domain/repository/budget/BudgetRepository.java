@@ -1,6 +1,5 @@
 package com.accountbook.domain.repository.budget;
 
-import com.accountbook.domain.entity.Budget;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
