@@ -67,7 +67,7 @@ public class UserApiController {
      * @param request
      * @return
      */
-    @PutMapping("/password/{userId}")
+    @PatchMapping("/{userId}/password")
     public ApiResponse changePassword(@PathVariable("userId") String userId, @Valid @RequestBody PasswordRequest request) throws Exception {
 
         userService.changePassword(userId, request);
@@ -104,9 +104,10 @@ public class UserApiController {
      * @param request (id, email)
      * @return 사용자 패스워드
      */
-    @PostMapping("/password")
-    public ApiResponse findUserPassword(@RequestBody UserInfoRequest request) throws Exception {
+    @PostMapping("/{userId}/password")
+    public ApiResponse findUserPassword(@PathVariable String userId, @RequestBody UserInfoRequest request) throws Exception {
         // TODO 사용자 패스워드를 반환하면 안됨. 이메일로 쏘든지 해야함.
+        // TODO userId도 확인하도록 수정
         return new ApiResponse(userService.findPassword(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
