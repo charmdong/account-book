@@ -1,19 +1,15 @@
 package com.accountbook.api;
 
-<<<<<<< HEAD
-=======
+import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.dto.response.ApiResponse;
->>>>>>> dd6c9ccc403dda91cc33d556b3d5011d3019af42
-import com.accountbook.dto.user.PasswordRequest;
-import com.accountbook.dto.user.UserRequest;
-import com.accountbook.dto.response.ApiResponse;
-import com.accountbook.dto.user.UserDto;
+import com.accountbook.dto.user.*;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -32,10 +28,9 @@ public class UserApiController {
      * @return 추가된 사용자 정보
      */
     @PostMapping
-    public ApiResponse addUser(@RequestBody @Valid UserRequest request) throws Exception {
+    public ApiResponse addUser(@RequestBody @Valid UserCreateRequest request) throws Exception {
 
-        userService.addUser(request);
-        UserDto createdUser = userService.getUser(request.getId());
+        UserDto createdUser = userService.addUser(request);
 
         return new ApiResponse(createdUser, HttpStatus.CREATED, CommonResponseMessage.SUCCESS);
     }
@@ -58,7 +53,7 @@ public class UserApiController {
      * @return 수정된 사용자 정보
      */
     @PutMapping("/{userId}")
-    public ApiResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserRequest request) throws Exception {
+    public ApiResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) throws Exception {
 
         userService.updateUser(userId, request);
         UserDto updatedUser = userService.getUser(userId);
@@ -99,7 +94,7 @@ public class UserApiController {
      * @return 사용자 아이디
      */
     @PostMapping("/id")
-    public ApiResponse findUserId(@RequestBody UserRequest request) throws Exception {
+    public ApiResponse findUserId(@RequestBody UserInfoRequest request) throws Exception {
 
         return new ApiResponse(userService.findUserId(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
@@ -110,9 +105,23 @@ public class UserApiController {
      * @return 사용자 패스워드
      */
     @PostMapping("/password")
-    public ApiResponse findUserPassword(@RequestBody UserRequest request) throws Exception {
+    public ApiResponse findUserPassword(@RequestBody UserInfoRequest request) throws Exception {
         // TODO 사용자 패스워드를 반환하면 안됨. 이메일로 쏘든지 해야함.
         return new ApiResponse(userService.findPassword(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
+    /**
+     * 사용자 설정 정보 수정
+     * @param session
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PatchMapping("/{userId}/setting")
+    public ApiResponse updateCustomSetting(HttpSession session, @RequestBody UpdateSettingRequest request) throws Exception {
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(SessionUtils.LOGIN_INFO);
+        String userId = loginInfo.getUserId();
+
+        return new ApiResponse(userService.updateCustomSetting(userId, request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
 }

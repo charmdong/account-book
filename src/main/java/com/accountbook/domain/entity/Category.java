@@ -53,12 +53,12 @@ public class Category extends BaseTimeInfo {
     public void changeUser(User user) {
 
         this.user = user;
-        user.getCategoryList().add(this);
+        //user.getCategoryList().add(this);
     }
 
     public void removeUserCategoryList(User user) {
 
-        user.getCategoryList().remove(this);
+        //user.getCategoryList().remove(this);
     }
 
     // 비즈니스 로직 메서드

@@ -1,15 +1,17 @@
 package com.accountbook.api;
 
-import com.accountbook.dto.response.ApiResponse;
+import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.dto.category.CategoryRequest;
+import com.accountbook.dto.response.ApiResponse;
+import com.accountbook.dto.user.LoginInfo;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 /**
  * CategoryApiController
@@ -33,7 +35,7 @@ public class CategoryApiController {
     @GetMapping
     public ApiResponse getCategoryListByUser(HttpSession session) throws Exception {
 
-        String userId = (String) session.getAttribute("userId");
+        String userId = getUserId(session);
         return new ApiResponse(categoryService.getCategoryListByUser(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
@@ -55,8 +57,9 @@ public class CategoryApiController {
      * @param request
      */
     @PostMapping
-    public ApiResponse addCategory(@RequestBody @Valid CategoryRequest request) throws Exception {
+    public ApiResponse addCategory(@RequestBody @Validated CategoryRequest request, HttpSession session) throws Exception {
 
+        request.setUserId(getUserId(session));
         return new ApiResponse(categoryService.addCategory(request), HttpStatus.CREATED, CommonResponseMessage.SUCCESS);
     }
 
@@ -68,8 +71,9 @@ public class CategoryApiController {
      */
     @PatchMapping("/{categorySeq}")
     public ApiResponse updateCategory(@PathVariable("categorySeq") Long seq,
-                                   @RequestBody @Valid CategoryRequest request) throws Exception {
+                                   @RequestBody CategoryRequest request, HttpSession session) throws Exception {
 
+        request.setUserId(getUserId(session));
         return new ApiResponse(categoryService.updateCategory(seq, request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
@@ -81,8 +85,18 @@ public class CategoryApiController {
     @DeleteMapping("/{categorySeq}")
     public ApiResponse deleteCategory(@PathVariable("categorySeq") Long seq, HttpSession session) throws Exception {
 
-        String userId = String.valueOf(session.getAttribute("userId"));
+        String userId = getUserId(session);
         return new ApiResponse(categoryService.deleteCategory(seq, userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
+
+    /**
+     * 세션으로부터 사용자 아이디 조회
+     * @param session
+     * @return
+     */
+    private String getUserId (HttpSession session) {
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(SessionUtils.LOGIN_INFO);
+        return loginInfo.getUserId();
     }
 
 }

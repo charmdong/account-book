@@ -45,7 +45,7 @@ public class Budget extends BaseInfo{
     //연관 관계 메소드
     private void setUser(User user) {
         this.user = user;
-        user.getBudgetList().add(this);
+        //user.getBudgetList().add(this);
     }
 
     //비즈니스 로직
@@ -56,6 +56,6 @@ public class Budget extends BaseInfo{
     }
 
     public void removeBudget(User user){
-        user.getBudgetList().remove(this);
+        //user.getBudgetList().remove(this);
     }
 }
