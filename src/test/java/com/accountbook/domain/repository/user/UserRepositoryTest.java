@@ -7,6 +7,7 @@ import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.dto.user.UpdateSettingRequest;
 import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -36,10 +37,10 @@ class UserRepositoryTest {
     @Autowired
     CustomSettingRepository settingRepository;
 
-    /*@BeforeEach
+    @BeforeEach
     void before() throws Exception {
         addUser();
-    }*/
+    }
 
     private void addUser () {
         UserCreateRequest userRequest = new UserCreateRequest();
@@ -121,22 +122,31 @@ class UserRepositoryTest {
     @Test
     @DisplayName("사용자 설정 정보 수정 테스트")
     public void updateUserSettingTest() throws Exception {
-        User user = userRepository.findById("user1").get();
+
+        UserCreateRequest userRequest = new UserCreateRequest();
+
+        userRequest.setName("tester");
+        userRequest.setBirthDate(LocalDateTime.now());
+        userRequest.setEmail("test@gmail.com");
+        userRequest.setId("user");
+        userRequest.setPassword("password");
+
+        User user = User.createUser(userRequest);
 
         CustomSetting setting = CustomSetting.createCustomSetting();
-
         setting.setUser(user);
         user.setSetting(setting);
 
-        settingRepository.addSetting(setting);
-        CustomSetting findSetting = settingRepository.findById("user1").get();
+        userRepository.addUser(user);
+
+        CustomSetting findSetting = settingRepository.findById("user").get();
 
         UpdateSettingRequest request = new UpdateSettingRequest();
         request.setInitDay(20);
         request.setOption(DisplayOption.MONTH_BALANCE);
         findSetting.updateSetting(request);
 
-        CustomSetting result = settingRepository.findById("user1").get();
+        CustomSetting result = settingRepository.findById("user").get();
 
         assertThat(result.getInitDay()).isEqualTo(20);
         assertThat(result.getOption()).isEqualTo(DisplayOption.MONTH_BALANCE);
