@@ -1,6 +1,6 @@
 package com.accountbook.domain.repository.setting;
 
-import com.accountbook.domain.entity.CustomSetting;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -9,9 +9,6 @@ import javax.persistence.EntityManager;
 public class CustomSettingCustomImpl implements CustomSettingCustom {
 
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
 
-    @Override
-    public void addSetting (CustomSetting setting) {
-        em.persist(setting);
-    }
 }
