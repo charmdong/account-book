@@ -1,6 +1,7 @@
 package com.accountbook.domain.entity;
 
 import com.accountbook.domain.enums.EventType;
+import com.accountbook.domain.enums.RequestType;
 import com.accountbook.dto.user.UpdatePrevInfoRequest;
 import com.accountbook.dto.user.UserCreateRequest;
 import com.accountbook.dto.user.UserUpdateRequest;
@@ -97,12 +98,12 @@ public class User extends BaseTimeInfo {
 
         // 수입
         if(request.getEventType().equals(EventType.INCOME)) {
-            // insert, TODO 상수화
-            if(request.getRequestType() == 1) {
+            // insert
+            if(request.getRequestType().equals(RequestType.INSERT)) { // TODO enum? util? EcoEvent public static int?
                 prevIncome += request.getAfterAmount();
             }
             // update
-            else if(request.getRequestType() == 0) {
+            else if(request.getRequestType().equals(RequestType.UPDATE)) {
                 prevIncome -= request.getBeforeAmount();
                 prevIncome += request.getAfterAmount();
             }
@@ -113,12 +114,12 @@ public class User extends BaseTimeInfo {
         }
         // 지출
         else {
-            // insert, TODO 상수화
-            if(request.getRequestType() == 1) {
+            // insert
+            if(request.getRequestType().equals(RequestType.INSERT)) {
                 prevExpenditure += request.getAfterAmount();
             }
             // update
-            else if(request.getRequestType() == 0) {
+            else if(request.getRequestType().equals(RequestType.UPDATE)) {
                 prevExpenditure -= request.getBeforeAmount();
                 prevExpenditure += request.getAfterAmount();
             }
