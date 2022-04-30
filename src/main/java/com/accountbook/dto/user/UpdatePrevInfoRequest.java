@@ -3,8 +3,10 @@ package com.accountbook.dto.user;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.enums.RequestType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class UpdatePrevInfoRequest {
 
     private EventType eventType;    // 수입, 지출 구분
