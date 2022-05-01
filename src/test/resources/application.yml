@@ -3,11 +3,11 @@ spring:
     ansi:
       enabled: always
   # datasource Local Setting
-    datasource:
-      url: jdbc:h2:tcp://localhost/~/accountbook
-      username: sa
-      password:
-      driver-class-name: org.h2.Driver
+#    datasource:
+#      url: jdbc:h2:tcp://localhost/~/accountbook
+#      username: sa
+#      password:
+#      driver-class-name: org.h2.Driver
 
   # docker image
 #  datasource:

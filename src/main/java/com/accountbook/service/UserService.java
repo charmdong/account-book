@@ -203,9 +203,9 @@ public class UserService {
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public String findPassword (UserInfoRequest request) throws Exception {
+    public String findPassword (String userId, UserInfoRequest request) throws Exception {
 
-        User user = userRepository.findByIdAndEmail(request.getId(), request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+        User user = userRepository.findByIdAndEmail(userId, request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         return user.getPassword();
     }

@@ -25,9 +25,9 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
     // 회원 정보 조회 by token
     User findByToken(String token);
 
-    @Modifying(clearAutomatically = true)
-    @Query("update User u set u.expireDate = :expireDate where u.token = :token")
-    int updateExpireDateByToken(@Param("token") String token, @Param("expireDate") LocalDateTime expireDate);
+//    @Modifying(clearAutomatically = true) // update 이후 Persistence Context clear
+//    @Query("update User u set u.expireDate = :expireDate where u.token = :token")
+//    long updateExpireDateByToken(@Param("token") String token, @Param("expireDate") LocalDateTime expireDate);
 
     // 이름, 이메일 기반 사용자 정보 조회 -> 아이디 찾기
     Optional<User> findByNameAndEmail(String name, String email);

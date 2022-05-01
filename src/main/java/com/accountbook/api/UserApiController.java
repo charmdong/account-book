@@ -13,7 +13,10 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
- * 사용자 API Controller
+ * UserApiController
+ *
+ * @author donggun
+ * @since 2022/04/17
  */
 @RestController
 @RequiredArgsConstructor
@@ -67,7 +70,7 @@ public class UserApiController {
      * @param request
      * @return
      */
-    @PutMapping("/password/{userId}")
+    @PatchMapping("/{userId}/password")
     public ApiResponse changePassword(@PathVariable("userId") String userId, @Valid @RequestBody PasswordRequest request) throws Exception {
 
         userService.changePassword(userId, request);
@@ -101,13 +104,15 @@ public class UserApiController {
 
     /**
      * 사용자 패스워드 찾기
-     * @param request (id, email)
+     * @param userId
+     * @param request
      * @return 사용자 패스워드
+     * @throws Exception
      */
-    @PostMapping("/password")
-    public ApiResponse findUserPassword(@RequestBody UserInfoRequest request) throws Exception {
+    @PostMapping("/{userId}/password")
+    public ApiResponse findUserPassword(@PathVariable String userId, @RequestBody UserInfoRequest request) throws Exception {
         // TODO 사용자 패스워드를 반환하면 안됨. 이메일로 쏘든지 해야함.
-        return new ApiResponse(userService.findPassword(request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(userService.findPassword(userId, request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     /**
