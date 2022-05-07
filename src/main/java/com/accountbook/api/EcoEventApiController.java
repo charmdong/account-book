@@ -63,5 +63,10 @@ public class EcoEventApiController {
     public ApiResponse delete(@PathVariable long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.deleteEcoEvents(ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
+
+//    @GetMapping("/summary")
+//    public ApiResponse summary() throws Exception{
+//        return new ApiResponse(ecoEventService.summarizeEcoEvents(),HttpStatus.OK, CommonResponseMessage.SUCCESS);
+//    }
 }
 
