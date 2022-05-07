@@ -22,8 +22,7 @@ public class EcoEventRepositoryCustomImpl implements EcoEventRepositoryCustom{
     public List<EcoEvent> findByUserId(String userId) {
         String jpql = "select e " +
                       "from EcoEvent e " +
-                      "join fetch e.category c " +
-                      "where c.user.id = :userId";
+                      "where e.user.id = :userId";
         return em.createQuery(jpql, EcoEvent.class)
                  .setParameter("userId", userId)
                  .getResultList();
@@ -34,7 +33,7 @@ public class EcoEventRepositoryCustomImpl implements EcoEventRepositoryCustom{
         String jpql = "select e " +
                 "from EcoEvent e " +
                 "join fetch e.category c " +
-                "where c.user.id = :userId ";
+                "where e.user.id = :userId ";
         if(startDate != null) {
             jpql += "and e.useDate >= :startDate ";
         }

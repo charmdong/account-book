@@ -59,6 +59,7 @@ public class EcoEventServiceTest {
         if(ecoEventDtos.isEmpty()){
         } else{
             ecoEventRequest.setAmount(90000L);
+            ecoEventRequest.setEventType(EventType.INCOME);
 
             //when
             ecoEventService.updateEcoEvents(ecoEventRequest,ecoEventDtos.get(0).getSeq());
@@ -95,7 +96,7 @@ public class EcoEventServiceTest {
         if(ecoEventDtos.isEmpty()){
         } else{
             //when
-            ecoEventService.getInTimeExpenseAmountInfos(ecoEventReadRequest);
+            ecoEventService.summarizeEcoEvents(ecoEventReadRequest);
         }
     }
 
