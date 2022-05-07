@@ -1,24 +1,23 @@
 package com.accountbook.service;
-
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
+import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
-import com.accountbook.dto.user.UserCreateRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import java.time.Year;
 import java.util.List;
-import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Slf4j
@@ -30,30 +29,16 @@ public class EcoEventServiceTest {
     private EcoEventService ecoEventService;
 
     @Autowired
+    private EntityManager em;
+
+    @Autowired
     private CategoryService categoryService;
 
     @Autowired
     private UserService userService;
 
-    //금융 이벤트 조회 By User
     @Test
-    public void 금융이벤트_조회_by_User() throws Exception{
-        //given
-        String userId = getUser();
-
-        //when
-        List<EcoEventDto> ecoEventList = ecoEventService.getEcoEventByUser(userId);
-
-        //then
-        Optional<EcoEventDto> anyDto = ecoEventList.stream()
-                                                   .filter(dto -> !userId.equals(dto.getUserId()))
-                                                   .findAny();
-
-        assertEquals(Optional.empty(), anyDto);
-    }
-
-    //금융 이벤트 등록
-    @Test
+    @Rollback(value = false)
     public void 금융이벤트_등록() throws Exception{
         //given
         int prevSize = ecoEventService.getAllEcoEvent().size();
@@ -65,66 +50,78 @@ public class EcoEventServiceTest {
         assertEquals(prevSize+1, currentSize);
     }
 
-    //금융 이벤트 수정
     @Test
     public void 금융이벤트_수정() throws Exception{
         //given
         EcoEventRequest ecoEventRequest = getEcoEventRequest();
-        Long ecoEventSeq =  ecoEventService.enrollEcoEvents(ecoEventRequest);
-        String userId = getUser();
+        List<EcoEventDto> ecoEventDtos = ecoEventService.getEcoEventByUser(ecoEventRequest.getUserId());
 
+        if(ecoEventDtos.isEmpty()){
+        } else{
+            ecoEventRequest.setAmount(90000L);
 
-        //when
-        EcoEventRequest ecoEventUpdateRequest = new EcoEventRequest(userId,EventType.INCOME, now(),40000L,ecoEventRequest.getCategorySeq());
-        ecoEventService.updateEcoEvents(ecoEventUpdateRequest, ecoEventSeq);
+            //when
+            ecoEventService.updateEcoEvents(ecoEventRequest,ecoEventDtos.get(0).getSeq());
 
-        //then
-        EcoEventDto ecoEventUpdateDto = ecoEventService.getOneEcoEvent(ecoEventSeq);
-        assertEquals(ecoEventUpdateDto.getAmount(), 40000L);
+            //then
+            em.flush();
+            List<EcoEventDto> ecoEventByUserDtos = ecoEventService.getEcoEventByUser(ecoEventRequest.getUserId());
+            assertEquals(90000L, ecoEventByUserDtos.get(0).getAmount());
+        }
     }
 
-    //금융 이벤트 삭제
     @Test
-    public void deleteEcoEvnet() throws Exception{
+    public void 금융이벤트_삭제() throws Exception{
         //given
-        Long ecoEventSeq = ecoEventService.enrollEcoEvents(getEcoEventRequest());
+        EcoEventRequest ecoEventRequest = getEcoEventRequest();
+        List<EcoEventDto> ecoEventDtos = ecoEventService.getEcoEventByUser(ecoEventRequest.getUserId());
 
-        //when
-        boolean result = ecoEventService.deleteEcoEvents(ecoEventSeq);
+        if(ecoEventDtos.isEmpty()){
+        } else{
+            //when
+            boolean check = ecoEventService.deleteEcoEvents(ecoEventDtos.get(0).getSeq());
 
-        //then
-        assertTrue(result);
+            //then
+            assertEquals(true,check);
+        }
     }
+
+    @Test
+    public void 금융이벤트_통계() throws Exception{
+        //given
+        EcoEventReadRequest ecoEventReadRequest = getEcoEventReadRequest();
+        List<EcoEventDto> ecoEventDtos = ecoEventService.getEcoEventByUser(ecoEventReadRequest.getUserId());
+
+        if(ecoEventDtos.isEmpty()){
+        } else{
+            //when
+            ecoEventService.getInTimeExpenseAmountInfos(ecoEventReadRequest);
+        }
+    }
+
     //테스트용 EcoEvent 생성
     public EcoEventRequest getEcoEventRequest() throws Exception{
-        String userId = getUser();
-        Long categorySeq = getCategory(userId);
 
-        EcoEventRequest ecoEventRequest = new EcoEventRequest(userId,EventType.EXPENDITURE, now(),30000L,categorySeq);
+        // UserServiceTest.addUserTest() 실행 후 실행
+        String userId = "user1";
+
+        //insert into CATEGORY values (3, now(), now(), 0, 'EXPENDITURE', '애완동물');
+        Long categorySeq = 3L;
+        EcoEventRequest ecoEventRequest = new EcoEventRequest(userId,EventType.EXPENDITURE, now(),50000L,categorySeq);
+
         return ecoEventRequest;
     }
 
-    //테스트용 User 생성
-    private String getUser() throws Exception{
+    //테스트용 Read EcoEvent 생성
+    public EcoEventReadRequest getEcoEventReadRequest() throws Exception{
 
-        UserCreateRequest request = new UserCreateRequest();
-        String userId = "gildong1";
+        // UserServiceTest.addUserTest() 실행 후 실행
+        String userId = "user1";
 
-        if(userService.getUser(userId) == null) {
-            request.setId(userId);
-            request.setPassword("ghdrlfehed123!");
-            request.setName("홍길동");
-            request.setEmail("ghdrlfehd@gmail.com");
-            request.setBirthDate(Year.of(2000).atMonth(12).atDay(31).atTime(14, 03));
+        //insert into CATEGORY values (2, now(), now(), 0, 'EXPENDITURE', '식비');
+        Long categorySeq = 2L;
+        EcoEventReadRequest ecoEventRequest  = new EcoEventReadRequest(userId, EventType.EXPENDITURE, now(), now().plusDays(1));
 
-            userService.addUser(request);
-        }
-
-        return userId;
-    }
-
-    //테스트용 Category 생성
-    private Long getCategory(String userId) throws Exception{
-        return categoryService.getCategoryList().get(0).getSeq();
+       return ecoEventRequest;
     }
 }
