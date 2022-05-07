@@ -1,5 +1,6 @@
 package com.accountbook.service;
 
+import com.accountbook.aop.LogTraceAspect;
 import com.accountbook.domain.enums.DisplayOption;
 import com.accountbook.dto.user.CustomSettingDto;
 import com.accountbook.dto.user.UpdateSettingRequest;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(LogTraceAspect.class)
 @SpringBootTest
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
