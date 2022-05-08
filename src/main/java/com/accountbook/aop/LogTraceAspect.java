@@ -6,6 +6,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 
+/**
+ * LogTraceAspect
+ *
+ * @author donggun
+ * @since 2022/05/06
+ */
 @Slf4j
 @Aspect
 public class LogTraceAspect {
