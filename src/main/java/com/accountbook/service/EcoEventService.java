@@ -164,11 +164,6 @@ public class EcoEventService {
         if(maxCategoryList != null && !maxCategoryList.isEmpty()){
             return maxCategoryList;
         }
-
-        //제안사항 - 0L일 때 Max 없는 것으로 처리하면 어떤지
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setSeq(0L);
-        maxCategoryList.add(categoryDto);
         return maxCategoryList;
     }
 
