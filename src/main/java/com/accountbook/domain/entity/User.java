@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-@ToString(of = {"id", "password", "name", "email", "birthDate", "token", "expireDate", "setting"})
+@ToString(of = {"id", "password", "name", "email", "birthDate", "token", "expireDate", "prevIncome", "prevExpenditure", "setting"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 public class User extends BaseTimeInfo {
@@ -93,41 +93,46 @@ public class User extends BaseTimeInfo {
         return password.equals(this.password);
     }
 
-    // 지난 달 수입, 지출 금액 수정
-    public void updatePrevInfo(UpdatePrevInfoRequest request) {
+    // // 지난 달 수입, 지출 금액 수정
+    // public void updatePrevInfo(UpdatePrevInfoRequest request) {
 
-        // 수입
-        if(request.getEventType().equals(EventType.INCOME)) {
-            // insert
-            if(request.getRequestType().equals(RequestType.INSERT)) { // TODO enum? util? EcoEvent public static int?
-                prevIncome += request.getAfterAmount();
-            }
-            // update
-            else if(request.getRequestType().equals(RequestType.UPDATE)) {
-                prevIncome -= request.getBeforeAmount();
-                prevIncome += request.getAfterAmount();
-            }
-            // delete
-            else {
-                prevIncome -= request.getAfterAmount();
-            }
-        }
-        // 지출
-        else {
-            // insert
-            if(request.getRequestType().equals(RequestType.INSERT)) {
-                prevExpenditure += request.getAfterAmount();
-            }
-            // update
-            else if(request.getRequestType().equals(RequestType.UPDATE)) {
-                prevExpenditure -= request.getBeforeAmount();
-                prevExpenditure += request.getAfterAmount();
-            }
-            // delete
-            else {
-                prevExpenditure -= request.getAfterAmount();
-            }
-        }
+    //     // 수입
+    //     if(request.getEventType().equals(EventType.INCOME)) {
+    //         // insert
+    //         if(request.getRequestType().equals(RequestType.INSERT)) { // TODO enum? util? EcoEvent public static int?
+    //             prevIncome += request.getAfterAmount();
+    //         }
+    //         // update
+    //         else if(request.getRequestType().equals(RequestType.UPDATE)) {
+    //             prevIncome -= request.getBeforeAmount();
+    //             prevIncome += request.getAfterAmount();
+    //         }
+    //         // delete
+    //         else {
+    //             prevIncome -= request.getAfterAmount();
+    //         }
+    //     }
+    //     // 지출
+    //     else {
+    //         // insert
+    //         if(request.getRequestType().equals(RequestType.INSERT)) {
+    //             prevExpenditure += request.getAfterAmount();
+    //         }
+    //         // update
+    //         else if(request.getRequestType().equals(RequestType.UPDATE)) {
+    //             prevExpenditure -= request.getBeforeAmount();
+    //             prevExpenditure += request.getAfterAmount();
+    //         }
+    //         // delete
+    //         else {
+    //             prevExpenditure -= request.getAfterAmount();
+    //         }
+    //     }
+    // }
+    
+    public void updatePrevInfo(Long prevIncome, Long prevExpenditure) {
+        this.prevIncome = prevIncome;
+        this.prevExpenditure = prevExpenditure;
     }
 
     public void changeSessionInfo(String token, LocalDateTime expireDate, String loginIp) {

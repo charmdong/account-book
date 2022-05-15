@@ -57,21 +57,6 @@ public class EcoEventService {
         return ecoEventRepository.findByUserId(userId).stream().map(EcoEventDto::new).collect(Collectors.toList());
     }
 
-    /**
-     * 이벤트 조회 by User, UseDate
-     * @param userId : 조회 대상의 userId
-     * @param startDate : 사용자가 설정한 초기화 날짜 (init Date)
-     * @param endDate : startDate + 1
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public List<EcoEventDto> getEcoEventByDate(String userId, LocalDateTime startDate, LocalDateTime endDate) {
-        return ecoEventRepository.findByUseDate(userId, startDate, endDate)
-                                .stream()
-                                .map(EcoEventDto::new)
-                                .collect(Collectors.toList());
-    }
-
     //이벤트 조회 by User, EventType, UseDate
     @Transactional(readOnly = true)
     public List<EcoEventDto> getAllEcoEvnetByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) {

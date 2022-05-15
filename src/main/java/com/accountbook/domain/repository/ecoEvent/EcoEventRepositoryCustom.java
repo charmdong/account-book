@@ -12,7 +12,5 @@ public interface EcoEventRepositoryCustom {
     //금융 이벤트 조회 by User
     List<EcoEvent> findByUserId(String userId);
 
-    List<EcoEvent> findByUseDate(String userId, LocalDateTime startDate, LocalDateTime endDate);
-
     List<EcoEvent> findByEventTypeAndUseDate(String userId, LocalDateTime startDate, LocalDateTime endDate, EventType eventType);
 }
