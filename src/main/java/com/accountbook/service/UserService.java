@@ -1,25 +1,43 @@
 package com.accountbook.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import com.accountbook.common.utils.CookieUtils;
 import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.domain.repository.user.UserRepository;
-import com.accountbook.dto.user.*;
-import com.accountbook.exception.user.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.accountbook.dto.user.CustomSettingDto;
+import com.accountbook.dto.user.LoginInfo;
+import com.accountbook.dto.user.PasswordRequest;
+import com.accountbook.dto.user.UpdateSettingRequest;
+import com.accountbook.dto.user.UserCreateRequest;
+import com.accountbook.dto.user.UserDto;
+import com.accountbook.dto.user.UserInfoRequest;
+import com.accountbook.dto.user.UserUpdateRequest;
+import com.accountbook.exception.user.DeleteUserException;
+import com.accountbook.exception.user.InsertUserException;
+import com.accountbook.exception.user.SettingNotFoundException;
+import com.accountbook.exception.user.UpdateUserException;
+import com.accountbook.exception.user.UserException;
+import com.accountbook.exception.user.UserExceptionCode;
+import com.accountbook.exception.user.UserNotFoundException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * UserService
@@ -110,6 +128,18 @@ public class UserService {
 
         return new UserDto(createdUser.get());
     }
+
+    /**
+     * 전체 사용자 정보 조회
+     * @return
+     * @throws Exception
+     */
+    @Transactional(readOnly = true)
+    public List<UserDto> getUsers () throws Exception {
+
+        return userRepository.findAll().stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+    }
+
 
     /**
      * 사용자 정보 조회
