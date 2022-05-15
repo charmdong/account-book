@@ -14,6 +14,11 @@ public class UserDto {
     private String name;
     private String email;
     private LocalDateTime birthDate;
+    
+    // 지난 달 수입, 지출 금액
+    private Long prevIncome;
+    private Long prevExpenditure;
+
     private CustomSettingDto settingDto;
 
     public UserDto(User user) {
@@ -21,6 +26,8 @@ public class UserDto {
         this.name = user.getName();
         this.email = user.getEmail();
         this.birthDate = user.getBirthDate();
+        this.prevIncome = user.getPrevIncome();
+        this.prevExpenditure = user.getPrevExpenditure();
         this.settingDto = new CustomSettingDto(user.getSetting());
     }
 }

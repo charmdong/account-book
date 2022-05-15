@@ -1,11 +1,10 @@
 package com.accountbook.domain.repository.ecoEvent;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.accountbook.domain.entity.EcoEvent;
 import com.accountbook.domain.enums.EventType;
-
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 public interface EcoEventRepositoryCustom {
     void saveEcoEvent(EcoEvent ecoEvent);
