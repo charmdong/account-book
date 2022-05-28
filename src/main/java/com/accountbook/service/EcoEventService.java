@@ -14,6 +14,7 @@ import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import com.accountbook.dto.EcoEvent.EcoEventStaticsResponse;
 import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.dto.user.UserDto;
 import com.accountbook.exception.ecoEvent.EcoEventException;
 import com.accountbook.exception.ecoEvent.EcoEventExceptionCode;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,8 @@ public class EcoEventService {
     private final CategoryRepository categoryRepository;
 
     private final CustomSettingRepository customSettingRepository;
+
+    private final UserService userService;
 
     //이벤트 전체 조회
     @Transactional(readOnly = true)
@@ -129,11 +132,11 @@ public class EcoEventService {
         List<CategoryDto> categoryDtoList = getTopCatergoryInfos(userId,startDate);
         map.put("categoryDtoList", categoryDtoList);
 
-        String [] curMonthExpenditureInfos = getCurrentMonthExpenditureInfos(userId,startDate);
+        String [] curMonthExpenditureInfos = getSumThisMonthExpenditureInfos(userId,startDate);
         map.put("curMonthExpenditureInfos", curMonthExpenditureInfos);
 
-        // String [] moMExpenditureInfos = getMoMExpenditureInfos(userId,startDate);
-        //map.put("moMExpenditureInfos",moMExpenditureInfos);
+        String moMExpenditureInfos = getMoMExpenditureInfos(userId,startDate);
+        map.put("moMExpenditureInfos",moMExpenditureInfos);
 
         Map<Integer,Long> inTimeExpenseAmountMap = getInTimeExpenseAmountInfos(userId, startDate);
         map.put("inTimeExpenseAmountMap",inTimeExpenseAmountMap);
@@ -168,13 +171,22 @@ public class EcoEventService {
     }
 
     //지난 달 대비 이번 달 지출 금액
-    public String [] getMoMExpenditureInfos(String userId, LocalDateTime startDate){
-        //금액 % 같이
-        return new String[]{"0","0"};
+    public String getMoMExpenditureInfos(String userId, LocalDateTime startDate) throws Exception {
+        Map<EventType,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),null)
+                .parallelStream()
+                .map(e -> new EcoEventStaticsResponse(e.getEventType(), e.getAmount()))
+                .collect(groupingBy(EcoEventStaticsResponse::getEventType,summingLong(EcoEventStaticsResponse::getSumAmount)));
+
+        Long thisExpenditure = map.get(EventType.EXPENDITURE);
+
+        UserDto user = userService.getUser(userId);
+        Long prevExpenditure = user.getPrevExpenditure();
+
+        return Long.toString(prevExpenditure - thisExpenditure);
     }
 
-    // 이번 달 수입 대비 지출 금액
-    public String [] getCurrentMonthExpenditureInfos(String userId, LocalDateTime startDate){
+    // 이번 달 수입 대비 지출 금액 (지출/ 수입)
+    public String [] getThisMonthExpenditureInfos(String userId, LocalDateTime startDate){
         Map<EventType,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),null)
                                                     .parallelStream()
                                                     .map(e -> new EcoEventStaticsResponse(e.getEventType(), e.getAmount()))
@@ -189,6 +201,25 @@ public class EcoEventService {
         return new String[]{expenditure, String.valueOf(Math.floor(resultPercent))};
     }
 
+    // 이번달 수입, 지출 비율 (지출/(수입 + 지출), 수입/(수입 + 지출))
+    public String [] getSumThisMonthExpenditureInfos(String userId, LocalDateTime startDate){
+
+        Map<EventType,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),null)
+                .parallelStream()
+                .map(e -> new EcoEventStaticsResponse(e.getEventType(), e.getAmount()))
+                .collect(groupingBy(EcoEventStaticsResponse::getEventType,summingLong(EcoEventStaticsResponse::getSumAmount)));
+
+        String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
+        if(map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0){
+            return new String[]{expenditure, "0"};
+        }
+
+        Double sum =  Double.valueOf(map.get(EventType.EXPENDITURE)) + Double.valueOf(map.get(EventType.INCOME));
+        Double expenditurePercent =  (Double.valueOf(map.get(EventType.EXPENDITURE)) / sum) * 100;
+        Double incomePercent =  (Double.valueOf(map.get(EventType.INCOME)) / sum) * 100;
+
+        return new String[]{String.valueOf(Math.floor(expenditurePercent)), String.valueOf(Math.floor(incomePercent))};
+    }
     //이번 달 시간대별 지출 금액
     public Map<Integer,Long> getInTimeExpenseAmountInfos(String userId, LocalDateTime startDate) throws Exception{
         Map<Integer,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),EventType.EXPENDITURE)
