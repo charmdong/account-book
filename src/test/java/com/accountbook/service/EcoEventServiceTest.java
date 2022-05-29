@@ -120,7 +120,7 @@ public class EcoEventServiceTest {
         String userId = "user1";
 
         //insert into CATEGORY values (2, now(), now(), 0, 'EXPENDITURE', '식비');
-        Long categorySeq = 2L;
+        Long categorySeq = 1L;
         EcoEventReadRequest ecoEventRequest  = new EcoEventReadRequest(userId, EventType.EXPENDITURE, now(), now().plusDays(1));
 
        return ecoEventRequest;
