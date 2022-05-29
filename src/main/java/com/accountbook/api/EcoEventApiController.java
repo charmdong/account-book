@@ -64,9 +64,10 @@ public class EcoEventApiController {
         return new ApiResponse(ecoEventService.deleteEcoEvents(ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
-//    @GetMapping("/summary")
-//    public ApiResponse summary() throws Exception{
-//        return new ApiResponse(ecoEventService.summarizeEcoEvents(),HttpStatus.OK, CommonResponseMessage.SUCCESS);
-//    }
+    //금융 이벤트 통계
+    @GetMapping("/summary")
+    public ApiResponse summary(@RequestBody @Valid EcoEventReadRequest ecoEventReadRequest) throws Exception{
+        return new ApiResponse(ecoEventService.summarizeEcoEvents(ecoEventReadRequest),HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
 }
 

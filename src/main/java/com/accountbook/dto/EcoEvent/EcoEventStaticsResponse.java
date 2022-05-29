@@ -1,30 +1,19 @@
 package com.accountbook.dto.EcoEvent;
 
-import com.accountbook.domain.enums.EventType;
+import com.accountbook.dto.category.CategoryDto;
 import lombok.Data;
+
+import java.util.List;
+import java.util.Map;
+
 @Data
 public class EcoEventStaticsResponse {
 
-    private int time;
+    List<CategoryDto> categoryDtoList;
 
-    private Long sumAmount;
+    List<String> thisMonthExpenditureInfos;
 
-    private Long categorySeq;
+    List<String> moMExpenditureInfos;
 
-    private EventType eventType;
-
-    public EcoEventStaticsResponse(int time, Long sumAmount) {
-        this.time = time;
-        this.sumAmount = sumAmount;
-    }
-
-    public EcoEventStaticsResponse(Long categorySeq, Long sumAmount) {
-        this.categorySeq = categorySeq;
-        this.sumAmount = sumAmount;
-    }
-
-    public EcoEventStaticsResponse(EventType eventType, Long sumAmount) {
-        this.eventType = eventType;
-        this.sumAmount = sumAmount;
-    }
+    Map<Integer,Long> inTimeExpenseAmountMap;
 }
