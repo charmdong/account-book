@@ -6,6 +6,7 @@ import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.EcoEventService;
+import com.accountbook.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EcoEventApiController {
     private final EcoEventService ecoEventService;
+    private final StatisticsService statisticsService;
 
     //금융 이벤트 전체 조회
     @GetMapping("/")
@@ -67,7 +69,7 @@ public class EcoEventApiController {
     //금융 이벤트 통계
     @GetMapping("/summary")
     public ApiResponse summary(@RequestBody @Valid EcoEventReadRequest ecoEventReadRequest) throws Exception{
-        return new ApiResponse(ecoEventService.summarizeEcoEvents(ecoEventReadRequest),HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(statisticsService.summarizeEcoEvents(ecoEventReadRequest),HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 }
 
