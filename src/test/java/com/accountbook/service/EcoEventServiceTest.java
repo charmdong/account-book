@@ -108,7 +108,7 @@ public class EcoEventServiceTest {
 
         //insert into CATEGORY values (3, now(), now(), 0, 'EXPENDITURE', '애완동물');
         Long categorySeq = 3L;
-        EcoEventRequest ecoEventRequest = new EcoEventRequest(userId,EventType.EXPENDITURE, now(),50000L,categorySeq);
+        EcoEventRequest ecoEventRequest = new EcoEventRequest(userId,EventType.EXPENDITURE, now(),50000L,"", categorySeq);
 
         return ecoEventRequest;
     }

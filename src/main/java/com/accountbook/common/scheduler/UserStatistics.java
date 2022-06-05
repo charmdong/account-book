@@ -8,6 +8,7 @@ import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.service.EcoEventService;
+import com.accountbook.service.StatisticsService;
 import com.accountbook.service.UserService;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,11 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserStatistics {
 
-    private final UserService userService;
+    private final StatisticsService statisticsService;
 
     // 왼쪽부터 "초 분 시 일 월 년"
     @Scheduled(cron = "0 0 0 * * *")
     private void scheduleTest() throws InterruptedException {
-        userService.getUserStatistics();
+        statisticsService.getUserStatistics();
     }
 }

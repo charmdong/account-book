@@ -12,22 +12,26 @@ public class EcoEventRequest {
     @NotEmpty(message = "사용자 누락")
     private String userId;
 
-    //@NotEmpty(message = "이벤트 타입 누락")
+    @NotEmpty(message = "이벤트 타입 누락")
     private EventType eventType;
 
     private LocalDateTime useDate;
 
-    //@NotEmpty(message = "금액 누락")
+    @NotEmpty(message = "금액 누락")
     private Long amount;
 
-    //@NotEmpty(message = "카테고리 누락")
+    //금융 이벤트 설명
+    private String desc;
+
+    @NotEmpty(message = "카테고리 누락")
     private Long categorySeq;
 
-    public EcoEventRequest(String userId, EventType eventType, LocalDateTime useDate, Long amount, Long categorySeq) {
+    public EcoEventRequest(String userId, EventType eventType, LocalDateTime useDate, Long amount, String desc, Long categorySeq) {
         this.userId = userId;
         this.eventType = eventType;
         this.useDate = useDate;
         this.amount = amount;
+        this.desc = desc;
         this.categorySeq = categorySeq;
     }
 
