@@ -22,6 +22,8 @@ public class EcoEventDto {
 
     private Long amount;
 
+    private String desc;
+
     private Long categorySeq;
 
     public EcoEventDto(EcoEvent ecoEvent){
@@ -30,6 +32,7 @@ public class EcoEventDto {
         this.eventType = ecoEvent.getEventType();
         this.useDate = ecoEvent.getUseDate();
         this.amount = ecoEvent.getAmount();
+        this.desc = ecoEvent.getDesc();
         this.categorySeq = ecoEvent.getCategory().getSeq();
     }
 }
