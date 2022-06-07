@@ -17,7 +17,7 @@ spring:
     url: jdbc:mysql://spring-db:3306/accountdb?serverTimezone=UTC
     username: root
     password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
 
   # JPA Setting
   jpa:
