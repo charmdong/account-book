@@ -3,8 +3,6 @@ spring:
     ansi:
       enabled: always
 
-  main:
-    web-application-type: none
   # datasource Local Setting
 #  datasource:
 #    url: jdbc:h2:tcp://localhost/~/accountbook
@@ -22,7 +20,7 @@ spring:
   # JPA Setting
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         #show_sql: true
