@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 public class UpdateSettingRequest {
 
     private Integer initDay;
-    private DisplayOption option;
+    private DisplayOption displayOption;
 }
