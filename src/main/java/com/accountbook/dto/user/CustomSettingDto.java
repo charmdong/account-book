@@ -22,6 +22,6 @@ public class CustomSettingDto {
 
     public CustomSettingDto(CustomSetting setting) {
         this.initDay = setting.getInitDay();
-        this.option = setting.getOption();
+        this.option = setting.getDisplayOption();
     }
 }
