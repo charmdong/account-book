@@ -1,8 +1,6 @@
 package com.accountbook.dto.EcoEvent;
 
-import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.entity.EcoEvent;
-import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +30,7 @@ public class EcoEventDto {
         this.eventType = ecoEvent.getEventType();
         this.useDate = ecoEvent.getUseDate();
         this.amount = ecoEvent.getAmount();
-        this.desc = ecoEvent.getDesc();
+        this.desc = ecoEvent.getDescription();
         this.categorySeq = ecoEvent.getCategory().getSeq();
     }
 }
