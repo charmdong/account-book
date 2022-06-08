@@ -17,7 +17,7 @@ public class Category extends BaseTimeInfo {
 
     @Id
     @GeneratedValue
-    @Column(name = "categorySeq")
+    @Column(name = "CATEGORY_SEQ")
     private Long seq;
 
     private String name;
