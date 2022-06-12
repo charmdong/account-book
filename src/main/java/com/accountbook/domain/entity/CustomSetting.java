@@ -27,7 +27,7 @@ public class CustomSetting {
     private int initDay; // 조회 기준 시작일
 
     @Enumerated(EnumType.STRING)
-    private DisplayOption option; // 메인 화면 출력 타입
+    private DisplayOption displayOption; // 메인 화면 출력 타입
 
     // 생성자 메서드
     public static CustomSetting createCustomSetting () {
@@ -35,7 +35,7 @@ public class CustomSetting {
         CustomSetting setting = new CustomSetting();
 
         setting.initDay = 1;
-        setting.option = DisplayOption.AMOUNT;
+        setting.displayOption = DisplayOption.AMOUNT;
 
         return setting;
     }
@@ -51,8 +51,8 @@ public class CustomSetting {
             this.initDay = request.getInitDay();
         }
 
-        if (request.getOption() != null) {
-            this.option = request.getOption();
+        if (request.getDisplayOption() != null) {
+            this.displayOption = request.getDisplayOption();
         }
     }
 }

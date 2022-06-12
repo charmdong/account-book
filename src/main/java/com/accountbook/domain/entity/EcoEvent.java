@@ -36,10 +36,10 @@ public class EcoEvent extends BaseInfo {
     private Long amount;
 
     //금융 이벤트 설명
-    private String desc;
+    private String description;
 
     //금융 이벤트 분류
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_SEQ")
     private Category category;
 

@@ -17,7 +17,7 @@ public class Category extends BaseTimeInfo {
 
     @Id
     @GeneratedValue
-    @Column(name = "categorySeq")
+    @Column(name = "CATEGORY_SEQ")
     private Long seq;
 
     private String name;
@@ -27,7 +27,7 @@ public class Category extends BaseTimeInfo {
 
     private Long defaultPrice;
 
-    @OneToMany
+    @OneToMany(mappedBy = "category")
     private List<EcoEvent> ecoEventList = new ArrayList<>(); // N+1 위험 (항상 fetch join으로만 조회)
 
 }
