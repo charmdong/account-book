@@ -19,7 +19,7 @@ import javax.servlet.Filter;
 @Configuration
 public class FilterConfig implements WebMvcConfigurer {
 
-    @Bean
+    //@Bean
     public FilterRegistrationBean loginFilterBean() {
         // 스프링 부트 사용하는 경우 FilterRegistrationBean 이용
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
