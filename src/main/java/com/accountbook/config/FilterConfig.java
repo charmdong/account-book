@@ -3,7 +3,6 @@ package com.accountbook.config;
 import com.accountbook.filter.LoginFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,7 +18,7 @@ import javax.servlet.Filter;
 @Configuration
 public class FilterConfig implements WebMvcConfigurer {
 
-    @Bean
+    //@Bean
     public FilterRegistrationBean loginFilterBean() {
         // 스프링 부트 사용하는 경우 FilterRegistrationBean 이용
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
@@ -34,7 +33,7 @@ public class FilterConfig implements WebMvcConfigurer {
     }
 
     // LoginFilter에서 UserRepository 의존관계 주입을 받기 위해서는 스프링 컨테이너에 먼저 등록이 되어있어야 한다.
-    @Bean
+    //@Bean
     public LoginFilter loginFilter() {
         return new LoginFilter();
     }
