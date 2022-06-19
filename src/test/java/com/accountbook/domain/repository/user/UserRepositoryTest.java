@@ -143,13 +143,13 @@ class UserRepositoryTest {
 
         UpdateSettingRequest request = new UpdateSettingRequest();
         request.setInitDay(20);
-        request.setOption(DisplayOption.MONTH_BALANCE);
+        request.setDisplayOption(DisplayOption.MONTH_BALANCE);
         findSetting.updateSetting(request);
 
         CustomSetting result = settingRepository.findById("user").get();
 
         assertThat(result.getInitDay()).isEqualTo(20);
-        assertThat(result.getOption()).isEqualTo(DisplayOption.MONTH_BALANCE);
+        assertThat(result.getDisplayOption()).isEqualTo(DisplayOption.MONTH_BALANCE);
     }
 
 

@@ -96,7 +96,7 @@ public class EcoEventServiceTest {
         if(ecoEventDtos.isEmpty()){
         } else{
             //when
-            ecoEventService.summarizeEcoEvents(ecoEventReadRequest);
+            ecoEventService.getAllEcoEvnetByEventTypeAndUseDate(ecoEventReadRequest);
         }
     }
 
