@@ -1,45 +1,27 @@
 package com.accountbook.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.accountbook.common.utils.CookieUtils;
+import com.accountbook.common.utils.SessionUtils;
+import com.accountbook.domain.entity.CustomSetting;
+import com.accountbook.domain.entity.User;
+import com.accountbook.domain.repository.setting.CustomSettingRepository;
+import com.accountbook.domain.repository.user.UserRepository;
+import com.accountbook.dto.user.*;
+import com.accountbook.exception.user.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.accountbook.common.utils.CookieUtils;
-import com.accountbook.common.utils.SessionUtils;
-import com.accountbook.domain.entity.CustomSetting;
-import com.accountbook.domain.entity.User;
-import com.accountbook.domain.enums.EventType;
-import com.accountbook.domain.repository.setting.CustomSettingRepository;
-import com.accountbook.domain.repository.user.UserRepository;
-import com.accountbook.dto.EcoEvent.EcoEventDto;
-import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
-import com.accountbook.dto.user.CustomSettingDto;
-import com.accountbook.dto.user.LoginInfo;
-import com.accountbook.dto.user.PasswordRequest;
-import com.accountbook.dto.user.UpdateSettingRequest;
-import com.accountbook.dto.user.UserCreateRequest;
-import com.accountbook.dto.user.UserDto;
-import com.accountbook.dto.user.UserInfoRequest;
-import com.accountbook.dto.user.UserUpdateRequest;
-import com.accountbook.exception.user.DeleteUserException;
-import com.accountbook.exception.user.InsertUserException;
-import com.accountbook.exception.user.SettingNotFoundException;
-import com.accountbook.exception.user.UpdateUserException;
-import com.accountbook.exception.user.UserException;
-import com.accountbook.exception.user.UserExceptionCode;
-import com.accountbook.exception.user.UserNotFoundException;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * UserService
@@ -66,13 +48,14 @@ public class UserService {
      * @return LoginInfo
      * @throws RuntimeException
      */
-    public LoginInfo login (String userId, String password, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
+    public LoginInfo login (String userId, String password, HttpServletRequest request, HttpServletResponse response) {
 
         // 1. id로 사용자 찾기
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
         // 2. password 비교
-        if (!user.getPassword().equals(password)) {
+        String encodedPassword = Base64.encodeBase64String(password.getBytes(StandardCharsets.UTF_8));
+        if (!user.getPassword().equals(encodedPassword)) {
             throw new UserException(UserExceptionCode.INVALID_PWD);
         }
 
@@ -106,7 +89,11 @@ public class UserService {
      * @return UserDto
      * @throws Exception
      */
-    public UserDto addUser (UserCreateRequest request) throws Exception {
+    public UserDto addUser (UserCreateRequest request) {
+
+        String password = request.getPassword();
+        password = Base64.encodeBase64String(password.getBytes(StandardCharsets.UTF_8));
+        request.setPassword(password);
 
         // 사용자 엔티티 생성
         User user = User.createUser(request);
@@ -139,7 +126,7 @@ public class UserService {
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public UserDto getUser (String userId) throws Exception {
+    public UserDto getUser (String userId) {
 
         return new UserDto(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND)));
     }
@@ -151,7 +138,7 @@ public class UserService {
      * @return UserDto
      * @throws Exception
      */
-    public UserDto updateUser (String userId, UserUpdateRequest request) throws Exception {
+    public UserDto updateUser (String userId, UserUpdateRequest request) {
 
         User user = userRepository.findById(userId).get();
 
@@ -171,7 +158,7 @@ public class UserService {
      * @param request
      * @throws Exception
      */
-    public void changePassword (String userId, PasswordRequest request) throws Exception {
+    public void changePassword (String userId, PasswordRequest request) {
 
         User user = userRepository.findById(userId).get();
 
@@ -189,7 +176,7 @@ public class UserService {
      * @return 삭제 여부
      * @throws Exception
      */
-    public Boolean deleteUser (String userId) throws Exception {
+    public Boolean deleteUser (String userId) {
 
         userRepository.deleteById(userId);
 
@@ -208,7 +195,7 @@ public class UserService {
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public String findUserId (UserInfoRequest request) throws Exception {
+    public String findUserId (UserInfoRequest request) {
 
         User user = userRepository.findByNameAndEmail(request.getName(), request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
@@ -223,7 +210,7 @@ public class UserService {
      * @throws Exception
      */
     @Transactional(readOnly = true)
-    public String findPassword (String userId, UserInfoRequest request) throws Exception {
+    public String findPassword (String userId, UserInfoRequest request) {
 
         User user = userRepository.findByIdAndEmail(userId, request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
 
@@ -238,7 +225,7 @@ public class UserService {
      * @return
      * @throws Exception
      */
-    public CustomSettingDto updateCustomSetting (String userId, UpdateSettingRequest request) throws Exception {
+    public CustomSettingDto updateCustomSetting (String userId, UpdateSettingRequest request) {
 
         // userId에 해당하는 setting 찾기
         CustomSetting setting = settingRepository.findById(userId)
@@ -257,7 +244,7 @@ public class UserService {
      * @return
      * @throws Exception
      */
-    public CustomSettingDto getCustomSetting (String userId) throws Exception {
+    public CustomSettingDto getCustomSetting (String userId) {
 
         // userId에 해당하는 setting 찾기
         CustomSetting setting = settingRepository.findById(userId)
