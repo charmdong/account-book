@@ -166,7 +166,8 @@ public class UserService {
             throw new UpdateUserException(UserExceptionCode.PWD_UPDATE_FAIL);
         }
 
-        user.changePassword(request.getNewPassword());
+        String newPassword = Base64.encodeBase64String(request.getNewPassword().getBytes(StandardCharsets.UTF_8));
+        user.changePassword(newPassword);
     }
 
     /**
