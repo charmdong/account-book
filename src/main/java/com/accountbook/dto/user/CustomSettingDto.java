@@ -18,10 +18,10 @@ import lombok.ToString;
 public class CustomSettingDto {
 
     private int initDay; // 조회 기준 시작일
-    private DisplayOption option; // 메인 화면 출력 타입
+    private DisplayOption displayOption; // 메인 화면 출력 타입
 
     public CustomSettingDto(CustomSetting setting) {
         this.initDay = setting.getInitDay();
-        this.option = setting.getDisplayOption();
+        this.displayOption = setting.getDisplayOption();
     }
 }

@@ -38,7 +38,7 @@ public class EcoEventApiController {
 
     //금융 이벤트 조건 조회 - user
     @GetMapping("/{userId}")
-    public ApiResponse getAllEcoEvnetByUser(@PathVariable String userId) throws Exception {
+    public ApiResponse getAllEcoEventByUser(@PathVariable String userId) throws Exception {
         return new ApiResponse(ecoEventService.getEcoEventByUser(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
@@ -67,7 +67,7 @@ public class EcoEventApiController {
     }
 
     //금융 이벤트 통계
-    @GetMapping("/summary")
+    @PostMapping("/summary")
     public ApiResponse summary(@RequestBody @Valid EcoEventReadRequest ecoEventReadRequest) throws Exception{
         return new ApiResponse(statisticsService.summarizeEcoEvents(ecoEventReadRequest),HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }

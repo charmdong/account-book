@@ -49,6 +49,8 @@ dependencies {
     // swagger
     implementation "io.springfox:springfox-boot-starter:3.0.0"
 
+    // base64 :: 2022.06.20
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.9'
 }
 
 test {
