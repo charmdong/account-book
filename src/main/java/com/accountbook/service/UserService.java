@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -109,13 +108,7 @@ public class UserService {
             throw new InsertUserException(UserExceptionCode.SETTING_FAIL);
         }
 
-        Optional<User> createdUser = userRepository.findById(user.getId());
-
-        if (createdUser.isEmpty()) {
-            throw new InsertUserException(UserExceptionCode.INSERT_FAIL);
-        }
-
-        return new UserDto(createdUser.get());
+        return new UserDto(userRepository.findById(user.getId()).orElseThrow(() -> new InsertUserException(UserExceptionCode.INSERT_FAIL)));
     }
 
     /**
@@ -140,12 +133,7 @@ public class UserService {
      */
     public UserDto updateUser (String userId, UserUpdateRequest request) {
 
-        User user = userRepository.findById(userId).get();
-
-        if (user == null) {
-            throw new UpdateUserException(UserExceptionCode.UPDATE_FAIL);
-        }
-
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
         user.changeUser(request);
 
         return getUser(userId);
