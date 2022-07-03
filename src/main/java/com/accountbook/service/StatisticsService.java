@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -130,30 +131,25 @@ public class StatisticsService {
     }
 
     //이번 달 가장 많은 지출 카테고리 정보 조회
-    public List<CategoryDto> getTopCatergoryInfos(String userId, LocalDateTime startDate){
+    public List<CategoryDto> getTopCatergoryInfos(String userId, LocalDateTime startDate) throws Exception {
         List <Long> maxCategorySeqList = new ArrayList<>();
-        Map<Long,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),EventType.EXPENDITURE)
+        List<CategoryDto> maxCategoryList = new ArrayList<>();
+        Map<Long, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), EventType.EXPENDITURE)
                 .parallelStream()
                 .map(e -> new EcoEventStaticsDto(e.getCategory().getSeq(), e.getAmount()))
-                .collect(groupingBy(EcoEventStaticsDto::getCategorySeq,summingLong(EcoEventStaticsDto::getSumAmount)));
+                .collect(groupingBy(EcoEventStaticsDto::getCategorySeq, summingLong(EcoEventStaticsDto::getSumAmount)));
 
         Long maxValue = Collections.max(map.values());
-        for(Map.Entry<Long, Long> m : map.entrySet()) {
-            if(m.getValue() == maxValue) {
+        for (Map.Entry<Long, Long> m : map.entrySet()) {
+            if (m.getValue() == maxValue) {
                 maxCategorySeqList.add(m.getKey());
             }
         }
-        List <CategoryDto> maxCategoryList = new ArrayList<>();
-        if(maxCategorySeqList != null && !maxCategorySeqList.isEmpty()){
-            maxCategoryList = maxCategorySeqList.stream()
-                    .map(seq -> categoryRepository.findBySeq(seq))
-                    .map(category -> new CategoryDto(category.get()))
-                    .collect(toList());
-        }
+        maxCategoryList = maxCategorySeqList.stream()
+                .map(seq -> categoryRepository.findBySeq(seq))
+                .map(category -> new CategoryDto(category.get()))
+                .collect(toList());
 
-        if(maxCategoryList != null && !maxCategoryList.isEmpty()){
-            return maxCategoryList;
-        }
         return maxCategoryList;
     }
 
@@ -161,62 +157,67 @@ public class StatisticsService {
     // [0] 금액
     // [1] 이번 달 오늘까지 지출 / 지난 달 총 지출 퍼센트
     public List<String> getMoMExpenditureInfos(String userId, LocalDateTime startDate) throws Exception {
-        Map<EventType,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),null)
+        List<String> result = new ArrayList<>();
+
+        Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
                 .parallelStream()
                 .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
-                .collect(groupingBy(EcoEventStaticsDto::getEventType,summingLong(EcoEventStaticsDto::getSumAmount)));
+                .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
         Long thisExpenditure = map.get(EventType.EXPENDITURE);
 
         UserDto user = userService.getUser(userId);
         Long prevExpenditure = user.getPrevExpenditure();
 
-        List<String> result = new ArrayList<>();
         result.add(Long.toString(prevExpenditure - thisExpenditure));
         result.add(String.valueOf((Double.valueOf(thisExpenditure) / Double.valueOf(prevExpenditure)) * 100));
+
         return result;
     }
 
     // 이번 달 수입 대비 지출 금액 (지출/ 수입)
     // [0] 지출 금액
     // [1] (지출/ 수입) 퍼센트
-    public List<String> getThisMonthExpenditureInfos(String userId, LocalDateTime startDate){
-        Map<EventType,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),null)
+    public List<String> getThisMonthExpenditureInfos(String userId, LocalDateTime startDate) throws Exception {
+        List<String> result = new ArrayList<>();
+
+        Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
                 .parallelStream()
                 .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
-                .collect(groupingBy(EcoEventStaticsDto::getEventType,summingLong(EcoEventStaticsDto::getSumAmount)));
+                .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
         String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
-        List<String> result = new ArrayList<>();
+
         result.add(expenditure);
 
-        if(map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0){
+        if (map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0) {
             result.add("0");
             return result;
         }
 
-        Double resultPercent = Double.valueOf(map.get(EventType.EXPENDITURE))/ Double.valueOf(map.get(EventType.INCOME)) * 100;
+        Double resultPercent = Double.valueOf(map.get(EventType.EXPENDITURE)) / Double.valueOf(map.get(EventType.INCOME)) * 100;
         result.add(String.valueOf(Math.floor(resultPercent)));
+
         return result;
     }
 
     // 이번달 수입, 지출 비율
     // [0] 지출/(수입 + 지출) 퍼센트
     // [1] 수입/(수입 + 지출) 퍼센트
-    public List<String> getSumThisMonthExpenditureInfos(String userId, LocalDateTime startDate){
-
-        Map<EventType,Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),null)
-                .parallelStream()
-                .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
-                .collect(groupingBy(EcoEventStaticsDto::getEventType,summingLong(EcoEventStaticsDto::getSumAmount)));
-
-        String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
+    public List<String> getSumThisMonthExpenditureInfos(String userId, LocalDateTime startDate) throws Exception {
         List<String> result = new ArrayList<>();
 
-        if(map.get(EventType.EXPENDITURE) == null || map.get(EventType.EXPENDITURE) == 0){
+        Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
+                .parallelStream()
+                .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
+                .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
+
+        String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
+
+        if (map.get(EventType.EXPENDITURE) == null || map.get(EventType.EXPENDITURE) == 0) {
             result.add("0");
             result.add("100");
-        } else if(map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0){
+        } else if (map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0) {
             result.add("100");
             result.add("0");
         } else {
@@ -232,10 +233,11 @@ public class StatisticsService {
     //이번 달 시간대별 지출 금액
     public Map<Integer,Long> getInTimeExpenseAmountInfos(String userId, LocalDateTime startDate) throws Exception{
         Map<Integer,Long> map = new HashMap<>();
-        map = ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,LocalDateTime.now(),EventType.EXPENDITURE)
-                .parallelStream()
-                .map(e -> new EcoEventStaticsDto(e.getUseDate().getHour(), e.getAmount()))
-                .collect(groupingBy(EcoEventStaticsDto::getTime,summingLong(EcoEventStaticsDto::getSumAmount)));
+        map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), EventType.EXPENDITURE)
+                                .parallelStream()
+                                .map(e -> new EcoEventStaticsDto(e.getUseDate().getHour(), e.getAmount()))
+                                .collect(groupingBy(EcoEventStaticsDto::getTime, summingLong(EcoEventStaticsDto::getSumAmount)));
+
         return map;
     }
 }

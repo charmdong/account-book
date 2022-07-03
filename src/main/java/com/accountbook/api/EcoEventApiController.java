@@ -31,13 +31,13 @@ public class EcoEventApiController {
     }
 
     //금융 이벤트 조회
-    @GetMapping("/{eventSeq}")
+    @GetMapping("/{ecoEventSeq}")
     public ApiResponse getOneEcoEvent(@PathVariable long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.getOneEcoEvent(ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     //금융 이벤트 조건 조회 - user
-    @GetMapping("/{userId}")
+    @GetMapping("/condition/{userId}")
     public ApiResponse getAllEcoEventByUser(@PathVariable String userId) throws Exception {
         return new ApiResponse(ecoEventService.getEcoEventByUser(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
@@ -55,14 +55,14 @@ public class EcoEventApiController {
     }
 
     //금융 이벤트 수정
-    @PatchMapping("/{eventSeq}")
-    public ApiResponse update(@RequestBody @Valid EcoEventRequest ecoEventRequest, @PathVariable long ecoEventSeq) throws Exception {
+    @PatchMapping("/")
+    public ApiResponse update(@RequestBody @Valid EcoEventRequest ecoEventRequest, @RequestParam long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.updateEcoEvents(ecoEventRequest, ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     //금융 이벤트 삭제
-    @DeleteMapping("/{eventSeq}")
-    public ApiResponse delete(@PathVariable long ecoEventSeq) throws Exception {
+    @DeleteMapping("/")
+    public ApiResponse delete(@RequestParam long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.deleteEcoEvents(ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 

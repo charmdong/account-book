@@ -1,7 +1,6 @@
 package com.accountbook.service;
 
 import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.EcoEvent;
 import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.EventType;
@@ -10,8 +9,6 @@ import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
 import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.EcoEvent.*;
-import com.accountbook.dto.category.CategoryDto;
-import com.accountbook.dto.user.UserDto;
 import com.accountbook.exception.ecoEvent.EcoEventException;
 import com.accountbook.exception.ecoEvent.EcoEventExceptionCode;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +20,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,10 +29,6 @@ public class EcoEventService {
     private final UserRepository userRepository;
 
     private final CategoryRepository categoryRepository;
-
-    private final CustomSettingRepository customSettingRepository;
-
-    private final UserService userService;
 
     //이벤트 전체 조회
     @Transactional(readOnly = true)

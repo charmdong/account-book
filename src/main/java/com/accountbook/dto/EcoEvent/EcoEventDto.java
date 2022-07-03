@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +17,7 @@ public class EcoEventDto {
 
     private EventType eventType;
 
-    private LocalDateTime useDate;
+    private String useDate;
 
     private Long amount;
 
@@ -28,7 +29,7 @@ public class EcoEventDto {
         this.seq = ecoEvent.getSeq();
         this.userId = ecoEvent.getUser().getId();
         this.eventType = ecoEvent.getEventType();
-        this.useDate = ecoEvent.getUseDate();
+        this.useDate = ecoEvent.getUseDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.amount = ecoEvent.getAmount();
         this.desc = ecoEvent.getDescription();
         this.categorySeq = ecoEvent.getCategory().getSeq();
