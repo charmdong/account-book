@@ -55,14 +55,14 @@ public class EcoEventApiController {
     }
 
     //금융 이벤트 수정
-    @PatchMapping("/")
-    public ApiResponse update(@RequestBody @Valid EcoEventRequest ecoEventRequest, @RequestParam long ecoEventSeq) throws Exception {
+    @PatchMapping("/{ecoEventSeq}")
+    public ApiResponse update(@RequestBody @Valid EcoEventRequest ecoEventRequest, @PathVariable long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.updateEcoEvents(ecoEventRequest, ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     //금융 이벤트 삭제
-    @DeleteMapping("/")
-    public ApiResponse delete(@RequestParam long ecoEventSeq) throws Exception {
+    @DeleteMapping("/{ecoEventSeq}")
+    public ApiResponse delete(@PathVariable long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.deleteEcoEvents(ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
