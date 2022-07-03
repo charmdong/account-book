@@ -131,29 +131,25 @@ public class StatisticsService {
     }
 
     //이번 달 가장 많은 지출 카테고리 정보 조회
-    public List<CategoryDto> getTopCatergoryInfos(String userId, LocalDateTime startDate){
+    public List<CategoryDto> getTopCatergoryInfos(String userId, LocalDateTime startDate) throws Exception {
         List <Long> maxCategorySeqList = new ArrayList<>();
         List<CategoryDto> maxCategoryList = new ArrayList<>();
-        try {
-            Map<Long, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), EventType.EXPENDITURE)
-                    .parallelStream()
-                    .map(e -> new EcoEventStaticsDto(e.getCategory().getSeq(), e.getAmount()))
-                    .collect(groupingBy(EcoEventStaticsDto::getCategorySeq, summingLong(EcoEventStaticsDto::getSumAmount)));
+        Map<Long, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), EventType.EXPENDITURE)
+                .parallelStream()
+                .map(e -> new EcoEventStaticsDto(e.getCategory().getSeq(), e.getAmount()))
+                .collect(groupingBy(EcoEventStaticsDto::getCategorySeq, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-            Long maxValue = Collections.max(map.values());
-            for (Map.Entry<Long, Long> m : map.entrySet()) {
-                if (m.getValue() == maxValue) {
-                    maxCategorySeqList.add(m.getKey());
-                }
+        Long maxValue = Collections.max(map.values());
+        for (Map.Entry<Long, Long> m : map.entrySet()) {
+            if (m.getValue() == maxValue) {
+                maxCategorySeqList.add(m.getKey());
             }
-            maxCategoryList = maxCategorySeqList.stream()
-                    .map(seq -> categoryRepository.findBySeq(seq))
-                    .map(category -> new CategoryDto(category.get()))
-                    .collect(toList());
-
-        } catch(NoSuchElementException e){
-            log.info("[내역 없음] "+"이번 달 가장 많은 지출 카테고리 정보 조회");
         }
+        maxCategoryList = maxCategorySeqList.stream()
+                .map(seq -> categoryRepository.findBySeq(seq))
+                .map(category -> new CategoryDto(category.get()))
+                .collect(toList());
+
         return maxCategoryList;
     }
 
@@ -162,83 +158,75 @@ public class StatisticsService {
     // [1] 이번 달 오늘까지 지출 / 지난 달 총 지출 퍼센트
     public List<String> getMoMExpenditureInfos(String userId, LocalDateTime startDate) throws Exception {
         List<String> result = new ArrayList<>();
-        try {
-            Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
-                    .parallelStream()
-                    .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
-                    .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-            Long thisExpenditure = map.get(EventType.EXPENDITURE);
+        Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
+                .parallelStream()
+                .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
+                .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-            UserDto user = userService.getUser(userId);
-            Long prevExpenditure = user.getPrevExpenditure();
+        Long thisExpenditure = map.get(EventType.EXPENDITURE);
 
-            result.add(Long.toString(prevExpenditure - thisExpenditure));
-            result.add(String.valueOf((Double.valueOf(thisExpenditure) / Double.valueOf(prevExpenditure)) * 100));
-        }
-        catch(NullPointerException e){
-            log.info("[내역 없음] "+"지난 달 대비 이번 달 지출 금액");
-        }
+        UserDto user = userService.getUser(userId);
+        Long prevExpenditure = user.getPrevExpenditure();
+
+        result.add(Long.toString(prevExpenditure - thisExpenditure));
+        result.add(String.valueOf((Double.valueOf(thisExpenditure) / Double.valueOf(prevExpenditure)) * 100));
+
         return result;
     }
 
     // 이번 달 수입 대비 지출 금액 (지출/ 수입)
     // [0] 지출 금액
     // [1] (지출/ 수입) 퍼센트
-    public List<String> getThisMonthExpenditureInfos(String userId, LocalDateTime startDate){
+    public List<String> getThisMonthExpenditureInfos(String userId, LocalDateTime startDate) throws Exception {
         List<String> result = new ArrayList<>();
-        try {
-            Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
-                    .parallelStream()
-                    .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
-                    .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-            String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
+        Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
+                .parallelStream()
+                .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
+                .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-            result.add(expenditure);
+        String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
 
-            if (map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0) {
-                result.add("0");
-                return result;
-            }
+        result.add(expenditure);
 
-            Double resultPercent = Double.valueOf(map.get(EventType.EXPENDITURE)) / Double.valueOf(map.get(EventType.INCOME)) * 100;
-            result.add(String.valueOf(Math.floor(resultPercent)));
-        } catch(NullPointerException e) {
-            log.info("[내역 없음] "+"이번 달 수입 대비 지출 금액");
+        if (map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0) {
+            result.add("0");
+            return result;
         }
+
+        Double resultPercent = Double.valueOf(map.get(EventType.EXPENDITURE)) / Double.valueOf(map.get(EventType.INCOME)) * 100;
+        result.add(String.valueOf(Math.floor(resultPercent)));
+
         return result;
     }
 
     // 이번달 수입, 지출 비율
     // [0] 지출/(수입 + 지출) 퍼센트
     // [1] 수입/(수입 + 지출) 퍼센트
-    public List<String> getSumThisMonthExpenditureInfos(String userId, LocalDateTime startDate){
+    public List<String> getSumThisMonthExpenditureInfos(String userId, LocalDateTime startDate) throws Exception {
         List<String> result = new ArrayList<>();
-        try {
-            Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
-                    .parallelStream()
-                    .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
-                    .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-            String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
+        Map<EventType, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), null)
+                .parallelStream()
+                .map(e -> new EcoEventStaticsDto(e.getEventType(), e.getAmount()))
+                .collect(groupingBy(EcoEventStaticsDto::getEventType, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-            if (map.get(EventType.EXPENDITURE) == null || map.get(EventType.EXPENDITURE) == 0) {
-                result.add("0");
-                result.add("100");
-            } else if (map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0) {
-                result.add("100");
-                result.add("0");
-            } else {
-                Double sum = Double.valueOf(map.get(EventType.EXPENDITURE)) + Double.valueOf(map.get(EventType.INCOME));
-                Double expenditurePercent = (Double.valueOf(map.get(EventType.EXPENDITURE)) / sum) * 100;
-                Double incomePercent = (Double.valueOf(map.get(EventType.INCOME)) / sum) * 100;
+        String expenditure = Long.toString(map.get(EventType.EXPENDITURE));
 
-                result.add(String.valueOf(Math.floor(expenditurePercent)));
-                result.add(String.valueOf(Math.floor(incomePercent)));
-            }
-        } catch(NullPointerException e){
-            log.info("[내역 없음] "+"이번 달 수입, 지출 비율");
+        if (map.get(EventType.EXPENDITURE) == null || map.get(EventType.EXPENDITURE) == 0) {
+            result.add("0");
+            result.add("100");
+        } else if (map.get(EventType.INCOME) == null || map.get(EventType.INCOME) == 0) {
+            result.add("100");
+            result.add("0");
+        } else {
+            Double sum = Double.valueOf(map.get(EventType.EXPENDITURE)) + Double.valueOf(map.get(EventType.INCOME));
+            Double expenditurePercent = (Double.valueOf(map.get(EventType.EXPENDITURE)) / sum) * 100;
+            Double incomePercent = (Double.valueOf(map.get(EventType.INCOME)) / sum) * 100;
+
+            result.add(String.valueOf(Math.floor(expenditurePercent)));
+            result.add(String.valueOf(Math.floor(incomePercent)));
         }
         return result;
     }

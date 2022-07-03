@@ -31,14 +31,14 @@ public class EcoEventApiController {
     }
 
     //금융 이벤트 조회
-    @GetMapping("/detail")
-    public ApiResponse getOneEcoEvent(@RequestParam long ecoEventSeq) throws Exception {
+    @GetMapping("/{ecoEventSeq}")
+    public ApiResponse getOneEcoEvent(@PathVariable long ecoEventSeq) throws Exception {
         return new ApiResponse(ecoEventService.getOneEcoEvent(ecoEventSeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     //금융 이벤트 조건 조회 - user
-    @GetMapping("/user")
-    public ApiResponse getAllEcoEventByUser(@RequestParam String userId) throws Exception {
+    @GetMapping("/condition/{userId}")
+    public ApiResponse getAllEcoEventByUser(@PathVariable String userId) throws Exception {
         return new ApiResponse(ecoEventService.getEcoEventByUser(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
