@@ -98,7 +98,7 @@ public class StatisticsService {
         String userId = ecoEventReadRequest.getUserId();
         CustomSetting customSetting = customSettingRepository.findById(userId).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_CUSTOMSETTING));
 
-        LocalDateTime startDate = LocalDateTime.now().minusMonths(1);
+        LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = LocalDateTime.now();
 
         if(customSetting.getInitDay() < endDate.getDayOfMonth()){
