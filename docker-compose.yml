@@ -1,0 +1,21 @@
+version: "3"
+services:
+
+  spring-db:
+    image: mysql:8.0
+    volumes:
+    - /data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: accountdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+
+  application:
+    build: .
+    image: chungdk1117/account-book
+    ports:
+      - 8080:8080
+    depends_on:
+      - spring-db
