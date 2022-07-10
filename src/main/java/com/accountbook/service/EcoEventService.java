@@ -92,7 +92,7 @@ public class EcoEventService {
         }catch(EmptyResultDataAccessException e){
             throw new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT);
         }
-        ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
+        //ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
         return true;
     }
 }
