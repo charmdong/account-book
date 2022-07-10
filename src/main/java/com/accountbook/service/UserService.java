@@ -11,6 +11,7 @@ import com.accountbook.exception.user.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -167,10 +168,10 @@ public class UserService {
      */
     public Boolean deleteUser (String userId) {
 
-        userRepository.deleteById(userId);
-
-        if (userRepository.findById(userId).isPresent()) {
-            throw new DeleteUserException(UserExceptionCode.DELETE_FAIL);
+        try {
+            userRepository.deleteById(userId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new DeleteUserException(UserExceptionCode.NOT_FOUND);
         }
 
         return true;

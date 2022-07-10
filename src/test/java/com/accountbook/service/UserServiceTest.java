@@ -2,6 +2,7 @@ package com.accountbook.service;
 
 import com.accountbook.aop.LogTraceAspect;
 import com.accountbook.domain.enums.DisplayOption;
+import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.CustomSettingDto;
 import com.accountbook.dto.user.UpdateSettingRequest;
 import com.accountbook.dto.user.UserCreateRequest;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     @DisplayName("사용자 등록 테스트")
@@ -67,7 +72,14 @@ class UserServiceTest {
 
         // then
         assertThat(user.getId()).isEqualTo("user1");
-        assertThat(user.getSettingDto().getOption()).isEqualTo(DisplayOption.AMOUNT);
+        assertThat(user.getSettingDto().getDisplayOption()).isEqualTo(DisplayOption.AMOUNT);
+    }
+
+    @Test
+    @DisplayName("테스트")
+    @Rollback(value = false)
+    public void userTest() throws Exception {
+        userService.deleteUser("member123123");
     }
 
     @Test
