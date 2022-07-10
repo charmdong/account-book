@@ -6,7 +6,7 @@ import com.accountbook.domain.entity.User;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
-import com.accountbook.domain.repository.setting.CustomSettingRepository;
+
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.EcoEvent.*;
 import com.accountbook.exception.ecoEvent.EcoEventException;
@@ -86,18 +86,13 @@ public class EcoEventService {
     }
 
     //이벤트 삭제
-    public Boolean deleteEcoEvents(Long EventsSeq) throws Exception{
+    public boolean deleteEcoEvents(Long EventsSeq) throws Exception {
         try {
             ecoEventRepository.deleteById(EventsSeq);
         }catch(EmptyResultDataAccessException e){
-            e.printStackTrace();
-            return false;
+            throw new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT);
         }
-        try{
-            ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new NoSuchElementException());
-        }catch (NoSuchElementException e){
-            return true;
-        }
-        return false;
+        ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
+        return true;
     }
 }
