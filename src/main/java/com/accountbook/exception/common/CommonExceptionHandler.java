@@ -30,9 +30,9 @@ public class CommonExceptionHandler {
         log.warn("Unexpected Exception >>> {}",  e.getClass(), e);
 
         return new ApiResponse(
-                CommonExceptionCode.UNEXPECTED_ERROR.getCode(),
+                CommonExceptionCode.UNEXPECTED_EX.getCode(),
                 HttpStatus.OK,
-                CommonExceptionCode.UNEXPECTED_ERROR.getMessage()
+                CommonExceptionCode.UNEXPECTED_EX.getMessage()
         );
     }
 }

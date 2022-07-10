@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public enum CommonExceptionCode {
 
-    UNEXPECTED_ERROR(9000L, "죄송합니다;"),
+    UNEXPECTED_EX(9000L, "Unexpected Exception 발생"),
     INVALID_PARAM(9001L, "유효성 오류"),
     ;
 

@@ -71,7 +71,7 @@ public class UserApiController {
      * @param request
      * @return
      */
-    @PatchMapping("/{userId}/password")
+    @PatchMapping("/password/{userId}")
     public ApiResponse changePassword (@PathVariable String userId, @Valid @RequestBody PasswordRequest request) {
 
         userService.changePassword(userId, request);
@@ -111,7 +111,7 @@ public class UserApiController {
      * @param request
      * @return 사용자 패스워드
      */
-    @PostMapping("/{userId}/password")
+    @PostMapping("/password/{userId}")
     public ApiResponse findUserPassword (@PathVariable String userId, @RequestBody UserInfoRequest request) {
         // TODO 이메일로 쏘든지 해야함.
         return new ApiResponse(userService.findPassword(userId, request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
@@ -123,7 +123,7 @@ public class UserApiController {
      * @param request
      * @return
      */
-    @PatchMapping("/{userId}/setting")
+    @PatchMapping("/setting/{userId}")
     public ApiResponse updateCustomSetting (@PathVariable String userId, @RequestBody UpdateSettingRequest request) {
         return new ApiResponse(userService.updateCustomSetting(userId, request), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
