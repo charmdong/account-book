@@ -86,7 +86,7 @@ public class EcoEventService {
     }
 
     //이벤트 삭제
-    public boolean deleteEcoEvents(Long EventsSeq) throws Exception {
+    public Boolean deleteEcoEvents(Long EventsSeq) throws Exception {
         try {
             ecoEventRepository.deleteById(EventsSeq);
         }catch(EmptyResultDataAccessException e){
