@@ -86,13 +86,13 @@ public class EcoEventService {
     }
 
     //이벤트 삭제
-    public Boolean deleteEcoEvents(Long EventsSeq) throws Exception {
+    public Boolean deleteEcoEvents(Long EventsSeq) {
         try {
             ecoEventRepository.deleteById(EventsSeq);
         }catch(EmptyResultDataAccessException e){
             throw new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT);
         }
-        //ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
+        ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
         return true;
     }
 }
