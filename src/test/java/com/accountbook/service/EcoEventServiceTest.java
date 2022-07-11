@@ -103,7 +103,7 @@ public class EcoEventServiceTest {
         if(ecoEventDtos.isEmpty()){
         } else{
             //when
-            ecoEventService.getAllEcoEvnetByEventTypeAndUseDate(ecoEventReadRequest);
+            ecoEventService.getAllEcoEventByEventTypeAndUseDate(ecoEventReadRequest);
         }
     }
 

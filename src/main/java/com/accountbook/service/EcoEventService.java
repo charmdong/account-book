@@ -50,7 +50,7 @@ public class EcoEventService {
 
     //이벤트 조회 by User, EventType, UseDate
     @Transactional(readOnly = true)
-    public List<EcoEventDto> getAllEcoEvnetByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) {
+    public List<EcoEventDto> getAllEcoEventByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) {
         String userId = ecoEventReadRequest.getUserId();
         LocalDateTime startDate = ecoEventReadRequest.getStartDate();
         LocalDateTime endDate = ecoEventReadRequest.getEndDate();

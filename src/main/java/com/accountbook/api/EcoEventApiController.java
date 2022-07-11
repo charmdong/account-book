@@ -45,7 +45,7 @@ public class EcoEventApiController {
     //금융 이벤트 조건 조회 - user,eventType,useDate
     @GetMapping("/condition")
     public ApiResponse getAllEcoEventByEventTypeAndUseDate(@RequestBody @Valid EcoEventReadRequest ecoEventReadRequest) throws Exception {
-        return new ApiResponse(ecoEventService.getAllEcoEvnetByEventTypeAndUseDate(ecoEventReadRequest), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(ecoEventService.getAllEcoEventByEventTypeAndUseDate(ecoEventReadRequest), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     //금융 이벤트 등록
