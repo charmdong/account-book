@@ -29,7 +29,6 @@ public class AccountBookApplication {
 	 */
 	@Bean
 	public AuditorAware<String> auditorProvider() {
-		// TODO Spring Security에 맞게 수정
 		// HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		// HttpSession session = request.getSession();
 		// String loginId = (String) session.getAttribute("loginId");
