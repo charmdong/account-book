@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,13 +72,6 @@ class UserServiceTest {
         // then
         assertThat(user.getId()).isEqualTo("user1");
         assertThat(user.getSettingDto().getDisplayOption()).isEqualTo(DisplayOption.AMOUNT);
-    }
-
-    @Test
-    @DisplayName("테스트")
-    @Rollback(value = false)
-    public void userTest() throws Exception {
-        userService.deleteUser("member123123");
     }
 
     @Test
