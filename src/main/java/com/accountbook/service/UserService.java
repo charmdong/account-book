@@ -152,7 +152,7 @@ public class UserService {
         User user = userRepository.findById(userId).get();
         String originalPassword = Base64.encodeBase64String(request.getOriginPassword().getBytes(StandardCharsets.UTF_8));
 
-        if (!user.checkPwdUpdate(request.getOriginPassword())) {
+        if (!user.checkPwdUpdate(originalPassword)) {
             throw new UpdateUserException(UserExceptionCode.PWD_UPDATE_FAIL);
         }
 
