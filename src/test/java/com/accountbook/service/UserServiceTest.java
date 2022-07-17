@@ -2,6 +2,7 @@ package com.accountbook.service;
 
 import com.accountbook.aop.LogTraceAspect;
 import com.accountbook.domain.enums.DisplayOption;
+import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.CustomSettingDto;
 import com.accountbook.dto.user.UpdateSettingRequest;
 import com.accountbook.dto.user.UserCreateRequest;
@@ -29,6 +30,9 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     @DisplayName("사용자 등록 테스트")
@@ -67,7 +71,7 @@ class UserServiceTest {
 
         // then
         assertThat(user.getId()).isEqualTo("user1");
-        assertThat(user.getSettingDto().getOption()).isEqualTo(DisplayOption.AMOUNT);
+        assertThat(user.getSettingDto().getDisplayOption()).isEqualTo(DisplayOption.AMOUNT);
     }
 
     @Test

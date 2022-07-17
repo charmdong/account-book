@@ -1,8 +1,10 @@
 package com.accountbook.service;
+
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
+import com.accountbook.exception.ecoEvent.EcoEventException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +15,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -88,6 +90,11 @@ public class EcoEventServiceTest {
     }
 
     @Test
+    public void deleteTest() {
+        assertThatThrownBy(() -> ecoEventService.deleteEcoEvents(111L)).isInstanceOf(EcoEventException.class);
+    }
+
+    @Test
     public void 금융이벤트_통계() throws Exception{
         //given
         EcoEventReadRequest ecoEventReadRequest = getEcoEventReadRequest();
@@ -96,7 +103,7 @@ public class EcoEventServiceTest {
         if(ecoEventDtos.isEmpty()){
         } else{
             //when
-            ecoEventService.getAllEcoEvnetByEventTypeAndUseDate(ecoEventReadRequest);
+            ecoEventService.getAllEcoEventByEventTypeAndUseDate(ecoEventReadRequest);
         }
     }
 

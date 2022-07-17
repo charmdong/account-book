@@ -50,7 +50,7 @@ public class EcoEventService {
 
     //이벤트 조회 by User, EventType, UseDate
     @Transactional(readOnly = true)
-    public List<EcoEventDto> getAllEcoEvnetByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) {
+    public List<EcoEventDto> getAllEcoEventByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) {
         String userId = ecoEventReadRequest.getUserId();
         LocalDateTime startDate = ecoEventReadRequest.getStartDate();
         LocalDateTime endDate = ecoEventReadRequest.getEndDate();
@@ -75,8 +75,8 @@ public class EcoEventService {
 
     //이벤트 수정
     public EcoEventDto updateEcoEvents(EcoEventRequest ecoEventRequest, Long ecoEventSeq) throws Exception{
-        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_CATEGORY));
         EcoEvent ecoEvent = ecoEventRepository.findBySeq(ecoEventSeq).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
+        Category category = categoryRepository.findBySeq(ecoEventRequest.getCategorySeq()).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_CATEGORY));
 
         ecoEvent.changeEcoEvent(ecoEventRequest,category);
 
@@ -86,13 +86,13 @@ public class EcoEventService {
     }
 
     //이벤트 삭제
-    public Boolean deleteEcoEvents(Long EventsSeq) throws Exception {
+    public Boolean deleteEcoEvents(Long EventsSeq) {
         try {
             ecoEventRepository.deleteById(EventsSeq);
         }catch(EmptyResultDataAccessException e){
             throw new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT);
         }
-        ecoEventRepository.findBySeq(EventsSeq).orElseThrow(() -> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_ECOEVENT));
+
         return true;
     }
 }
