@@ -22,6 +22,7 @@ public class CategoryDto {
     private String name;
     private EventType eventType;
     private long defaultPrice;
+    private String useYn;
     private List<EcoEventDto> ecoEventList = new ArrayList<>();
 
     public CategoryDto(Category category) {
@@ -29,6 +30,7 @@ public class CategoryDto {
         this.name = category.getName();
         this.eventType = category.getEventType();
         this.defaultPrice = category.getDefaultPrice();
+        this.useYn = category.getUseYn();
         this.ecoEventList = category.getEcoEventList().stream().map(EcoEventDto::new).collect(Collectors.toList());
     }
 }
