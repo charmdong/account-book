@@ -5,7 +5,7 @@ import com.accountbook.domain.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -25,6 +25,8 @@ public class EcoEventDto {
 
     private Long categorySeq;
 
+    private String categoryName;
+
     public EcoEventDto(EcoEvent ecoEvent){
         this.seq = ecoEvent.getSeq();
         this.userId = ecoEvent.getUser().getId();
@@ -33,5 +35,6 @@ public class EcoEventDto {
         this.amount = ecoEvent.getAmount();
         this.desc = ecoEvent.getDescription();
         this.categorySeq = ecoEvent.getCategory().getSeq();
+        this.categoryName = ecoEvent.getCategory().getName();
     }
 }
