@@ -26,7 +26,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @Override
     public List<User> findAllUser() {
-        log.info("HELLO");
+
         return queryFactory.selectFrom(user)
                 .innerJoin(user.setting, customSetting).fetchJoin()
                 .fetch();
