@@ -14,6 +14,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -93,6 +95,23 @@ public class UserService {
      */
     public UserDto addUser (UserCreateRequest request) {
 
+        // 1. 아이디 중복 확인
+        String id = request.getId();
+        Optional<User> findUser = userRepository.findById(id);
+        if (findUser.isPresent()) {
+            throw new InsertUserException(UserExceptionCode.PRESENT_USER_ID);
+        }
+
+        // 2. 이메일 중복 확인
+        String email = request.getEmail();
+        if (StringUtils.hasText(email)) {
+            findUser = userRepository.findByEmail(email);
+            if (findUser.isPresent()) {
+                throw new InsertUserException(UserExceptionCode.PRESENT_USER_EMAIL);
+            }
+        }
+
+        // 패스워드 암호화
         String password = request.getPassword();
         password = Base64.encodeBase64String(password.getBytes(StandardCharsets.UTF_8));
         request.setPassword(password);

@@ -18,6 +18,9 @@ public interface UserRepository extends JpaRepository<User, String>, UserReposit
     // 회원 정보 조회
     Optional<User> findById(String userId);
 
+    // 이메일 기반 회원 정보 조회
+    Optional<User> findByEmail(String email);
+
     // 회원 정보 조회 by token
     User findByToken(String token);
 
