@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -66,11 +65,11 @@ public class StatisticsService {
 
                     // Get expenditure ecoEvent
                     EcoEventReadRequest expenditureEcoEventRequest = new EcoEventReadRequest(user.getId(), EventType.EXPENDITURE, startDate, endDate);
-                    List<EcoEventDto> expenditureEcoEvent = ecoEventService.getAllEcoEvnetByEventTypeAndUseDate(expenditureEcoEventRequest);
+                    List<EcoEventDto> expenditureEcoEvent = ecoEventService.getAllEcoEventByEventTypeAndUseDate(expenditureEcoEventRequest);
 
                     // Get income ecoEvent
                     EcoEventReadRequest incomeEcoEventRequest = new EcoEventReadRequest(user.getId(), EventType.INCOME, startDate, endDate);
-                    List<EcoEventDto> incomeEcoEvnet = ecoEventService.getAllEcoEvnetByEventTypeAndUseDate(incomeEcoEventRequest);
+                    List<EcoEventDto> incomeEcoEvnet = ecoEventService.getAllEcoEventByEventTypeAndUseDate(incomeEcoEventRequest);
 
                     // 지난 달 수입, 지출 금액
                     Long prevIncome = 0L;
