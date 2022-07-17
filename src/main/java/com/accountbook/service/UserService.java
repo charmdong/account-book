@@ -50,7 +50,6 @@ public class UserService {
      * @param request
      * @param response
      * @return LoginInfo
-     * @throws RuntimeException
      */
     public LoginInfo login (String userId, String password, HttpServletRequest request, HttpServletResponse response) {
 
@@ -91,7 +90,6 @@ public class UserService {
      *
      * @param request
      * @return UserDto
-     * @throws Exception
      */
     public UserDto addUser (UserCreateRequest request) {
 
@@ -149,7 +147,6 @@ public class UserService {
      *
      * @param userId
      * @return UserDto
-     * @throws Exception
      */
     @Transactional(readOnly = true)
     public UserDto getUser (String userId) {
@@ -162,7 +159,6 @@ public class UserService {
      *
      * @param request
      * @return UserDto
-     * @throws Exception
      */
     public UserDto updateUser (String userId, UserUpdateRequest request) {
 
@@ -177,7 +173,6 @@ public class UserService {
      *
      * @param userId
      * @param request
-     * @throws Exception
      */
     public void changePassword (String userId, PasswordRequest request) {
 
@@ -197,7 +192,6 @@ public class UserService {
      *
      * @param userId
      * @return 삭제 여부
-     * @throws Exception
      */
     public Boolean deleteUser (String userId) {
 
@@ -215,7 +209,6 @@ public class UserService {
      *
      * @param request
      * @return userId
-     * @throws Exception
      */
     @Transactional(readOnly = true)
     public String findUserId (UserInfoRequest request) {
@@ -230,7 +223,6 @@ public class UserService {
      *
      * @param request
      * @return password
-     * @throws Exception
      */
     @Transactional(readOnly = true)
     public String findPassword (String userId, UserInfoRequest request) {
@@ -246,7 +238,6 @@ public class UserService {
      * @param userId
      * @param request
      * @return
-     * @throws Exception
      */
     public CustomSettingDto updateCustomSetting (String userId, UpdateSettingRequest request) {
 
@@ -265,7 +256,6 @@ public class UserService {
      *
      * @param userId
      * @return
-     * @throws Exception
      */
     public CustomSettingDto getCustomSetting (String userId) {
 
