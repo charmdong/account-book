@@ -51,6 +51,7 @@ public class EcoEvent extends BaseInfo {
         ecoEvent.useDate = ecoEventRequest.getUseDate();
         ecoEvent.amount = ecoEventRequest.getAmount();
         ecoEvent.category = category;
+        ecoEvent.description = ecoEventRequest.getDesc();
         return ecoEvent;
     }
 
@@ -65,7 +66,10 @@ public class EcoEvent extends BaseInfo {
         if(ecoEventRequest.getAmount() != null) {
             this.amount = ecoEventRequest.getAmount();
         }
-        if(ecoEventRequest.getCategorySeq() != null){
+        if(ecoEventRequest.getDesc() != null){
+            this.description = ecoEventRequest.getDesc();
+        }
+        if(ecoEventRequest.getCategorySeq() != null && category != null){
             this.category = category;
         }
     }
