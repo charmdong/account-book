@@ -21,7 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * UserService
@@ -110,6 +112,17 @@ public class UserService {
         }
 
         return new UserDto(userRepository.findById(user.getId()).orElseThrow(() -> new InsertUserException(UserExceptionCode.INSERT_FAIL)));
+    }
+
+    /**
+     * 사용자 전체 정보 조회
+     *
+     * @return 사용자 전체 목록
+     */
+    @Transactional(readOnly = true)
+    public List<UserDto> findAllUser() {
+
+        return userRepository.findAllUser().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
     /**

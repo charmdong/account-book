@@ -4,7 +4,6 @@ import com.accountbook.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,8 +14,6 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, String>, UserRepositoryCustom {
-
-    List<User> findAll();
 
     // 회원 정보 조회
     Optional<User> findById(String userId);

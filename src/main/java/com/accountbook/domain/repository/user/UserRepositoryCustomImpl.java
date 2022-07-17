@@ -1,15 +1,18 @@
 package com.accountbook.domain.repository.user;
 
-import com.accountbook.domain.entity.QUser;
 import com.accountbook.domain.entity.User;
-import com.querydsl.core.QueryFactory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static com.accountbook.domain.entity.QCustomSetting.customSetting;
+import static com.accountbook.domain.entity.QUser.user;
+
+@Slf4j
 @RequiredArgsConstructor
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
@@ -22,8 +25,15 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     }
 
     @Override
+    public List<User> findAllUser() {
+        log.info("HELLO");
+        return queryFactory.selectFrom(user)
+                .innerJoin(user.setting, customSetting).fetchJoin()
+                .fetch();
+    }
+
+    @Override
     public long updateExpireDateByToken(String token, LocalDateTime expireDate) {
-        QUser user = QUser.user;
 
         return queryFactory.update(user)
                 .set(user.expireDate, expireDate)
