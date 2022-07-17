@@ -4,7 +4,6 @@ import com.accountbook.domain.entity.EcoEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +19,6 @@ public interface EcoEventRepository extends JpaRepository<EcoEvent, Long> ,EcoEv
     //금융 이벤트  삭제
     void deleteBySeq(Long ecoEventSeq);
 
+    //금융 이벤트 삭제 - 사용자 아이디
+    void deleteByUserId(String userId);
 }

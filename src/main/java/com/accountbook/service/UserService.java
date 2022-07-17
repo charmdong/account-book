@@ -4,6 +4,7 @@ import com.accountbook.common.utils.CookieUtils;
 import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.User;
+import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
 import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.*;
@@ -41,6 +42,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CustomSettingRepository settingRepository;
+    private final EcoEventRepository ecoEventRepository;
 
     /**
      * 아이디, 패스워드 기반 세션 성립
@@ -180,7 +182,7 @@ public class UserService {
         String originalPassword = Base64.encodeBase64String(request.getOriginPassword().getBytes(StandardCharsets.UTF_8));
 
         if (!user.checkPwdUpdate(originalPassword)) {
-            throw new UpdateUserException(UserExceptionCode.PWD_UPDATE_FAIL);
+            throw new UpdateUserException(UserExceptionCode.INVALID_PWD);
         }
 
         String newPassword = Base64.encodeBase64String(request.getNewPassword().getBytes(StandardCharsets.UTF_8));
@@ -197,6 +199,7 @@ public class UserService {
 
         try {
             userRepository.deleteById(userId);
+            ecoEventRepository.deleteByUserId(userId);
         } catch (EmptyResultDataAccessException e) {
             throw new DeleteUserException(UserExceptionCode.NOT_FOUND);
         }
