@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -58,10 +60,13 @@ public class StatisticsService {
                 if (initDay == nowDay) {
 
                     // make start date
-                    LocalDateTime startDate = LocalDateTime.of(nowYear, nowMonth.minus(1), initDay, 0, 0, 0);
+                    //LocalDateTime startDate = LocalDateTime.of(nowYear, nowMonth.minus(1), initDay, 0, 0, 0);
+                    //yyyy-MM-dd 형식 String
+                    String startDate = Integer.toString(nowYear)+"-"+nowMonth.minus(1)+"-"+initDay;
 
                     // make end date
-                    LocalDateTime endDate = startDate.plusMonths(1);
+                    //LocalDateTime endDate = startDate.plusMonths(1);
+                    String endDate = Integer.toString(nowYear)+"-"+nowMonth+"-"+initDay;
 
                     // Get expenditure ecoEvent
                     EcoEventReadRequest expenditureEcoEventRequest = new EcoEventReadRequest(user.getId(), EventType.EXPENDITURE, startDate, endDate);
@@ -97,8 +102,28 @@ public class StatisticsService {
         String userId = ecoEventReadRequest.getUserId();
         CustomSetting customSetting = customSettingRepository.findById(userId).orElseThrow(()-> new EcoEventException(EcoEventExceptionCode.NOT_FOUND_CUSTOMSETTING));
 
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = LocalDateTime.now();
+        //s : 날짜 포맷팅
+        List<Integer> formatDate = Arrays.stream(ecoEventReadRequest.getStartDate().split("-"))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+        if(formatDate == null){
+            throw new EcoEventException(EcoEventExceptionCode.ERROR_PARSING_DATE);
+        }
+        LocalDateTime startDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 0,0,0);
+
+        LocalDateTime endDate = null;
+        if(ecoEventReadRequest.getEndDate() == null || ecoEventReadRequest.getStartDate().equals(ecoEventReadRequest.getEndDate())) {
+            endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 23,59,59);;
+        } else {
+            formatDate = Arrays.stream(ecoEventReadRequest.getEndDate().split("-"))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+            if(formatDate == null){
+                throw new EcoEventException(EcoEventExceptionCode.ERROR_PARSING_DATE);
+            }
+            endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 0,0,0);
+        }
+        //e : 날짜 포맷팅
 
         if(customSetting.getInitDay() < endDate.getDayOfMonth()){
             // ex. 기준 일자가 오늘 일자보다 작은 경우 (기준일 1일, 오늘 3일 -> 당월 1일부터 당월 오늘까지)
@@ -138,12 +163,17 @@ public class StatisticsService {
                 .map(e -> new EcoEventStaticsDto(e.getCategory().getSeq(), e.getAmount()))
                 .collect(groupingBy(EcoEventStaticsDto::getCategorySeq, summingLong(EcoEventStaticsDto::getSumAmount)));
 
-        Long maxValue = Collections.max(map.values());
-        for (Map.Entry<Long, Long> m : map.entrySet()) {
-            if (m.getValue() == maxValue) {
-                maxCategorySeqList.add(m.getKey());
+        try {
+            Long maxValue = Collections.max(map.values());
+            for (Map.Entry<Long, Long> m : map.entrySet()) {
+                if (m.getValue() == maxValue) {
+                    maxCategorySeqList.add(m.getKey());
+                }
             }
+        } catch(NoSuchElementException e){
+            return maxCategoryList;
         }
+
         maxCategoryList = maxCategorySeqList.stream()
                 .map(seq -> categoryRepository.findBySeq(seq))
                 .map(category -> new CategoryDto(category.get()))

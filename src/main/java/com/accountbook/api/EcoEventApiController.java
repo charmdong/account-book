@@ -2,7 +2,6 @@ package com.accountbook.api;
 
 import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.response.ApiResponse;
-import com.accountbook.dto.EcoEvent.EcoEventDto;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.EcoEventService;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 @RestController
@@ -24,9 +22,8 @@ public class EcoEventApiController {
 
     //금융 이벤트 전체 조회
     @GetMapping("/")
-    public ApiResponse getAllEcoEvent(){
-        List<EcoEventDto> ecoEventDtoList = ecoEventService.getAllEcoEvent();
-        ApiResponse apiResponse = new ApiResponse(ecoEventDtoList, HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    public ApiResponse getAllEcoEvent() throws Exception {
+        ApiResponse apiResponse = new ApiResponse(ecoEventService.getAllEcoEvent(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
         return apiResponse;
     }
 

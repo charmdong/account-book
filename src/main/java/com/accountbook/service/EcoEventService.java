@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class EcoEventService {
 
     //이벤트 전체 조회
     @Transactional(readOnly = true)
-    public List<EcoEventDto> getAllEcoEvent(){
+    public List<EcoEventDto> getAllEcoEvent() throws Exception{
         return ecoEventRepository.findAll().stream().map(EcoEventDto::new).collect(Collectors.toList());
     }
 
@@ -44,16 +45,38 @@ public class EcoEventService {
 
     //이벤트 조회 by User
     @Transactional(readOnly = true)
-    public List<EcoEventDto> getEcoEventByUser(String userId){
+    public List<EcoEventDto> getEcoEventByUser(String userId) throws Exception{
         return ecoEventRepository.findByUserId(userId).stream().map(EcoEventDto::new).collect(Collectors.toList());
     }
 
     //이벤트 조회 by User, EventType, UseDate
     @Transactional(readOnly = true)
-    public List<EcoEventDto> getAllEcoEventByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) {
+    public List<EcoEventDto> getAllEcoEventByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) throws Exception{
         String userId = ecoEventReadRequest.getUserId();
-        LocalDateTime startDate = ecoEventReadRequest.getStartDate();
-        LocalDateTime endDate = ecoEventReadRequest.getEndDate();
+
+        //s : 날짜 포맷팅
+        List<Integer> formatDate = Arrays.stream(ecoEventReadRequest.getStartDate().split("-"))
+                                              .map(Integer::parseInt)
+                                              .collect(Collectors.toList());
+        if(formatDate == null){
+            throw new EcoEventException(EcoEventExceptionCode.ERROR_PARSING_DATE);
+        }
+        LocalDateTime startDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 0,0,0);
+
+        LocalDateTime endDate = null;
+        if(ecoEventReadRequest.getEndDate() == null || ecoEventReadRequest.getStartDate().equals(ecoEventReadRequest.getEndDate())) {
+            endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 23,59,59);;
+        } else {
+            formatDate = Arrays.stream(ecoEventReadRequest.getEndDate().split("-"))
+                               .map(Integer::parseInt)
+                               .collect(Collectors.toList());
+            if(formatDate == null){
+                throw new EcoEventException(EcoEventExceptionCode.ERROR_PARSING_DATE);
+            }
+            endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 0,0,0);
+        }
+        //e : 날짜 포맷팅
+
         EventType eventType = ecoEventReadRequest.getEventType();
 
         return ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,endDate,eventType)
