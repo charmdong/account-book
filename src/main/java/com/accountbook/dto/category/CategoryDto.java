@@ -1,16 +1,16 @@
 package com.accountbook.dto.category;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.accountbook.domain.entity.Category;
-import com.accountbook.domain.entity.EcoEvent;
 import com.accountbook.domain.enums.EventType;
-
+import com.accountbook.dto.EcoEvent.EcoEventDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ToString(exclude = {"ecoEventList"})
 @Setter
@@ -22,13 +22,13 @@ public class CategoryDto {
     private String name;
     private EventType eventType;
     private long defaultPrice;
-    private List<EcoEvent> ecoEventList = new ArrayList<>();
+    private List<EcoEventDto> ecoEventList = new ArrayList<>();
 
     public CategoryDto(Category category) {
         this.seq = category.getSeq();
         this.name = category.getName();
         this.eventType = category.getEventType();
         this.defaultPrice = category.getDefaultPrice();
-        this.ecoEventList = category.getEcoEventList();
+        this.ecoEventList = category.getEcoEventList().stream().map(EcoEventDto::new).collect(Collectors.toList());
     }
 }
