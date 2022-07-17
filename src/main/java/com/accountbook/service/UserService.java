@@ -150,6 +150,7 @@ public class UserService {
     public void changePassword (String userId, PasswordRequest request) {
 
         User user = userRepository.findById(userId).get();
+        String originalPassword = Base64.encodeBase64String(request.getOriginPassword().getBytes(StandardCharsets.UTF_8));
 
         if (!user.checkPwdUpdate(request.getOriginPassword())) {
             throw new UpdateUserException(UserExceptionCode.PWD_UPDATE_FAIL);
