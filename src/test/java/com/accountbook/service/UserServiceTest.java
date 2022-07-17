@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,5 +91,24 @@ class UserServiceTest {
         CustomSettingDto updatedSettingDto = userService.updateCustomSetting(user.getId(), request);
         log.info("after={}", updatedSettingDto);
         // then
+    }
+
+    @Test
+    public void validatePasswordTest() {
+        String password1 = "1!hell";
+        String password2 = "hello123";
+        String password3 = "hello!@#";
+        String password4 = "hello12!@";
+
+        assertThat(isValidatePassword(password1)).isFalse();
+        assertThat(isValidatePassword(password2)).isFalse();
+        assertThat(isValidatePassword(password3)).isFalse();
+        assertThat(isValidatePassword(password4)).isTrue();
+    }
+
+    private Boolean isValidatePassword (String password) {
+
+        String pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$";
+        return Pattern.matches(pattern, password);
     }
 }
