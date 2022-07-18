@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +62,7 @@ public class UserService {
         // 2. password 비교
         String encodedPassword = Base64.encodeBase64String(password.getBytes(StandardCharsets.UTF_8));
         if (!user.getPassword().equals(encodedPassword)) {
-            throw new UserException(UserExceptionCode.INVALID_PWD);
+            throw new UserException(UserExceptionCode.INCORRECT_PWD);
         }
 
         // 3. UID 생성 및 만료 기한 설정
@@ -111,8 +112,13 @@ public class UserService {
             }
         }
 
-        // 패스워드 암호화
+        // 3. 패스워드 유효성 검사
         String password = request.getPassword();
+        if (!isValidatePassword(password)) {
+            throw new InsertUserException(UserExceptionCode.INVALID_PWD);
+        }
+
+        // 패스워드 암호화
         password = Base64.encodeBase64String(password.getBytes(StandardCharsets.UTF_8));
         request.setPassword(password);
 
@@ -182,7 +188,7 @@ public class UserService {
         String originalPassword = Base64.encodeBase64String(request.getOriginPassword().getBytes(StandardCharsets.UTF_8));
 
         if (!user.checkPwdUpdate(originalPassword)) {
-            throw new UpdateUserException(UserExceptionCode.INVALID_PWD);
+            throw new UpdateUserException(UserExceptionCode.INCORRECT_PWD);
         }
 
         String newPassword = Base64.encodeBase64String(request.getNewPassword().getBytes(StandardCharsets.UTF_8));
@@ -267,5 +273,17 @@ public class UserService {
                 .orElseThrow(() -> new SettingNotFoundException(UserExceptionCode.SETTING_NOT_FOUND));
 
         return new CustomSettingDto(setting);
+    }
+
+    /**
+     * 패스워드 유효성 검사
+     *
+     * @param password
+     * @return
+     */
+    private Boolean isValidatePassword (String password) {
+
+        String pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$";
+        return Pattern.matches(pattern, password);
     }
 }
