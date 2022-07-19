@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -98,16 +97,14 @@ public class UserService {
 
         // 1. 아이디 중복 확인
         String id = request.getId();
-        Optional<User> findUser = userRepository.findById(id);
-        if (findUser.isPresent()) {
+        if (userRepository.existById(id)) {
             throw new InsertUserException(UserExceptionCode.PRESENT_USER_ID);
         }
 
         // 2. 이메일 중복 확인
         String email = request.getEmail();
         if (StringUtils.hasText(email)) {
-            findUser = userRepository.findByEmail(email);
-            if (findUser.isPresent()) {
+            if (userRepository.existByEmail(email)) {
                 throw new InsertUserException(UserExceptionCode.PRESENT_USER_EMAIL);
             }
         }

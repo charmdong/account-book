@@ -1,5 +1,6 @@
 package com.accountbook.domain.repository.user;
 
+import com.accountbook.domain.entity.QUser;
 import com.accountbook.domain.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,28 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
         return queryFactory.selectFrom(user)
                 .innerJoin(user.setting, customSetting).fetchJoin()
                 .fetch();
+    }
+
+    @Override
+    public Boolean existById (String userId) {
+
+        User findUser = queryFactory.selectFrom(user)
+                                    .innerJoin(user.setting, customSetting).fetchJoin()
+                                    .where(user.id.eq(userId))
+                                    .fetchFirst();
+
+        return findUser != null;
+    }
+
+    @Override
+    public Boolean existByEmail (String email) {
+
+        User findUser = queryFactory.selectFrom(QUser.user)
+                                    .innerJoin(user.setting, customSetting).fetchJoin()
+                                    .where(QUser.user.email.eq(email))
+                                    .fetchFirst();
+
+        return findUser != null;
     }
 
     @Override

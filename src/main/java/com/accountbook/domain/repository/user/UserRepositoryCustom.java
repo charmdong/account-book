@@ -9,5 +9,7 @@ public interface UserRepositoryCustom {
 
     void addUser (User user);
     List<User> findAllUser ();
+    Boolean existById (String userId);
+    Boolean existByEmail (String email);
     long updateExpireDateByToken(String token, LocalDateTime expireDate);
 }
