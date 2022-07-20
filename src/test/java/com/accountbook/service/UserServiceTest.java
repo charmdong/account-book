@@ -94,6 +94,16 @@ class UserServiceTest {
     }
 
     @Test
+    public void checkDuplication () {
+
+        Boolean resultById = userRepository.existById("member2");
+        Boolean resultByEmail = userRepository.existByEmail("test@naver.com");
+
+        assertThat(resultById).isTrue();
+        assertThat(resultByEmail).isTrue();
+    }
+
+    @Test
     public void validatePasswordTest() {
         String password1 = "1!hell";
         String password2 = "hello123";
