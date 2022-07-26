@@ -23,7 +23,7 @@ import java.util.Optional;
 @Import(LogTraceAspect.class)
 public class AccountBookApplication {
 
-    private final String NO_LOGIN_USER = "NO_LOGIN_USER";
+    private final String ANONYMOUS = "ANONYMOUS";
 
     public static void main (String[] args) {
         SpringApplication.run(AccountBookApplication.class, args);
@@ -46,9 +46,9 @@ public class AccountBookApplication {
             if (session != null) {
                 return () -> Optional.of((String) session.getAttribute("loginId"));
             }
-            else return () -> Optional.of(NO_LOGIN_USER);
+            else return () -> Optional.of(ANONYMOUS);
         }
-        else return () -> Optional.of(NO_LOGIN_USER);
+        else return () -> Optional.of(ANONYMOUS);
     }
 
     @Bean
