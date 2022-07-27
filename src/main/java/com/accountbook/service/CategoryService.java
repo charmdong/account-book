@@ -11,7 +11,6 @@ import com.accountbook.dto.category.CategoryRankDto;
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.exception.category.CategoryException;
 import com.accountbook.exception.category.CategoryExceptionCode;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +32,8 @@ public class CategoryService {
     public List<CategoryDto> getCategoryList() throws Exception {
 
         var result = categoryRepository.findAll().stream()
+                .filter(e -> "Y".equals(e.getUseYn()))
                 .map(CategoryDto::new)
-                .filter(dto -> "Y".equals(dto.getUseYn()))
                 .collect(Collectors.toList());
 
         return result;
@@ -61,12 +60,10 @@ public class CategoryService {
                 defaultPrice = categoryRequest.getDefaultPrice();
             }
             category.changeUseYn("Y", defaultPrice);
-            categoryRepository.save(category);
         } else {
            category = Category.createCategory(categoryRequest);
+           categoryRepository.save(category);
         }
-
-        categoryRepository.save(category);
         return category.getSeq();
     }
 
