@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Data
 public class EcoEventReadRequest {
@@ -14,13 +13,13 @@ public class EcoEventReadRequest {
 
     private EventType eventType; //타입 미 지정 시 전체 조회
 
-    private LocalDateTime startDate;
+    private String startDate;
 
-    private LocalDateTime endDate;
+    private String endDate;
 
     public EcoEventReadRequest(){} //테스트용
 
-    public EcoEventReadRequest(String userId, EventType eventType, LocalDateTime startDate,LocalDateTime endDate) {
+    public EcoEventReadRequest(String userId, EventType eventType, String startDate,String endDate) {
         this.userId = userId;
         this.eventType = eventType;
         this.startDate = startDate;
