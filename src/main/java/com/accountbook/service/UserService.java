@@ -4,6 +4,7 @@ import com.accountbook.common.utils.CookieUtils;
 import com.accountbook.common.utils.SessionUtils;
 import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.User;
+import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
 import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.domain.repository.user.UserRepository;
 import com.accountbook.dto.user.*;
@@ -14,6 +15,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * UserService
@@ -37,6 +42,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CustomSettingRepository settingRepository;
+    private final EcoEventRepository ecoEventRepository;
 
     /**
      * 아이디, 패스워드 기반 세션 성립
@@ -46,7 +52,6 @@ public class UserService {
      * @param request
      * @param response
      * @return LoginInfo
-     * @throws RuntimeException
      */
     public LoginInfo login (String userId, String password, HttpServletRequest request, HttpServletResponse response) {
 
@@ -56,7 +61,7 @@ public class UserService {
         // 2. password 비교
         String encodedPassword = Base64.encodeBase64String(password.getBytes(StandardCharsets.UTF_8));
         if (!user.getPassword().equals(encodedPassword)) {
-            throw new UserException(UserExceptionCode.INVALID_PWD);
+            throw new UserException(UserExceptionCode.INCORRECT_PWD);
         }
 
         // 3. UID 생성 및 만료 기한 설정
@@ -87,11 +92,30 @@ public class UserService {
      *
      * @param request
      * @return UserDto
-     * @throws Exception
      */
     public UserDto addUser (UserCreateRequest request) {
 
+        // 1. 아이디 중복 확인
+        String id = request.getId();
+        if (userRepository.existById(id)) {
+            throw new InsertUserException(UserExceptionCode.PRESENT_USER_ID);
+        }
+
+        // 2. 이메일 중복 확인
+        String email = request.getEmail();
+        if (StringUtils.hasText(email)) {
+            if (userRepository.existByEmail(email)) {
+                throw new InsertUserException(UserExceptionCode.PRESENT_USER_EMAIL);
+            }
+        }
+
+        // 3. 패스워드 유효성 검사
         String password = request.getPassword();
+        if (!isValidatePassword(password)) {
+            throw new InsertUserException(UserExceptionCode.INVALID_PWD);
+        }
+
+        // 패스워드 암호화
         password = Base64.encodeBase64String(password.getBytes(StandardCharsets.UTF_8));
         request.setPassword(password);
 
@@ -113,11 +137,21 @@ public class UserService {
     }
 
     /**
+     * 사용자 전체 정보 조회
+     *
+     * @return 사용자 전체 목록
+     */
+    @Transactional(readOnly = true)
+    public List<UserDto> findAllUser() {
+
+        return userRepository.findAllUser().stream().map(UserDto::new).collect(Collectors.toList());
+    }
+
+    /**
      * 사용자 정보 조회
      *
      * @param userId
      * @return UserDto
-     * @throws Exception
      */
     @Transactional(readOnly = true)
     public UserDto getUser (String userId) {
@@ -130,7 +164,6 @@ public class UserService {
      *
      * @param request
      * @return UserDto
-     * @throws Exception
      */
     public UserDto updateUser (String userId, UserUpdateRequest request) {
 
@@ -145,14 +178,14 @@ public class UserService {
      *
      * @param userId
      * @param request
-     * @throws Exception
      */
     public void changePassword (String userId, PasswordRequest request) {
 
         User user = userRepository.findById(userId).get();
+        String originalPassword = Base64.encodeBase64String(request.getOriginPassword().getBytes(StandardCharsets.UTF_8));
 
-        if (!user.checkPwdUpdate(request.getOriginPassword())) {
-            throw new UpdateUserException(UserExceptionCode.PWD_UPDATE_FAIL);
+        if (!user.checkPwdUpdate(originalPassword)) {
+            throw new UpdateUserException(UserExceptionCode.INCORRECT_PWD);
         }
 
         String newPassword = Base64.encodeBase64String(request.getNewPassword().getBytes(StandardCharsets.UTF_8));
@@ -164,12 +197,12 @@ public class UserService {
      *
      * @param userId
      * @return 삭제 여부
-     * @throws Exception
      */
     public Boolean deleteUser (String userId) {
 
         try {
             userRepository.deleteById(userId);
+            ecoEventRepository.deleteByUserId(userId);
         } catch (EmptyResultDataAccessException e) {
             throw new DeleteUserException(UserExceptionCode.NOT_FOUND);
         }
@@ -182,7 +215,6 @@ public class UserService {
      *
      * @param request
      * @return userId
-     * @throws Exception
      */
     @Transactional(readOnly = true)
     public String findUserId (UserInfoRequest request) {
@@ -197,7 +229,6 @@ public class UserService {
      *
      * @param request
      * @return password
-     * @throws Exception
      */
     @Transactional(readOnly = true)
     public String findPassword (String userId, UserInfoRequest request) {
@@ -213,7 +244,6 @@ public class UserService {
      * @param userId
      * @param request
      * @return
-     * @throws Exception
      */
     public CustomSettingDto updateCustomSetting (String userId, UpdateSettingRequest request) {
 
@@ -232,7 +262,6 @@ public class UserService {
      *
      * @param userId
      * @return
-     * @throws Exception
      */
     public CustomSettingDto getCustomSetting (String userId) {
 
@@ -241,5 +270,17 @@ public class UserService {
                 .orElseThrow(() -> new SettingNotFoundException(UserExceptionCode.SETTING_NOT_FOUND));
 
         return new CustomSettingDto(setting);
+    }
+
+    /**
+     * 패스워드 유효성 검사
+     *
+     * @param password
+     * @return
+     */
+    private Boolean isValidatePassword (String password) {
+
+        String pattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$";
+        return Pattern.matches(pattern, password);
     }
 }

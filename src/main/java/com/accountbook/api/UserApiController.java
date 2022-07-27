@@ -38,6 +38,17 @@ public class UserApiController {
     }
 
     /**
+     * 사용자 전체 목록 조회
+     *
+     * @return 사용자 전체 목록
+     */
+    @GetMapping
+    public ApiResponse findAllUser () {
+
+        return new ApiResponse(userService.findAllUser(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
+
+    /**
      * 사용자 조회
      *
      * @param userId

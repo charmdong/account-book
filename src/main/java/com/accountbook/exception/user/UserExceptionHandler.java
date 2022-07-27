@@ -24,7 +24,7 @@ public class UserExceptionHandler {
     @ExceptionHandler(UserException.class)
     public ApiResponse userExceptionHandler (UserException ue) {
 
-        log.warn("{}...", ue.getClass(), ue);
+        log.warn("{}...{}:{}", ue.getClass(), ue.getUserExceptionCode(), ue.getUserExceptionCode().getMessage(), ue);
 
         return new ApiResponse(
                 ue.getUserExceptionCode().getCode(),
