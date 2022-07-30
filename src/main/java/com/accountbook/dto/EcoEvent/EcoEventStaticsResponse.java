@@ -11,9 +11,11 @@ public class EcoEventStaticsResponse {
 
     List<CategoryDto> categoryDtoList;
 
+    List<String> moMExpenditureInfos;
+
     List<String> thisMonthExpenditureInfos;
 
-    List<String> moMExpenditureInfos;
+    List<String> thisMonthExpenditureInfoPercent;
 
     Map<Integer,Long> inTimeExpenseAmountMap;
 }
