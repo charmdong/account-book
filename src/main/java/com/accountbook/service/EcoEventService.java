@@ -53,30 +53,34 @@ public class EcoEventService {
     @Transactional(readOnly = true)
     public List<EcoEventDto> getAllEcoEventByEventTypeAndUseDate(EcoEventReadRequest ecoEventReadRequest) throws Exception{
         String userId = ecoEventReadRequest.getUserId();
+        LocalDateTime startDate = null;
+        LocalDateTime endDate = null;
 
         //s : 날짜 포맷팅
-        List<Integer> formatDate = Arrays.stream(ecoEventReadRequest.getStartDate().split("-"))
-                                              .map(Integer::parseInt)
-                                              .collect(Collectors.toList());
-        if(formatDate == null){
-            throw new EcoEventException(EcoEventExceptionCode.ERROR_PARSING_DATE);
-        }
-        LocalDateTime startDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 0,0,0);
-
-        LocalDateTime endDate = null;
-        if(ecoEventReadRequest.getEndDate() == null || ecoEventReadRequest.getStartDate().equals(ecoEventReadRequest.getEndDate())) {
-            endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 23,59,59);;
-        } else {
-            formatDate = Arrays.stream(ecoEventReadRequest.getEndDate().split("-"))
-                               .map(Integer::parseInt)
-                               .collect(Collectors.toList());
-            if(formatDate == null){
+        if(ecoEventReadRequest.getStartDate() != null) {
+            List<Integer> formatDate = Arrays.stream(ecoEventReadRequest.getStartDate().split("-"))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+            if (formatDate == null) {
                 throw new EcoEventException(EcoEventExceptionCode.ERROR_PARSING_DATE);
             }
-            endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1),formatDate.get(2), 0,0,0);
-        }
-        //e : 날짜 포맷팅
+            startDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1), formatDate.get(2), 0, 0, 0);
 
+            endDate = null;
+            if (ecoEventReadRequest.getEndDate() == null || ecoEventReadRequest.getStartDate().equals(ecoEventReadRequest.getEndDate())) {
+                endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1), formatDate.get(2), 23, 59, 59);
+
+            } else {
+                formatDate = Arrays.stream(ecoEventReadRequest.getEndDate().split("-"))
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList());
+                if (formatDate == null) {
+                    throw new EcoEventException(EcoEventExceptionCode.ERROR_PARSING_DATE);
+                }
+                endDate = LocalDateTime.of(formatDate.get(0), formatDate.get(1), formatDate.get(2), 0, 0, 0);
+            }
+            //e : 날짜 포맷팅
+        }
         EventType eventType = ecoEventReadRequest.getEventType();
 
         return ecoEventRepository.findByEventTypeAndUseDate(userId,startDate,endDate,eventType)
