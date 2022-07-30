@@ -1,5 +1,6 @@
 package com.accountbook.api;
 
+import com.accountbook.domain.enums.EventType;
 import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
@@ -23,8 +24,7 @@ public class EcoEventApiController {
     //금융 이벤트 전체 조회
     @GetMapping("/")
     public ApiResponse getAllEcoEvent() throws Exception {
-        ApiResponse apiResponse = new ApiResponse(ecoEventService.getAllEcoEvent(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
-        return apiResponse;
+        return new ApiResponse(ecoEventService.getAllEcoEvent(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     //금융 이벤트 조회
@@ -41,7 +41,9 @@ public class EcoEventApiController {
 
     //금융 이벤트 조건 조회 - user,eventType,useDate
     @GetMapping("/condition")
-    public ApiResponse getAllEcoEventByEventTypeAndUseDate(@RequestBody @Valid EcoEventReadRequest ecoEventReadRequest) throws Exception {
+    public ApiResponse getAllEcoEventByEventTypeAndUseDate(@RequestParam String userId, @RequestParam(required = false) EventType eventType,
+                                                           @RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate) throws Exception {
+        EcoEventReadRequest ecoEventReadRequest = new EcoEventReadRequest(userId,eventType, startDate,endDate);
         return new ApiResponse(ecoEventService.getAllEcoEventByEventTypeAndUseDate(ecoEventReadRequest), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
@@ -64,8 +66,10 @@ public class EcoEventApiController {
     }
 
     //금융 이벤트 통계
-    @PostMapping("/summary")
-    public ApiResponse summary(@RequestBody @Valid EcoEventReadRequest ecoEventReadRequest) throws Exception{
+    @GetMapping("/summary")
+    public ApiResponse summary(@RequestParam String userId, @RequestParam(required = false) EventType eventType,
+                               @RequestParam String startDate, @RequestParam(required = false) String endDate) throws Exception{
+        EcoEventReadRequest ecoEventReadRequest = new EcoEventReadRequest(userId,eventType, startDate,endDate);
         return new ApiResponse(statisticsService.summarizeEcoEvents(ecoEventReadRequest),HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 }

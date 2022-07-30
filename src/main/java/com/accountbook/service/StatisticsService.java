@@ -144,8 +144,12 @@ public class StatisticsService {
         ecoEventStaticsResponse.setMoMExpenditureInfos(moMExpenditureInfos);
 
         // 이번 달 수입 대비 지출 금액 (지출/ 수입)
-        List <String> thisMonthExpenditureInfos = getSumThisMonthExpenditureInfos(userId,startDate);
+        List <String> thisMonthExpenditureInfos = getThisMonthExpenditureInfos(userId,startDate);
         ecoEventStaticsResponse.setThisMonthExpenditureInfos(thisMonthExpenditureInfos);
+
+        // 이번달 수입, 지출 비율
+        List <String> thisMonthExpenditureInfoPercent = getSumThisMonthExpenditureInfos(userId,startDate);
+        ecoEventStaticsResponse.setThisMonthExpenditureInfoPercent(thisMonthExpenditureInfoPercent);
 
         //이번 달 시간대별 지출 금액
         Map<Integer,Long> inTimeExpenseAmountMap = getInTimeExpenseAmountInfos(userId, startDate);
@@ -198,8 +202,14 @@ public class StatisticsService {
         UserDto user = userService.getUser(userId);
         Long prevExpenditure = user.getPrevExpenditure();
 
-        result.add(Long.toString(prevExpenditure - thisExpenditure));
-        result.add(String.valueOf((Double.valueOf(thisExpenditure) / Double.valueOf(prevExpenditure)) * 100));
+        String amount = Long.toString(prevExpenditure - thisExpenditure);
+        String percent = "0";
+        if(Double.valueOf(prevExpenditure) > 0){
+            percent = String.valueOf((Double.valueOf(thisExpenditure) / Double.valueOf(prevExpenditure)) * 100);
+        }
+        result.add(amount);
+        result.add(percent);
+        log.info("getMoMExpenditureInfos >> prevExpenditure : "+prevExpenditure+" | thisExpenditure : "+thisExpenditure);
 
         return result;
     }
@@ -226,6 +236,8 @@ public class StatisticsService {
 
         Double resultPercent = Double.valueOf(map.get(EventType.EXPENDITURE)) / Double.valueOf(map.get(EventType.INCOME)) * 100;
         result.add(String.valueOf(Math.floor(resultPercent)));
+
+        log.info("getThisMonthExpenditureInfos >> expenditure : "+expenditure+" | income : "+map.get(EventType.INCOME)+"| resultPercent : "+resultPercent);
 
         return result;
     }
@@ -257,6 +269,8 @@ public class StatisticsService {
             result.add(String.valueOf(Math.floor(expenditurePercent)));
             result.add(String.valueOf(Math.floor(incomePercent)));
         }
+        log.info("getSumThisMonthExpenditureInfos >> expenditure : "+map.get(EventType.EXPENDITURE)+" | income : "+map.get(EventType.INCOME));
+
         return result;
     }
     //이번 달 시간대별 지출 금액

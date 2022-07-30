@@ -13,6 +13,7 @@ public enum CommonExceptionCode {
 
     UNEXPECTED_EX(9000L, "Unexpected Exception 발생"),
     INVALID_PARAM(9001L, "유효성 오류"),
+    MISSING_SERVLET_REQUEST_PARAM(9003L, "필수 요청 파라미터가 존재하지 않습니다."),
     ;
 
     private Long code;

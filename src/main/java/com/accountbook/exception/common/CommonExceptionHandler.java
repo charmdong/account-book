@@ -5,6 +5,7 @@ import com.accountbook.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -21,6 +22,18 @@ public class CommonExceptionHandler {
                 CommonExceptionCode.INVALID_PARAM.getCode(),
                 HttpStatus.OK,
                 CommonExceptionCode.INVALID_PARAM.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    public ApiResponse missingServletRequestParameterExceptionHandler (MissingServletRequestParameterException e) {
+
+        log.warn("MissingServletRequestParameterException >>> {}",  e.getClass(), e);
+
+        return new ApiResponse(
+                CommonExceptionCode.MISSING_SERVLET_REQUEST_PARAM.getCode(),
+                HttpStatus.OK,
+                CommonExceptionCode.MISSING_SERVLET_REQUEST_PARAM.getMessage()
         );
     }
 
