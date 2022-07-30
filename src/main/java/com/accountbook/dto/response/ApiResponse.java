@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 public class ApiResponse<T> {
 
-    private T data;
+    private T data; // 응답 데이터 (오류 발생의 경우 오류 코드)
     private HttpStatus status;
     private String message;
     
