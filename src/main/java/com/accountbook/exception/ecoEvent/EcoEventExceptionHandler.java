@@ -16,7 +16,7 @@ public class EcoEventExceptionHandler {
     @ExceptionHandler
     public ApiResponse EcoEventExceptionHandler(EcoEventException e){
         return new ApiResponse(e.getEcoEventExceptionCode().getCode(),
-                HttpStatus.OK,
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 e.getEcoEventExceptionCode().getMessage());
     }
 }

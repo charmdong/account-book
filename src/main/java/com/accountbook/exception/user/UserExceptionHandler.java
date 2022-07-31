@@ -28,7 +28,7 @@ public class UserExceptionHandler {
 
         return new ApiResponse(
                 ue.getUserExceptionCode().getCode(),
-                HttpStatus.OK,
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 ue.getUserExceptionCode().getMessage()
         );
     }

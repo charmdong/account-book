@@ -20,7 +20,7 @@ public class CommonExceptionHandler {
 
         return new ApiResponse(
                 CommonExceptionCode.INVALID_PARAM.getCode(),
-                HttpStatus.OK,
+                HttpStatus.BAD_REQUEST,
                 CommonExceptionCode.INVALID_PARAM.getMessage()
         );
     }
@@ -28,11 +28,11 @@ public class CommonExceptionHandler {
     @ExceptionHandler
     public ApiResponse missingServletRequestParameterExceptionHandler (MissingServletRequestParameterException e) {
 
-        log.warn("MissingServletRequestParameterException >>> {}",  e.getClass(), e);
+        log.warn("MissingServletRequestParameterException >>> {}", e);
 
         return new ApiResponse(
                 CommonExceptionCode.MISSING_SERVLET_REQUEST_PARAM.getCode(),
-                HttpStatus.OK,
+                HttpStatus.BAD_REQUEST,
                 CommonExceptionCode.MISSING_SERVLET_REQUEST_PARAM.getMessage()
         );
     }
@@ -44,7 +44,7 @@ public class CommonExceptionHandler {
 
         return new ApiResponse(
                 CommonExceptionCode.UNEXPECTED_EX.getCode(),
-                HttpStatus.OK,
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 CommonExceptionCode.UNEXPECTED_EX.getMessage()
         );
     }
