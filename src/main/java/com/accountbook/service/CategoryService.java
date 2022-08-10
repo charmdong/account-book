@@ -63,6 +63,7 @@ public class CategoryService {
      * @return
      * @throws Exception
      */
+    @Transactional(readOnly = true)
     public CategoryDto getCategory(long categorySeq) throws Exception {
         Category category = categoryRepository.findById(categorySeq).orElseThrow(() -> new CategoryException(CategoryExceptionCode.NOT_FOUND));
         return new CategoryDto(category);
