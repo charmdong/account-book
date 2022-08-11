@@ -34,7 +34,7 @@ public class CategoryApiController {
     
     // 특정 카테고리 조회
     @GetMapping("/{category-seq}")
-    public ApiResponse getCategory(@PathVariable long categorySeq) throws Exception {
+    public ApiResponse getCategory(@PathVariable("category-seq") long categorySeq) throws Exception {
 
         return new ApiResponse(categoryService.getCategory(categorySeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
