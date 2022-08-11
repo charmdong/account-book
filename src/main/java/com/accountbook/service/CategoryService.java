@@ -3,16 +3,17 @@ package com.accountbook.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.dto.category.CategoryListDto;
 import com.accountbook.dto.category.CategoryRankDto;
-
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.exception.category.CategoryException;
 import com.accountbook.exception.category.CategoryExceptionCode;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +30,23 @@ public class CategoryService {
      * @return 카테고리 목록
      */
     @Transactional(readOnly = true)
-    public List<CategoryDto> getCategoryList() throws Exception {
+    public List<CategoryListDto> getCategoryList() throws Exception {
+
+        var result = categoryRepository.findAll().stream()
+                .filter(e -> "Y".equals(e.getUseYn()))
+                .map(CategoryListDto::new)
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
+    /**
+     * 카테고리 (이벤트 포함)목록 조회
+     * 
+     * @return 카테고리 목록
+     */
+    @Transactional(readOnly = true)
+    public List<CategoryDto> getCategoryEventList() throws Exception {
 
         var result = categoryRepository.findAll().stream()
                 .filter(e -> "Y".equals(e.getUseYn()))
@@ -39,6 +56,19 @@ public class CategoryService {
         return result;
     }
 
+    /**
+     * 특정 카테고리 조회
+     * 
+     * @param categorySeq
+     * @return
+     * @throws Exception
+     */
+    @Transactional(readOnly = true)
+    public CategoryDto getCategory(long categorySeq) throws Exception {
+        Category category = categoryRepository.findById(categorySeq).orElseThrow(() -> new CategoryException(CategoryExceptionCode.NOT_FOUND));
+        return new CategoryDto(category);
+    }
+
     @Transactional(readOnly = true)
     public List<CategoryRankDto> getCategoryRank(String userId) {
         var rank = CategoryRankDto.rank(categoryRepository.findByUserId(userId));
@@ -46,7 +76,7 @@ public class CategoryService {
     }
 
     //카테고리 등록
-    public Long enrollCategory(CategoryRequest categoryRequest) throws Exception{
+    public Long enrollCategory(CategoryRequest categoryRequest) throws Exception {
 
         //Name, EventType이 동일한 카테고리가 존재하면, 이미 존재하는 카테고리로 판단하고 useYn만 Y로 업데이트
         List<Category> categories = categoryRepository.findByNameAndEventType(categoryRequest.getName(), categoryRequest.getEventType());
