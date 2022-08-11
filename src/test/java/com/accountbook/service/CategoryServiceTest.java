@@ -15,7 +15,7 @@ public class CategoryServiceTest {
 
     @Test
     void testGetCategoryList() throws Exception {
-        var categoryList = categoryService.getCategoryList();
+        var categoryList = categoryService.getCategoryList("Y");
         log.info(" >> category List : {}", categoryList.toString());
 
     }
