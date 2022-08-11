@@ -1,23 +1,14 @@
 package com.accountbook.api;
 
-import javax.validation.Valid;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.CategoryService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @RestController
@@ -29,9 +20,9 @@ public class CategoryApiController {
 
     // 카테고리 목록 조회
     @GetMapping("/list")
-    public ApiResponse getCategoryList() throws Exception {
+    public ApiResponse getCategoryList(@RequestParam(value = "useYn", defaultValue = "Y") String useYn) throws Exception {
 
-        return new ApiResponse(categoryService.getCategoryList(), HttpStatus.OK, CommonResponseMessage.SUCCESS);
+        return new ApiResponse(categoryService.getCategoryList(useYn), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     // 카테고리 목록 조회 (이벤트 포함)

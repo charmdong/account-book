@@ -1,11 +1,5 @@
 package com.accountbook.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.accountbook.domain.entity.Category;
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.dto.category.CategoryDto;
@@ -14,8 +8,12 @@ import com.accountbook.dto.category.CategoryRankDto;
 import com.accountbook.dto.category.CategoryRequest;
 import com.accountbook.exception.category.CategoryException;
 import com.accountbook.exception.category.CategoryExceptionCode;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +28,10 @@ public class CategoryService {
      * @return 카테고리 목록
      */
     @Transactional(readOnly = true)
-    public List<CategoryListDto> getCategoryList() throws Exception {
+    public List<CategoryListDto> getCategoryList(String useYn) throws Exception {
 
         var result = categoryRepository.findAll().stream()
-                .filter(e -> "Y".equals(e.getUseYn()))
+                .filter(e -> useYn.equals(e.getUseYn()))
                 .map(CategoryListDto::new)
                 .collect(Collectors.toList());
 

@@ -28,7 +28,7 @@ public class CategoryExceptionHandler {
 
         return new ApiResponse(
                 ce.getCategoryExceptionCode().getCode(),
-                HttpStatus.OK,
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 ce.getCategoryExceptionCode().getMessage()
         );
     }
