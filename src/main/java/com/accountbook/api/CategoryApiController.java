@@ -20,7 +20,7 @@ public class CategoryApiController {
 
     // 카테고리 목록 조회
     @GetMapping("/list")
-    public ApiResponse getCategoryList(@RequestParam("useYn") String useYn) throws Exception {
+    public ApiResponse getCategoryList(@RequestParam(value = "useYn", required = false) String useYn) throws Exception {
 
         return new ApiResponse(categoryService.getCategoryList(useYn), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
