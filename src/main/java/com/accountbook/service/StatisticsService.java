@@ -11,6 +11,7 @@ import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
 import com.accountbook.dto.EcoEvent.EcoEventStaticsDto;
 import com.accountbook.dto.EcoEvent.EcoEventStaticsResponse;
 import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.dto.category.CategoryListDto;
 import com.accountbook.dto.user.UserDto;
 import com.accountbook.exception.ecoEvent.EcoEventException;
 import com.accountbook.exception.ecoEvent.EcoEventExceptionCode;
@@ -136,7 +137,7 @@ public class StatisticsService {
         EcoEventStaticsResponse ecoEventStaticsResponse = new EcoEventStaticsResponse();
 
         //이번 달 가장 많은 지출 카테고리 정보 조회
-        List<CategoryDto> categoryDtoList = getTopCatergoryInfos(userId,startDate);
+        List<CategoryListDto> categoryDtoList = getTopCatergoryInfos(userId,startDate);
         ecoEventStaticsResponse.setCategoryDtoList(categoryDtoList);
 
         //지난 달 대비 이번 달 지출 금액
@@ -159,9 +160,9 @@ public class StatisticsService {
     }
 
     //이번 달 가장 많은 지출 카테고리 정보 조회
-    public List<CategoryDto> getTopCatergoryInfos(String userId, LocalDateTime startDate) throws Exception {
+    public List<CategoryListDto> getTopCatergoryInfos(String userId, LocalDateTime startDate) throws Exception {
         List <Long> maxCategorySeqList = new ArrayList<>();
-        List<CategoryDto> maxCategoryList = new ArrayList<>();
+        List<CategoryListDto> maxCategoryList = new ArrayList<>();
         Map<Long, Long> map = ecoEventRepository.findByEventTypeAndUseDate(userId, startDate, LocalDateTime.now(), EventType.EXPENDITURE)
                 .parallelStream()
                 .map(e -> new EcoEventStaticsDto(e.getCategory().getSeq(), e.getAmount()))
@@ -180,7 +181,7 @@ public class StatisticsService {
 
         maxCategoryList = maxCategorySeqList.stream()
                 .map(seq -> categoryRepository.findBySeq(seq))
-                .map(category -> new CategoryDto(category.get()))
+                .map(category -> new CategoryListDto(category.get()))
                 .collect(toList());
 
         return maxCategoryList;

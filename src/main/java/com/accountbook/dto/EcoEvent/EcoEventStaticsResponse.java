@@ -1,6 +1,6 @@
 package com.accountbook.dto.EcoEvent;
 
-import com.accountbook.dto.category.CategoryDto;
+import com.accountbook.dto.category.CategoryListDto;
 import lombok.Data;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
 @Data
 public class EcoEventStaticsResponse {
 
-    List<CategoryDto> categoryDtoList;
+    List<CategoryListDto> categoryDtoList;
 
     List<String> moMExpenditureInfos;
 
