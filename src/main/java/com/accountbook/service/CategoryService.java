@@ -11,6 +11,7 @@ import com.accountbook.exception.category.CategoryExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,12 +31,13 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryListDto> getCategoryList(String useYn) throws Exception {
 
-        var result = categoryRepository.findAll().stream()
-                .filter(e -> useYn.equals(e.getUseYn()))
-                .map(CategoryListDto::new)
-                .collect(Collectors.toList());
+        var result = categoryRepository.findAll().stream();
 
-        return result;
+        if(StringUtils.hasText(useYn)) {
+            result = result.filter(e -> useYn.equals(e.getUseYn()));
+        }
+
+        return result.map(CategoryListDto::new).collect(Collectors.toList());
     }
 
     /**
