@@ -1,24 +1,32 @@
 package com.accountbook.service;
 
 import com.accountbook.domain.entity.Category;
+import com.accountbook.domain.entity.CustomSetting;
 import com.accountbook.domain.entity.EcoEvent;
 import com.accountbook.domain.entity.User;
+import com.accountbook.domain.enums.DisplayOption;
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.domain.repository.category.CategoryRepository;
 import com.accountbook.domain.repository.ecoEvent.EcoEventRepository;
-
+import com.accountbook.domain.repository.setting.CustomSettingRepository;
 import com.accountbook.domain.repository.user.UserRepository;
-import com.accountbook.dto.EcoEvent.*;
+import com.accountbook.dto.EcoEvent.EcoEventDto;
+import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
+import com.accountbook.dto.EcoEvent.EcoEventRequest;
 import com.accountbook.exception.ecoEvent.EcoEventException;
 import com.accountbook.exception.ecoEvent.EcoEventExceptionCode;
+import com.accountbook.exception.user.UserExceptionCode;
+import com.accountbook.exception.user.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +36,8 @@ public class EcoEventService {
     private final EcoEventRepository ecoEventRepository;
 
     private final UserRepository userRepository;
+
+    private final CustomSettingRepository settingRepository;
 
     private final CategoryRepository categoryRepository;
 
@@ -125,5 +135,35 @@ public class EcoEventService {
         }
 
         return true;
+    }
+
+    /**
+     * 메인 화면에서 보여줄 데이터 구하기 (displayOption)
+     */
+    public Map<String, Long> getDisplayData(String userId) {
+
+        Map<String, Long> resultMap = new HashMap<>();
+        CustomSetting setting = settingRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+        String displayOption = setting.getDisplayOption().toString();
+
+        // 월 사용 금액 (기준 일자 ~ 오늘), 월 수입 - 월 지출 (기준 일자 ~ 오늘)
+        if (DisplayOption.AMOUNT.equals(displayOption) || DisplayOption.MONTH_BALANCE.equals(displayOption)) {
+            // 1. 오늘 날짜를 기준으로 시작일 구하기
+
+            // 2. 금융 이벤트 조회
+        }
+        // 총 수입 - 총 지출
+        else if (DisplayOption.TOTAL_BALANCE.equals(displayOption)) {
+            List<EcoEvent> ecoEventList = ecoEventRepository.findByUserId(userId);
+
+            long income = ecoEventList.stream().filter(e -> e.getEventType().equals(EventType.INCOME)).mapToLong(EcoEvent::getAmount).sum();
+            long expenditure = ecoEventList.stream().filter(e -> e.getEventType().equals(EventType.EXPENDITURE)).mapToLong(EcoEvent::getAmount).sum();
+
+            resultMap.put("income", income);
+            resultMap.put("expenditure", expenditure);
+            resultMap.put("balance", income - expenditure);
+        }
+
+        return resultMap;
     }
 }
