@@ -156,8 +156,16 @@ public class EcoEventService {
         else if (DisplayOption.TOTAL_BALANCE.equals(displayOption)) {
             List<EcoEvent> ecoEventList = ecoEventRepository.findByUserId(userId);
 
-            long income = ecoEventList.stream().filter(e -> e.getEventType().equals(EventType.INCOME)).mapToLong(EcoEvent::getAmount).sum();
-            long expenditure = ecoEventList.stream().filter(e -> e.getEventType().equals(EventType.EXPENDITURE)).mapToLong(EcoEvent::getAmount).sum();
+            long income = 0L;
+            long expenditure = 0L;
+
+            for (EcoEvent ecoEvent: ecoEventList) {
+                if (EventType.INCOME.equals(ecoEvent.getEventType())) {
+                    income += ecoEvent.getAmount();
+                } else {
+                    expenditure += ecoEvent.getAmount();
+                }
+            }
 
             resultMap.put("income", income);
             resultMap.put("expenditure", expenditure);
