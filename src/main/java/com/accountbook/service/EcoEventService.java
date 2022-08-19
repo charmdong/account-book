@@ -149,6 +149,8 @@ public class EcoEventService {
         // 월 사용 금액 (기준 일자 ~ 오늘), 월 수입 - 월 지출 (기준 일자 ~ 오늘)
         if (DisplayOption.AMOUNT.equals(displayOption) || DisplayOption.MONTH_BALANCE.equals(displayOption)) {
             // 1. 오늘 날짜를 기준으로 시작일 구하기
+            LocalDateTime startDate = null;
+            LocalDateTime endDate = null;
 
             // 2. 금융 이벤트 조회
         }
