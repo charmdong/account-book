@@ -2,6 +2,7 @@ package com.accountbook.domain.repository.ecoEvent;
 
 import com.accountbook.domain.entity.EcoEvent;
 import com.accountbook.domain.enums.EventType;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -9,10 +10,13 @@ import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.accountbook.domain.entity.QEcoEvent.ecoEvent;
+
 @RequiredArgsConstructor
 public class EcoEventRepositoryCustomImpl implements EcoEventRepositoryCustom{
 
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
 
     public void saveEcoEvent(EcoEvent ecoEvent){
         em.persist(ecoEvent);
@@ -56,5 +60,21 @@ public class EcoEventRepositoryCustomImpl implements EcoEventRepositoryCustom{
             query.setParameter("eventType", eventType);
         }
         return query.getResultList();
+    }
+
+    /**
+     * startDate ~ endDate 에 해당하는 금융 이벤트 조회
+     * @param userId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @Override
+    public List<EcoEvent> findByUseDate (String userId, LocalDateTime startDate, LocalDateTime endDate) {
+
+        return queryFactory.selectFrom(ecoEvent)
+                .where(ecoEvent.user.id.eq(userId),
+                        ecoEvent.useDate.between(startDate, endDate))
+                .fetch();
     }
 }
