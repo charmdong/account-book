@@ -234,8 +234,17 @@ public class UserService {
     public String findPassword (String userId, UserInfoRequest request) {
 
         User user = userRepository.findByIdAndEmail(userId, request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
+        String pwd = new String(java.util.Base64.getDecoder().decode(user.getPassword()));
+        StringBuilder maskPwd = new StringBuilder();
 
-        return user.getPassword();
+        for (int index = 0; index < pwd.length(); index++) {
+            if (2 <= index && index < pwd.length() - 2) {
+                maskPwd.append("*");
+            }
+            else maskPwd.append(pwd.charAt(index));
+        }
+
+        return maskPwd.toString();
     }
 
     /**
