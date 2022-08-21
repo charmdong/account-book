@@ -98,13 +98,13 @@ public class CategoryService {
     }
 
     //카테고리 수정
-    public CategoryDto updateCategory(CategoryRequest categoryRequest, long categorySeq) throws Exception{
+    public CategoryListDto updateCategory(CategoryRequest categoryRequest, long categorySeq) throws Exception{
         Category category = categoryRepository.findBySeq(categorySeq).orElseThrow(() -> new CategoryException(CategoryExceptionCode.NOT_FOUND));
 
         category.changeCategory(categoryRequest);
         categoryRepository.flush();
 
-        return new CategoryDto(categoryRepository.findBySeq(categorySeq).get());
+        return new CategoryListDto(categoryRepository.findBySeq(categorySeq).get());
     }
 
     //카테고리 삭제

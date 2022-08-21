@@ -2,8 +2,8 @@ package com.accountbook.api;
 
 import com.accountbook.domain.enums.EventType;
 import com.accountbook.dto.EcoEvent.EcoEventReadRequest;
-import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.dto.EcoEvent.EcoEventRequest;
+import com.accountbook.dto.response.ApiResponse;
 import com.accountbook.exception.common.CommonResponseMessage;
 import com.accountbook.service.EcoEventService;
 import com.accountbook.service.StatisticsService;
@@ -71,6 +71,14 @@ public class EcoEventApiController {
                                @RequestParam String startDate, @RequestParam(required = false) String endDate) throws Exception{
         EcoEventReadRequest ecoEventReadRequest = new EcoEventReadRequest(userId,eventType, startDate,endDate);
         return new ApiResponse(statisticsService.summarizeEcoEvents(ecoEventReadRequest),HttpStatus.OK, CommonResponseMessage.SUCCESS);
+    }
+
+    /**
+     * 메인 화면에서 보여줄 데이터 (CustomSetting - displayOption)
+     */
+    @GetMapping("/display")
+    public ApiResponse display(@RequestParam("userId") String userId) {
+        return new ApiResponse(ecoEventService.getDisplayData(userId), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 }
 
