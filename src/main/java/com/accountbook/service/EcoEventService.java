@@ -24,10 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -145,9 +142,9 @@ public class EcoEventService {
 
         Map<String, Long> resultMap = new HashMap<>();
         CustomSetting setting = settingRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
-        String displayOption = setting.getDisplayOption().toString();
+        DisplayOption displayOption = setting.getDisplayOption();
 
-        List<EcoEvent> ecoEventList = null;
+        List<EcoEvent> ecoEventList = new ArrayList<>();
 
         // 월 사용 금액 (기준 일자 ~ 오늘), 월 수입 - 월 지출 (기준 일자 ~ 오늘)
         if (DisplayOption.AMOUNT.equals(displayOption) || DisplayOption.MONTH_BALANCE.equals(displayOption)) {
