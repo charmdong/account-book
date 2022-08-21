@@ -52,13 +52,13 @@ public class CategoryApiController {
 
     //카테고리 수정
     @PatchMapping("/{category-seq}")
-    public ApiResponse update(@RequestBody @Valid CategoryRequest categoryRequest, @PathVariable long categorySeq) throws Exception {
+    public ApiResponse update(@RequestBody @Valid CategoryRequest categoryRequest, @PathVariable("category-seq") long categorySeq) throws Exception {
         return new ApiResponse(categoryService.updateCategory(categoryRequest, categorySeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 
     //카테고리 삭제
     @DeleteMapping("/{category-seq}")
-    public ApiResponse delete(@PathVariable long categorySeq) throws Exception {
+    public ApiResponse delete(@PathVariable("category-seq") long categorySeq) throws Exception {
         return new ApiResponse(categoryService.deleteCategory(categorySeq), HttpStatus.OK, CommonResponseMessage.SUCCESS);
     }
 }
