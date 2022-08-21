@@ -234,7 +234,7 @@ public class UserService {
     public String findPassword (String userId, UserInfoRequest request) {
 
         User user = userRepository.findByIdAndEmail(userId, request.getEmail()).orElseThrow(() -> new UserNotFoundException(UserExceptionCode.NOT_FOUND));
-        String pwd = new String(java.util.Base64.getDecoder().decode(user.getPassword()));
+        String pwd = new String(Base64.decodeBase64(user.getPassword()));
         StringBuilder maskPwd = new StringBuilder();
 
         for (int index = 0; index < pwd.length(); index++) {
