@@ -23,7 +23,11 @@ public class UserDto {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
-        this.birthDate = user.getBirthDate().toString();
+
+        if (user.getBirthDate() != null) {
+            this.birthDate = user.getBirthDate().toString();
+        }
+
         this.prevIncome = user.getPrevIncome();
         this.prevExpenditure = user.getPrevExpenditure();
         this.settingDto = new CustomSettingDto(user.getSetting());
