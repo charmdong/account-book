@@ -201,8 +201,8 @@ public class UserService {
     public Boolean deleteUser (String userId) {
 
         try {
-            userRepository.deleteById(userId);
             ecoEventRepository.deleteByUserId(userId);
+            userRepository.deleteById(userId);
         } catch (EmptyResultDataAccessException e) {
             throw new DeleteUserException(UserExceptionCode.NOT_FOUND);
         }

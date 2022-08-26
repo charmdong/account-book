@@ -1,8 +1,5 @@
 package com.accountbook.domain.entity;
 
-import com.accountbook.domain.enums.EventType;
-import com.accountbook.domain.enums.RequestType;
-import com.accountbook.dto.user.UpdatePrevInfoRequest;
 import com.accountbook.dto.user.UserCreateRequest;
 import com.accountbook.dto.user.UserUpdateRequest;
 import lombok.AccessLevel;
@@ -13,7 +10,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * User
@@ -34,7 +33,7 @@ public class User extends BaseTimeInfo {
     private String password;
     private String name;
     private String email;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     // 자동 로그인 대상 여부 판단
     private String token;
@@ -60,7 +59,7 @@ public class User extends BaseTimeInfo {
         user.password = request.getPassword();
         user.name = request.getName();
         user.email = request.getEmail();
-        user.birthDate = request.getBirthDate();
+        user.birthDate = LocalDate.parse(request.getBirthDate(), DateTimeFormatter.ISO_DATE);
 
         // 지난 달 수입, 지출 금액
         user.prevIncome = user.prevExpenditure = 0L;
@@ -82,6 +81,10 @@ public class User extends BaseTimeInfo {
 
         if(StringUtils.hasText(request.getEmail())) {
             this.email = request.getEmail();
+        }
+
+        if(StringUtils.hasText(request.getBirthDate())) {
+            birthDate = LocalDate.parse(request.getBirthDate(), DateTimeFormatter.ISO_DATE);
         }
     }
 
