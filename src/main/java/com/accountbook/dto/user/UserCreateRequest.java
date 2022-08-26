@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
@@ -21,5 +19,5 @@ public class UserCreateRequest extends UserRequest {
 
     //@NotEmpty(message = "이메일 누락")
     private String email;
-    private LocalDateTime birthDate;
+    private String birthDate;
 }
