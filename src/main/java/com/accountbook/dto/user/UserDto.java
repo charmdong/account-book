@@ -4,8 +4,6 @@ import com.accountbook.domain.entity.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 public class UserDto {
@@ -13,7 +11,7 @@ public class UserDto {
     private String id;
     private String name;
     private String email;
-    private LocalDateTime birthDate;
+    private String birthDate;
     
     // 지난 달 수입, 지출 금액
     private Long prevIncome;
@@ -25,7 +23,7 @@ public class UserDto {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
-        this.birthDate = user.getBirthDate();
+        this.birthDate = user.getBirthDate().toString();
         this.prevIncome = user.getPrevIncome();
         this.prevExpenditure = user.getPrevExpenditure();
         this.settingDto = new CustomSettingDto(user.getSetting());

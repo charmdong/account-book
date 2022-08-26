@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString(exclude = {"ecoEventList"})
+@ToString
 @Setter
 @Getter
 @RequiredArgsConstructor
