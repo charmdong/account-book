@@ -166,7 +166,7 @@ public class EcoEventService {
             }
 
             // 2. 금융 이벤트 조회
-            ecoEventList = ecoEventRepository.findByUseDate(userId, startDate, LocalDateTime.now());
+            ecoEventList = ecoEventRepository.findByUseDate(userId, startDate, LocalDateTime.of(curDate.getYear(), curDate.getMonth(), today, 23, 59, 59));
         }
         // 총 수입 - 총 지출
         else if (DisplayOption.TOTAL_BALANCE.equals(displayOption)) {
