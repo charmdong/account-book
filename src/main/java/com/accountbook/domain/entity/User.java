@@ -59,7 +59,10 @@ public class User extends BaseTimeInfo {
         user.password = request.getPassword();
         user.name = request.getName();
         user.email = request.getEmail();
-        user.birthDate = LocalDate.parse(request.getBirthDate(), DateTimeFormatter.ISO_DATE);
+
+        if (request.getBirthDate() != null) {
+            user.birthDate = LocalDate.parse(request.getBirthDate(), DateTimeFormatter.ISO_DATE);
+        }
 
         // 지난 달 수입, 지출 금액
         user.prevIncome = user.prevExpenditure = 0L;
