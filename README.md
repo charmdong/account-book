@@ -30,8 +30,4 @@
 
 ### Library
 - lombok
-- Spring Batch
-- Quartz
-- Spring Security
-- Oauth
 - JUnit
